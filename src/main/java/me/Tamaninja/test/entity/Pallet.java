@@ -1,4 +1,4 @@
-package me.Tamaninja.test;
+package me.Tamaninja.test.entity;
 
 import javax.persistence.*;
 

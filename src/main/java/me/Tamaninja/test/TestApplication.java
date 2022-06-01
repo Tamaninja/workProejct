@@ -1,6 +1,7 @@
 package me.Tamaninja.test;
 
-import me.Tamaninja.test.Service.Impl.PalletServiceImpl;
+import me.Tamaninja.test.service.PalletContainersService;
+import me.Tamaninja.test.service.PalletService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,12 +15,13 @@ public class TestApplication {
 
 	}
 	@Bean
-	public CommandLineRunner run(PalletServiceImpl palletService) throws Exception {
+	public CommandLineRunner run(PalletService palletService, PalletContainersService palletContainersService) throws Exception {
 		return args -> {
 			try {
 				System.out.println(palletService.newPallet(200));
 				System.out.println(palletService.newPallet(50L,200));
 				System.out.println(palletService.newPallet(50L,300));
+				System.out.println(palletContainersService.newPalletContainer("tray",0.97,100));
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
 			}
