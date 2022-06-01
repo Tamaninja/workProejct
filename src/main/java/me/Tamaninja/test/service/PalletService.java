@@ -18,10 +18,9 @@ public class PalletService {
     }
 
     public Pallet newPallet(Long barcode, int weightGross) {
-        if (palletRepo.existsById(barcode)) {
-            throw (new IllegalArgumentException("BARCODE ALREADY EXISTS"));
 
-        }
+        if (palletRepo.existsById(barcode)) return null; //Return if barcode already exist
+
         Pallet pallet = new Pallet(barcode,weightGross);
         palletRepo.save(pallet);
         return (pallet);
