@@ -7,7 +7,9 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PalletRepo extends CrudRepository<Pallet,Long> {
+public interface PalletRepo extends JpaRepository<Pallet,Long> {
+
+
     @Query(value = "SELECT max(p.id) FROM pallets p")
     Long maxId();
 }

@@ -10,9 +10,14 @@ public class Pallet {
     @Column(nullable = false,name = "weight_gross")
     private int weightGross;
 
-    public Pallet(Long barcode, int weight) {
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "name", referencedColumnName = "container_name")
+    private PalletContainer palletContainer;
+
+    public Pallet(Long barcode, int weight, PalletContainer palletContainer) {
         this.barcode = barcode;
         this.weightGross = weight;
+        this.palletContainer = palletContainer;
     }
     public Pallet(){
 

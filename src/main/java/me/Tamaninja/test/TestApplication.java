@@ -19,10 +19,11 @@ public class TestApplication {
 	public CommandLineRunner run(ManagerService managerService) throws Exception {
 		return args -> {
 			try {
-				System.out.println(managerService.getPalletService().newPallet(200));
-				System.out.println(managerService.getPalletService().newPallet(50L,200));
-				System.out.println(managerService.getPalletService().newPallet(50L,300));
 				System.out.println(managerService.getPalletContainersService().newPalletContainer("tray",0.97,100));
+				System.out.println(managerService.getPalletContainersService().newPalletContainer("smalltray",0.27,200));
+				System.out.println(managerService.getPalletService().newPallet(200,managerService.getPalletContainersService().findById(1L)));
+				System.out.println(managerService.getPalletService().newPallet(50L,200,managerService.getPalletContainersService().findById(2L)));
+				System.out.println(managerService.getPalletService().newPallet(30L,300,managerService.getPalletContainersService().findById(1L)));
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
 			}
