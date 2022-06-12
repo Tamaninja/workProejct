@@ -1,10 +1,10 @@
 package me.Tamaninja.test.repository;
 
-import me.Tamaninja.test.entity.PalletContainer;
+import me.Tamaninja.test.entity.PalletType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PalletContainerRepo extends JpaRepository<PalletContainer,Long> {
+public interface PalletTypeRepo extends JpaRepository<PalletType,Long> {
 
 }

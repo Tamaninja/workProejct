@@ -11,13 +11,18 @@ public class Pallet {
     private int weightGross;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "name", referencedColumnName = "container_name")
+    @JoinColumn(name = "container_name", referencedColumnName = "container_name")
     private PalletContainer palletContainer;
 
-    public Pallet(Long barcode, int weight, PalletContainer palletContainer) {
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "pallet_type_name",referencedColumnName = "pallet_type_name")
+    private  PalletType palletType;
+
+    public Pallet(Long barcode, int weight, PalletContainer palletContainer, PalletType palletType) {
         this.barcode = barcode;
         this.weightGross = weight;
         this.palletContainer = palletContainer;
+        this.palletType = palletType;
     }
     public Pallet(){
 

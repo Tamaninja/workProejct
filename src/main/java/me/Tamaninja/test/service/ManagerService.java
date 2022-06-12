@@ -8,11 +8,13 @@ import org.springframework.stereotype.Service;
 public class ManagerService {
     private PalletContainersService palletContainersService;
     private PalletService palletService;
+    private PalletTypeService palletTypeService;
 
     @Autowired
-    public ManagerService(PalletContainersService palletContainersService, PalletService palletService) {
+    public ManagerService(PalletContainersService palletContainersService, PalletService palletService, PalletTypeService palletTypeService) {
         this.palletContainersService = palletContainersService;
         this.palletService = palletService;
+        this.palletTypeService = palletTypeService;
     }
 
     public PalletContainersService getPalletContainersService() {
@@ -21,5 +23,9 @@ public class ManagerService {
 
     public PalletService getPalletService() {
         return palletService;
+    }
+
+    public PalletTypeService getPalletTypeService() {
+        return palletTypeService;
     }
 }

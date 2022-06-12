@@ -4,8 +4,6 @@ import me.Tamaninja.test.entity.PalletContainer;
 import me.Tamaninja.test.repository.PalletContainerRepo;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class PalletContainersService {
 
