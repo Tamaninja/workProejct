@@ -26,9 +26,9 @@ public class TestApplication {
 				System.out.println(inventoryManagementService.newPalletContent("wet"));
 				System.out.println(inventoryManagementService.newLocation(150,"masua warehouse"));
 				System.out.println(inventoryManagementService.newLocation(200,"tamar tov"));
-				System.out.println(inventoryManagementService.newPallet(200L, 300, 2L,1L,"dry",150));
-				System.out.println(inventoryManagementService.newPallet( 250, 1L,2L,"wet",200));
-				System.out.println(inventoryManagementService.newPallet( 300, 2L,1L,"wet",200));
+				System.out.println(inventoryManagementService.savePallet(200L, 300, 2L,1L,"dry",150,100));
+				System.out.println(inventoryManagementService.savePallet(null, 250, 1L,2L,"wet",200,100));
+				System.out.println(inventoryManagementService.savePallet(null, 300, 2L,1L,"wet",200,100));
 
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();

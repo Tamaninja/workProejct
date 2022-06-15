@@ -21,13 +21,6 @@ public class InventoryManagementService {
         this.locationRepo = locationRepo;
     }
 
-
-    public Pallet newPallet(int weightGross, Long palletContainerId, Long palletTypeId, String content, int locationId) {
-        return (savePallet(generatePalletBarcode(),weightGross,palletContainerId,palletTypeId,content,locationId));
-    }
-    public Pallet newPallet(Long barcode, int weightGross, Long palletContainerId, Long palletTypeId, String content, int locationId) {
-        return (savePallet(barcode,weightGross,palletContainerId,palletTypeId,content,locationId));
-    }
     public PalletType newPalletType(String name, double weight) {
         PalletType palletType = new PalletType(name, weight);
         palletTypeRepo.save(palletType);
@@ -50,17 +43,17 @@ public class InventoryManagementService {
         return (location);
     }
 
-    public Pallet savePallet(Long barcode, int weightGross, Long palletContainerId, Long palletTypeId, String content, int locationId) {
+    public Pallet savePallet(Long barcode, double weightGross, Long palletContainerId, Long palletTypeId, String content, int locationId, int amount) {
         PalletContainer palletContainer = containerRepo.findById(palletContainerId).orElseThrow(() -> new RuntimeException(Errors.PALLET_CONTAINER_NOT_FOUND.toString()));
         PalletType palletType = palletTypeRepo.findById(palletTypeId).orElseThrow(() -> new RuntimeException(Errors.PALLET_TYPE_NOT_FOUND.toString()));
         PalletContent palletContent = palletContentRepo.findById(content).orElseThrow(() -> new RuntimeException(Errors.PALLET_CONTENTS_NOT_FOUND.toString()));
         Location location = locationRepo.findById(locationId).orElseThrow(() -> new RuntimeException(Errors.PALLET_CONTENTS_NOT_FOUND.toString()));
 
-
+        if (barcode == null) barcode = generatePalletBarcode();
         if (palletRepo.existsById(barcode)) {System.out.println(Errors.ALREADY_EXISTS); return null;} //return if barcode already exists
 
 
-        Pallet pallet = new Pallet(barcode, weightGross, palletContainer, palletType, palletContent, location);
+        Pallet pallet = new Pallet(barcode, weightGross, palletContainer, palletType, palletContent, location, amount);
         return (palletRepo.save(pallet));
     }
     private Long generatePalletBarcode() {
