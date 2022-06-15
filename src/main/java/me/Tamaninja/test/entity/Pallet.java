@@ -16,14 +16,25 @@ public class Pallet {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "pallet_type_name",referencedColumnName = "pallet_type_name")
-    private  PalletType palletType;
+    private PalletType palletType;
 
-    public Pallet(Long barcode, int weight, PalletContainer palletContainer, PalletType palletType) {
+    @OneToOne(cascade =  CascadeType.ALL)
+    @JoinColumn(name = "pallet_content", referencedColumnName = "pallet_content")
+    private PalletContent palletContent;
+
+    @OneToOne(cascade =  CascadeType.ALL)
+    @JoinColumn(name = "pallet_location", referencedColumnName = "location_id")
+    private Location palletLocation;
+
+    public Pallet(Long barcode, int weight, PalletContainer palletContainer, PalletType palletType, PalletContent palletContent, Location palletLocation) {
         this.barcode = barcode;
         this.weightGross = weight;
         this.palletContainer = palletContainer;
         this.palletType = palletType;
+        this.palletContent = palletContent;
+        this.palletLocation = palletLocation;
     }
+
     public Pallet(){
 
     }
@@ -37,6 +48,9 @@ public class Pallet {
         return "Pallet{" +
                 "barcode=" + barcode +
                 ", weightGross=" + weightGross +
+                ", palletContainer=" + palletContainer +
+                ", palletType=" + palletType +
+                ", palletContent=" + palletContent +
                 '}';
     }
 }

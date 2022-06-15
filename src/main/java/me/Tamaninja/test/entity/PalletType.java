@@ -6,7 +6,6 @@ import javax.persistence.*;
 @Entity(name = "pallet_types")
 
 public class PalletType {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pallet_type_id", nullable = false, unique = true)

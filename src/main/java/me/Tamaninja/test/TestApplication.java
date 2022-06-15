@@ -1,7 +1,6 @@
 package me.Tamaninja.test;
 
-import me.Tamaninja.test.enums.Errors;
-import me.Tamaninja.test.service.ManagerService;
+import me.Tamaninja.test.service.InventoryManagementService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,16 +14,22 @@ public class TestApplication {
 
 	}
 	@Bean
-	public CommandLineRunner run(ManagerService managerService) throws Exception {
+	public CommandLineRunner run(InventoryManagementService inventoryManagementService) throws Exception {
 		return args -> {
 			try {
-				System.out.println(managerService.getPalletContainersService().newPalletContainer("tray",0.97,100));
-				System.out.println(managerService.getPalletContainersService().newPalletContainer("smalltray",0.27,200));
-				System.out.println(managerService.getPalletTypeService().newPalletType("wooden", 15));
-				System.out.println(managerService.getPalletTypeService().newPalletType("plastic", 20));
-				System.out.println(managerService.getPalletService().newPallet(200,1L,1L));
-				System.out.println(managerService.getPalletService().newPallet(50L,200,2L,2L));
-				System.out.println(managerService.getPalletService().newPallet(30L,300,1L, 1L));
+
+				System.out.println(inventoryManagementService.newPalletContainer("tray",0.97,100));
+				System.out.println(inventoryManagementService.newPalletContainer("smalltray",0.27,200));
+				System.out.println(inventoryManagementService.newPalletType("wooden", 15));
+				System.out.println(inventoryManagementService.newPalletType("plastic", 20));
+				System.out.println(inventoryManagementService.newPalletContent("dry"));
+				System.out.println(inventoryManagementService.newPalletContent("wet"));
+				System.out.println(inventoryManagementService.newLocation(150,"masua warehouse"));
+				System.out.println(inventoryManagementService.newLocation(200,"tamar tov"));
+				System.out.println(inventoryManagementService.newPallet(200L, 300, 2L,1L,"dry",150));
+				System.out.println(inventoryManagementService.newPallet( 250, 1L,2L,"wet",200));
+				System.out.println(inventoryManagementService.newPallet( 300, 2L,1L,"wet",200));
+
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
 			}
