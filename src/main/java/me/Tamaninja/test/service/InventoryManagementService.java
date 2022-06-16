@@ -5,6 +5,9 @@ import me.Tamaninja.test.enums.Errors;
 import me.Tamaninja.test.repository.*;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class InventoryManagementService {
     private final PalletRepo palletRepo;
@@ -12,15 +15,26 @@ public class InventoryManagementService {
     private final PalletTypeRepo palletTypeRepo;
     private final PalletContentRepo palletContentRepo;
     private final LocationRepo locationRepo;
+    private final TransferRepo transferRepo;
 
-    public InventoryManagementService(PalletRepo palletRepo, PalletContainerRepo containerRepo, PalletTypeRepo palletTypeRepo, PalletContentRepo palletContentRepo, LocationRepo locationRepo) {
+    public InventoryManagementService(PalletRepo palletRepo, PalletContainerRepo containerRepo, PalletTypeRepo palletTypeRepo, PalletContentRepo palletContentRepo, LocationRepo locationRepo,TransferRepo transferRepo) {
         this.palletRepo = palletRepo;
         this.containerRepo = containerRepo;
         this.palletTypeRepo = palletTypeRepo;
         this.palletContentRepo = palletContentRepo;
         this.locationRepo = locationRepo;
+        this.transferRepo = transferRepo;
     }
 
+
+    public Transfer newTransfer(Long deliveryId, Long palletId1, Long palletId2) {
+        Pallet pallet1 = palletRepo.findById(palletId1).orElseThrow(() -> new RuntimeException(Errors.PALLET_TYPE_NOT_FOUND.toString()));
+        Pallet pallet2 = palletRepo.findById(palletId2).orElseThrow(() -> new RuntimeException(Errors.PALLET_TYPE_NOT_FOUND.toString()));
+        List<Pallet> pallets = List.of(pallet1,pallet2);
+        Transfer transfer = new Transfer(deliveryId,pallets);
+        transferRepo.save(transfer);
+        return (transfer);
+    }
     public PalletType newPalletType(String name, double weight) {
         PalletType palletType = new PalletType(name, weight);
         palletTypeRepo.save(palletType);
