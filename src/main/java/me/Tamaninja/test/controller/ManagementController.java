@@ -25,8 +25,8 @@ public class ManagementController {
             @RequestParam("containerId") Long containerId,
             @RequestParam("containerTypeId") Long containerTypeId,
             @RequestParam("palletContent") String palletContent,
-            @RequestParam("location") int locationId,
-            @RequestParam(required = false, value="amount") int amount) {
-        return (inventoryManagementService.savePallet(barcode,weight,containerId,containerTypeId,palletContent,locationId,amount).toString());
+            @RequestParam("location") Long locationId,
+            @RequestParam(required = false, value="amount") Integer amount) {
+        return (inventoryManagementService.savePallet(barcode, containerTypeId, containerId, amount, palletContent, weight, locationId).toString());
     }
 }

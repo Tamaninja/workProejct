@@ -10,12 +10,12 @@ public class Location {
 
     @Id
     @Column(name = "location_id", nullable = false, unique = true)
-    private int id;
+    private Long id;
 
     @Column(name = "location_desc", nullable = true)
     private String desc;
 
-    public Location(int id,String desc) {
+    public Location(Long id,String desc) {
         this.id = id;
         this.desc = desc;
     }
@@ -23,7 +23,7 @@ public class Location {
 
     public Location() {}
 
-    public int getId() {
+    public Long getId() {
         return (id);
     }
     public String getDescription() {

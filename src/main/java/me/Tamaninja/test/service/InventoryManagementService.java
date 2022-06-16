@@ -37,23 +37,24 @@ public class InventoryManagementService {
         containerRepo.save(palletContainer);
         return (palletContainer);
     }
-    public Location newLocation(int id, String description) {
+    public Location newLocation(Long id, String description) {
         Location location = new Location(id, description);
         locationRepo.save(location);
         return (location);
     }
 
-    public Pallet savePallet(Long barcode, double weightGross, Long palletContainerId, Long palletTypeId, String content, int locationId, int amount) {
+    public Pallet savePallet(Long barcode, Long palletTypeId, Long palletContainerId, Integer amount, String content, double weightGross, Long locationId) {
         PalletContainer palletContainer = containerRepo.findById(palletContainerId).orElseThrow(() -> new RuntimeException(Errors.PALLET_CONTAINER_NOT_FOUND.toString()));
         PalletType palletType = palletTypeRepo.findById(palletTypeId).orElseThrow(() -> new RuntimeException(Errors.PALLET_TYPE_NOT_FOUND.toString()));
         PalletContent palletContent = palletContentRepo.findById(content).orElseThrow(() -> new RuntimeException(Errors.PALLET_CONTENTS_NOT_FOUND.toString()));
         Location location = locationRepo.findById(locationId).orElseThrow(() -> new RuntimeException(Errors.PALLET_CONTENTS_NOT_FOUND.toString()));
 
         if (barcode == null) barcode = generatePalletBarcode();
+        if (amount == null) amount = palletContainer.getDefaultAmount();
         if (palletRepo.existsById(barcode)) {System.out.println(Errors.ALREADY_EXISTS); return null;} //return if barcode already exists
 
 
-        Pallet pallet = new Pallet(barcode, weightGross, palletContainer, palletType, palletContent, location, amount);
+        Pallet pallet = new Pallet(barcode, palletType, palletContainer, amount, palletContent, weightGross, location);
         return (palletRepo.save(pallet));
     }
     private Long generatePalletBarcode() {

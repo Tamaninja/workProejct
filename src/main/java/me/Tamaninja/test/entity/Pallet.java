@@ -31,7 +31,7 @@ public class Pallet {
 
 
     @Column(nullable = true, name = "pallet_container_amount")
-    private int amount;
+    private Integer amount;
 
     @Column(nullable = true, name = "pallet_weight_net")
     private double weightNet;
@@ -40,7 +40,7 @@ public class Pallet {
     @CreationTimestamp
     private Date created_at;
 
-    public Pallet(Long barcode, double weight, PalletContainer palletContainer, PalletType palletType, PalletContent palletContent, Location palletLocation, int amount) {
+    public Pallet(Long barcode, PalletType palletType, PalletContainer palletContainer, Integer amount, PalletContent palletContent, double weight, Location palletLocation) {
         this.barcode = barcode;
         this.weightGross = weight;
         this.palletContainer = palletContainer;
@@ -67,6 +67,10 @@ public class Pallet {
                 ", palletContainer=" + palletContainer +
                 ", palletType=" + palletType +
                 ", palletContent=" + palletContent +
+                ", palletLocation=" + palletLocation +
+                ", amount=" + amount +
+                ", weightNet=" + weightNet +
+                ", created_at=" + created_at +
                 '}';
     }
 }
