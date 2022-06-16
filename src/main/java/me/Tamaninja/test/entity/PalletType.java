@@ -2,10 +2,11 @@ package me.Tamaninja.test.entity;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity(name = "pallet_types")
 
-public class PalletType {
+public class PalletType implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pallet_type_id", nullable = false, unique = true)

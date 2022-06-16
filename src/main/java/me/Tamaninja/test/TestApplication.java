@@ -28,7 +28,7 @@ public class TestApplication {
 				System.out.println(inventoryManagementService.savePallet(200L, 1L, 2L, null, "dry", 300, 150L));
 				System.out.println(inventoryManagementService.savePallet(null, 2L, 1L, null, "wet", 250, 200L));
 				System.out.println(inventoryManagementService.savePallet(null, 1L, 2L, null, "wet", 300, 200L));
-				System.out.println(inventoryManagementService.newTransfer(303030L,200L,201L));
+				System.out.println(inventoryManagementService.newTransfer(303030L));
 
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();

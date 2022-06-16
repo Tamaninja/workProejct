@@ -5,9 +5,10 @@ import org.springframework.context.annotation.Primary;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.io.Serializable;
 
 @Entity(name = "pallet_contents")
-public class PalletContent {
+public class PalletContent implements Serializable {
 
     @Id
     @Column(name = "pallet_content", nullable = false, unique = true)

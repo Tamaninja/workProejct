@@ -4,9 +4,10 @@ package me.Tamaninja.test.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.io.Serializable;
 
 @Entity(name = "location")
-public class Location {
+public class Location implements Serializable {
 
     @Id
     @Column(name = "location_id", nullable = false, unique = true)

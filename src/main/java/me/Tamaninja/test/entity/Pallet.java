@@ -3,10 +3,11 @@ package me.Tamaninja.test.entity;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity(name = "pallets")
-public class Pallet {
+public class Pallet implements Serializable {
     @Id
     @Column(nullable = false,name = "pallet_barcode",unique = true)
     private Long barcode;

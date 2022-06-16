@@ -27,23 +27,20 @@ public class InventoryManagementService {
     }
 
 
-    public Transfer newTransfer(Long deliveryId, Long palletId1, Long palletId2) {
-        Pallet pallet1 = palletRepo.findById(palletId1).orElseThrow(() -> new RuntimeException(Errors.PALLET_TYPE_NOT_FOUND.toString()));
-        Pallet pallet2 = palletRepo.findById(palletId2).orElseThrow(() -> new RuntimeException(Errors.PALLET_TYPE_NOT_FOUND.toString()));
+    public Transfer newTransfer(Long deliveryId) {
         Transfer transfer = new Transfer(deliveryId);
         transferRepo.save(transfer);
-        pallet1.setTransfer(transfer);
-        pallet2.setTransfer(transfer);
         return (transfer);
+    }
+
+    public void addToDeliver(Pallet pallet, Transfer transfer) {
+        pallet.setTransfer(transfer);
+        palletRepo.save(pallet);
     }
     public PalletType newPalletType(String name, double weight) {
         PalletType palletType = new PalletType(name, weight);
         palletTypeRepo.save(palletType);
         return (palletType);
-    }
-
-    public void addToDelivery(Pallet pallet, Transfer transfer) {
-        pallet.setTransfer(transfer);
     }
 
     public PalletContent newPalletContent(String name) {
