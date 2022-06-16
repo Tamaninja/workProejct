@@ -40,7 +40,11 @@ public class Pallet {
     @CreationTimestamp
     private Date created_at;
 
-    public Pallet(Long barcode, PalletType palletType, PalletContainer palletContainer, Integer amount, PalletContent palletContent, double weight, Location palletLocation) {
+    @ManyToOne()
+    @JoinColumn(name = "deliveryId")
+    private Transfer transfer;
+
+    public Pallet(Long barcode, PalletType palletType, PalletContainer palletContainer, Integer amount, PalletContent palletContent, double weight, Location palletLocation, Transfer transfer) {
         this.barcode = barcode;
         this.weightGross = weight;
         this.palletContainer = palletContainer;
@@ -49,14 +53,15 @@ public class Pallet {
         this.palletLocation = palletLocation;
         this.amount = amount;
         this.weightNet = (weightGross - (palletContainer.getWeight() * amount) - palletType.getWeight());
+        this.transfer = transfer;
     }
 
     public Pallet(){
 
     }
 
-    public Long getBarcode() {
-        return this.barcode;
+    public void setTransfer(Transfer transfer) {
+        this.transfer = transfer;
     }
 
     @Override

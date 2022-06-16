@@ -30,9 +30,10 @@ public class InventoryManagementService {
     public Transfer newTransfer(Long deliveryId, Long palletId1, Long palletId2) {
         Pallet pallet1 = palletRepo.findById(palletId1).orElseThrow(() -> new RuntimeException(Errors.PALLET_TYPE_NOT_FOUND.toString()));
         Pallet pallet2 = palletRepo.findById(palletId2).orElseThrow(() -> new RuntimeException(Errors.PALLET_TYPE_NOT_FOUND.toString()));
-        List<Pallet> pallets = List.of(pallet1,pallet2);
-        Transfer transfer = new Transfer(deliveryId,pallets);
+        Transfer transfer = new Transfer(deliveryId);
         transferRepo.save(transfer);
+        pallet1.setTransfer(transfer);
+        pallet2.setTransfer(transfer);
         return (transfer);
     }
     public PalletType newPalletType(String name, double weight) {
@@ -40,6 +41,11 @@ public class InventoryManagementService {
         palletTypeRepo.save(palletType);
         return (palletType);
     }
+
+    public void addToDelivery(Pallet pallet, Transfer transfer) {
+        pallet.setTransfer(transfer);
+    }
+
     public PalletContent newPalletContent(String name) {
         if (palletContentRepo.existsById("name")) {System.out.println(Errors.ALREADY_EXISTS); return null;} //return if already exists
         PalletContent palletContent = new PalletContent(name);
@@ -68,7 +74,7 @@ public class InventoryManagementService {
         if (palletRepo.existsById(barcode)) {System.out.println(Errors.ALREADY_EXISTS); return null;} //return if barcode already exists
 
 
-        Pallet pallet = new Pallet(barcode, palletType, palletContainer, amount, palletContent, weightGross, location);
+        Pallet pallet = new Pallet(barcode, palletType, palletContainer, amount, palletContent, weightGross, location, null);
         return (palletRepo.save(pallet));
     }
     private Long generatePalletBarcode() {
