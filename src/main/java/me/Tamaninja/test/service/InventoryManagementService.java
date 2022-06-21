@@ -5,9 +5,6 @@ import me.Tamaninja.test.enums.Errors;
 import me.Tamaninja.test.repository.*;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 public class InventoryManagementService {
     private final PalletRepo palletRepo;
@@ -16,33 +13,33 @@ public class InventoryManagementService {
     private final PalletContentRepo palletContentRepo;
     private final InventoryRepo inventoryRepo;
     private final TransferRepo transferRepo;
+    private final TruckRepo truckRepo;
 
-    public InventoryManagementService(PalletRepo palletRepo, PalletContainerRepo containerRepo, PalletTypeRepo palletTypeRepo, PalletContentRepo palletContentRepo, InventoryRepo inventoryRepo, TransferRepo transferRepo) {
+    public InventoryManagementService(PalletRepo palletRepo, PalletContainerRepo containerRepo, PalletTypeRepo palletTypeRepo, PalletContentRepo palletContentRepo, InventoryRepo inventoryRepo, TransferRepo transferRepo, TruckRepo truckRepo) {
         this.palletRepo = palletRepo;
         this.containerRepo = containerRepo;
         this.palletTypeRepo = palletTypeRepo;
         this.palletContentRepo = palletContentRepo;
         this.inventoryRepo = inventoryRepo;
         this.transferRepo = transferRepo;
+        this.truckRepo = truckRepo;
     }
 
 
-    public Transfer newTransfer(Long deliveryId, Inventory transferFrom, Inventory transferUsing, Inventory transferTo) {
-        Transfer transfer = new Transfer(deliveryId, transferFrom, transferUsing, transferTo);
+    public Truck newTruck(Long truckId, String driverName) {
+        Truck truck = new Truck(truckId, driverName);
+        truckRepo.save(truck);
+        return (truck);
+    }
+
+    public Transfer newTransfer(Long deliveryId, Inventory transferFrom, Truck transferTruck, Inventory transferTo) {
+        Transfer transfer = new Transfer(deliveryId, transferFrom, transferTruck, transferTo);
         transferRepo.save(transfer);
         return (transfer);
     }
 
-    public void refreshTransfer(Transfer transfer) {
-        String[] data = palletRepo.totalGrossWeightByTransfer(transfer).split(",");
-        transfer.refresh(Double.parseDouble(data[0]), Double.parseDouble(data[1]), Integer.parseInt(data[2]));
-    }
-
-    public void addToDeliver(Pallet pallet, Transfer transfer) {
-        transfer.addToDelivery(pallet);
-        pallet.setTransfer(transfer);
-        palletRepo.save(pallet);
-        refreshTransfer(transfer);
+    public void addPalletToTransfer(Pallet pallet, Transfer transfer) {
+        transfer.addToTransfer(pallet);
         transferRepo.save(transfer);
     }
     public PalletType newPalletType(String name, double weight) {

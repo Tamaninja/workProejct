@@ -14,7 +14,7 @@ public class Pallet implements Serializable {
     @Column(nullable = false,name = "pallet_weight_gross")
     private double palletWeightGross;
 
-    @Column(name = "pallet_weight_net")
+    @Column(name = "pallet_weight_net", nullable = false)
     private double palletWeightNet;
 
 
@@ -32,8 +32,6 @@ public class Pallet implements Serializable {
     private PalletType palletType;
 
 
-
-
     @Column(nullable = false, updatable = false, name = "pallet_timestamp")
     @CreationTimestamp
     private Date palletTimestamp;
@@ -46,17 +44,6 @@ public class Pallet implements Serializable {
     @JoinColumn(name = "pallet_content")
     private PalletContent palletContent;
 
-    @ManyToOne
-    @JoinColumn(name = "pallet_transfer_id")
-    private Transfer transfer;
-
-    public Transfer getTransfer() {
-        return transfer;
-    }
-
-    public void setTransfer(Transfer transfer) {
-        this.transfer = transfer;
-    }
 
     public Pallet(Long palletBarcode, PalletType palletType, PalletContainer palletContainer, Integer palletAmount, PalletContent palletContent, double weight, Inventory palletInventory) {
         this.palletBarcode = palletBarcode;
@@ -71,14 +58,6 @@ public class Pallet implements Serializable {
 
     public Pallet(){
 
-    }
-
-    public double getPalletWeightGross() {
-        return palletWeightGross;
-    }
-
-    public double getPalletWeightNet() {
-        return palletWeightNet;
     }
 
     @Override

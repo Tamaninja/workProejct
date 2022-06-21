@@ -17,6 +17,6 @@ public interface PalletRepo extends JpaRepository<Pallet,Long> {
     @Query(value = "SELECT max(p.id) FROM pallet p")
     Long maxId();
 
-    @Query(value = "SELECT sum(p.palletWeightGross), sum(p.palletWeightNet), sum(p.palletAmount) FROM pallet p WHERE p.transfer = :transfer_id")
-    String totalGrossWeightByTransfer(@Param("transfer_id") Transfer transfer);
+//    @Query(value = "SELECT sum(p.palletWeightGross), sum(p.palletWeightNet), sum(p.palletAmount) FROM pallet p WHERE p.transfer = :transfer_id")
+//    String totalGrossWeightByTransfer(@Param("transfer_id") Transfer transfer);
 }

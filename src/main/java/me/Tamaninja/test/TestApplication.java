@@ -3,6 +3,7 @@ package me.Tamaninja.test;
 import me.Tamaninja.test.entity.Inventory;
 import me.Tamaninja.test.entity.Pallet;
 import me.Tamaninja.test.entity.Transfer;
+import me.Tamaninja.test.entity.Truck;
 import me.Tamaninja.test.service.InventoryManagementService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -28,15 +29,15 @@ public class TestApplication {
 				inventoryManagementService.newPalletContent("wet");
 				Inventory inv150 = inventoryManagementService.newLocation(150L,"masua warehouse");
 				Inventory inv200 = inventoryManagementService.newLocation(200L,"tamar tov");
-				Inventory truck = inventoryManagementService.newLocation(111111111L,"truck");
 				Pallet pallet1 = inventoryManagementService.savePallet(200L, 1L, 2L, null, "dry", 300, 150L);
 				Pallet pallet2 = inventoryManagementService.savePallet(null, 2L, 1L, null, "wet", 250, 200L);
 				Pallet pallet3 = inventoryManagementService.savePallet(null, 1L, 2L, null, "wet", 300, 200L);
-				Transfer transfer = inventoryManagementService.newTransfer(303030L,inv150, truck, inv200);
-				inventoryManagementService.addToDeliver(pallet1, transfer);
-				inventoryManagementService.addToDeliver(pallet2,transfer);
-				Transfer transfer1 = inventoryManagementService.newTransfer(303031L,inv150,truck,inv200);
-				inventoryManagementService.addToDeliver(pallet3,transfer1);
+				Truck truck1 = inventoryManagementService.newTruck(999999999L,"tama ninja");
+				Transfer transfer = inventoryManagementService.newTransfer(303030L,inv150, truck1, inv200);
+				inventoryManagementService.addPalletToTransfer(pallet1, transfer);
+				inventoryManagementService.addPalletToTransfer(pallet2,transfer);
+				Transfer transfer1 = inventoryManagementService.newTransfer(303031L,inv150,truck1,inv200);
+				inventoryManagementService.addPalletToTransfer(pallet2,transfer1);
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
 			}

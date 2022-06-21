@@ -5,9 +5,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
-
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 
 
@@ -23,49 +22,37 @@ public class Transfer implements Serializable {
     private Inventory transferFrom;
 
     @ManyToOne()
-    @JoinColumn(name = "transfer_using", referencedColumnName = "INVENTORY_ID")
-    private Inventory transferUsing;
+    @JoinColumn(name = "transfer_truck_id", referencedColumnName = "truck_id")
+    private Truck transferTruck;
 
     @ManyToOne()
     @JoinColumn(name = "transfer_to", referencedColumnName = "INVENTORY_ID")
     private Inventory transferTo;
-
-    @Column(name = "transfer_weight_gross")
-    double weight_gross;
-
-    @Column(name = "transfer_weight_net")
-    double weight_net;
-
-    @Column(name = "transfer_amount")
-    Integer transferAmount;
-
 
 
     @Column(nullable = false, updatable = false, name = "transfer_timestamp")
     @CreationTimestamp
     private Date transferTimestamp;
 
-    @OneToMany(mappedBy = "transfer")
-    private List<Pallet> pallets = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(name = "transfer_pallets",
+            joinColumns = @JoinColumn(name = "transfer_id"),
+            inverseJoinColumns = @JoinColumn(name = "pallet_barcode"))
+    private Collection<Pallet> pallets = new ArrayList<>();
 
-    public Transfer(Long transferId, Inventory transferFrom, Inventory transferUsing, Inventory transferTo) {
+
+
+    public Transfer(Long transferId, Inventory transferFrom, Truck transferTruck, Inventory transferTo) {
         this.transferId = transferId;
         this.transferFrom = transferFrom;
-        this.transferUsing = transferUsing;
+        this.transferTruck = transferTruck;
         this.transferTo = transferTo;
     }
     public Transfer() {
 
     }
 
-    public void refresh(double weight_gross, double weight_net, Integer transfer_amount) {
-        this.weight_gross = weight_gross;
-        this.weight_net = weight_net;
-        this.transferAmount = transfer_amount;
-    }
-
-
-    public void addToDelivery(Pallet pallet) {
+    public void addToTransfer(Pallet pallet) {
         pallets.add(pallet);
     }
 }

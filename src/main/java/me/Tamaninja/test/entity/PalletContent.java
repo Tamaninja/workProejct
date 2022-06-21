@@ -1,7 +1,5 @@
 package me.Tamaninja.test.entity;
 
-import org.springframework.context.annotation.Primary;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
