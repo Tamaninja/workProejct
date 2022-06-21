@@ -24,7 +24,7 @@ public class Pallet implements Serializable {
 
 
     @Column(name = "pallet_container_amount")
-    private Integer amount;
+    private Integer palletAmount;
 
 
     @ManyToOne
@@ -58,15 +58,15 @@ public class Pallet implements Serializable {
         this.transfer = transfer;
     }
 
-    public Pallet(Long palletBarcode, PalletType palletType, PalletContainer palletContainer, Integer amount, PalletContent palletContent, double weight, Inventory palletInventory) {
+    public Pallet(Long palletBarcode, PalletType palletType, PalletContainer palletContainer, Integer palletAmount, PalletContent palletContent, double weight, Inventory palletInventory) {
         this.palletBarcode = palletBarcode;
         this.palletWeightGross = weight;
         this.palletContainer = palletContainer;
         this.palletType = palletType;
         this.palletContent = palletContent;
         this.palletInventory = palletInventory;
-        this.amount = amount;
-        this.palletWeightNet = (palletWeightGross - (palletContainer.getWeight() * amount) - palletType.getWeight());
+        this.palletAmount = palletAmount;
+        this.palletWeightNet = (palletWeightGross - (palletContainer.getWeight() * palletAmount) - palletType.getWeight());
     }
 
     public Pallet(){
@@ -88,7 +88,7 @@ public class Pallet implements Serializable {
                 ", palletWeightGross=" + palletWeightGross +
                 ", palletWeightNet=" + palletWeightNet +
                 ", palletContainer=" + palletContainer +
-                ", amount=" + amount +
+                ", amount=" + palletAmount +
                 ", palletType=" + palletType +
                 ", palletTimestamp=" + palletTimestamp +
                 ", palletInventory=" + palletInventory +

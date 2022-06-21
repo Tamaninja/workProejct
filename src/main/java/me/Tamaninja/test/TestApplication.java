@@ -37,7 +37,6 @@ public class TestApplication {
 				inventoryManagementService.addToDeliver(pallet2,transfer);
 				Transfer transfer1 = inventoryManagementService.newTransfer(303031L,inv150,truck,inv200);
 				inventoryManagementService.addToDeliver(pallet3,transfer1);
-
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
 			}

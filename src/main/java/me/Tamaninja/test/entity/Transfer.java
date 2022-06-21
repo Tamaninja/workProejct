@@ -36,6 +36,9 @@ public class Transfer implements Serializable {
     @Column(name = "transfer_weight_net")
     double weight_net;
 
+    @Column(name = "transfer_amount")
+    Integer transferAmount;
+
 
 
     @Column(nullable = false, updatable = false, name = "transfer_timestamp")
@@ -55,21 +58,14 @@ public class Transfer implements Serializable {
 
     }
 
-    public void refresh() {
-        weight_gross = 0;
-        weight_net = 0;
-        for (Pallet pallet:pallets) {
-            weight_gross = weight_gross + pallet.getPalletWeightGross();
-            weight_net = weight_net + pallet.getPalletWeightNet();
-        }
-
+    public void refresh(double weight_gross, double weight_net, Integer transfer_amount) {
+        this.weight_gross = weight_gross;
+        this.weight_net = weight_net;
+        this.transferAmount = transfer_amount;
     }
 
 
     public void addToDelivery(Pallet pallet) {
         pallets.add(pallet);
-        this.refresh();
     }
-
-
 }

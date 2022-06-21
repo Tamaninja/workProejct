@@ -5,6 +5,9 @@ import me.Tamaninja.test.enums.Errors;
 import me.Tamaninja.test.repository.*;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class InventoryManagementService {
     private final PalletRepo palletRepo;
@@ -30,10 +33,16 @@ public class InventoryManagementService {
         return (transfer);
     }
 
+    public void refreshTransfer(Transfer transfer) {
+        String[] data = palletRepo.totalGrossWeightByTransfer(transfer).split(",");
+        transfer.refresh(Double.parseDouble(data[0]), Double.parseDouble(data[1]), Integer.parseInt(data[2]));
+    }
+
     public void addToDeliver(Pallet pallet, Transfer transfer) {
         transfer.addToDelivery(pallet);
         pallet.setTransfer(transfer);
         palletRepo.save(pallet);
+        refreshTransfer(transfer);
         transferRepo.save(transfer);
     }
     public PalletType newPalletType(String name, double weight) {
