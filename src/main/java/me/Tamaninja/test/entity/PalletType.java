@@ -4,16 +4,16 @@ package me.Tamaninja.test.entity;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity(name = "pallet_types")
+@Entity(name = "palletType")
 
 public class PalletType implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "pallet_type_id", nullable = false, unique = true)
+    @Column(name = "palletType_id", nullable = false, unique = true)
     private Long id;
-    @Column(name = "pallet_type_name", nullable = false, unique = true)
+    @Column(name = "palletType_name", nullable = false, unique = true)
     private String name;
-    @Column(name = "pallet_type_weight", nullable = false)
+    @Column(name = "palletType_weight", nullable = false)
     private double weight;
 
     public PalletType(String name, double weight) {

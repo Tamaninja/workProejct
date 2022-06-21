@@ -4,20 +4,20 @@ package me.Tamaninja.test.entity;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity(name = "pallet_containers")
+@Entity(name = "palletContainer")
 
 public class PalletContainer implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "container_id", nullable = false, unique = true)
+    @Column(name = "palletContainer_id", nullable = false, unique = true)
     private Long id;
-    @Column(name = "container_name", nullable = false, unique = true)
+    @Column(name = "palletContainer_name", nullable = false, unique = true)
     private String name;
-    @Column(name = "container_weight", nullable = false)
+    @Column(name = "palletContainer_weight", nullable = false)
     private double weight;
 
-    @Column(name = "container_amount", nullable = false)
+    @Column(name = "palletContainer_amount", nullable = false)
     private int defaultAmount;
 
     public PalletContainer(String name, double weight, int defaultAmount) {

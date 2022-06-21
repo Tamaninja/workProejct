@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface PalletRepo extends JpaRepository<Pallet,Long> {
 
 
-    @Query(value = "SELECT max(p.id) FROM pallets p")
+    @Query(value = "SELECT max(p.id) FROM pallet p")
     Long maxId();
 }

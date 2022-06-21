@@ -6,77 +6,81 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
-@Entity(name = "pallets")
+@Entity(name = "pallet")
 public class Pallet implements Serializable {
     @Id
     @Column(nullable = false,name = "pallet_barcode",unique = true)
-    private Long barcode;
+    private Long palletBarcode;
     @Column(nullable = false,name = "pallet_weight_gross")
-    private double weightGross;
+    private double palletWeightGross;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "pallet_container_name", referencedColumnName = "container_name")
+    @Column(name = "pallet_weight_net")
+    private double palletWeightNet;
+
+
+    @ManyToOne
+    @JoinColumn(name = "pallet_container")
     private PalletContainer palletContainer;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "pallet_type_name",referencedColumnName = "pallet_type_name")
-    private PalletType palletType;
 
-    @OneToOne(cascade =  CascadeType.ALL)
-    @JoinColumn(name = "pallet_content", referencedColumnName = "pallet_content")
-    private PalletContent palletContent;
-
-    @OneToOne(cascade =  CascadeType.ALL)
-    @JoinColumn(name = "pallet_location", referencedColumnName = "location_id")
-    private Location palletLocation;
-
-
-    @Column(nullable = true, name = "pallet_container_amount")
+    @Column(name = "pallet_container_amount")
     private Integer amount;
 
-    @Column(nullable = true, name = "pallet_weight_net")
-    private double weightNet;
 
-    @Column(nullable = false, updatable = false)
+    @ManyToOne
+    @JoinColumn(name = "pallet_type")
+    private PalletType palletType;
+
+
+
+
+    @Column(nullable = false, updatable = false, name = "pallet_timestamp")
     @CreationTimestamp
-    private Date created_at;
+    private Date palletTimestamp;
 
-    @ManyToOne()
-    @JoinColumn(name = "deliveryId")
-    private Transfer transfer;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "pallet_inventory_id", nullable = false)
+    private Inventory palletInventory;
 
-    public Pallet(Long barcode, PalletType palletType, PalletContainer palletContainer, Integer amount, PalletContent palletContent, double weight, Location palletLocation, Transfer transfer) {
-        this.barcode = barcode;
-        this.weightGross = weight;
+    @ManyToOne
+    @JoinColumn(name = "pallet_content")
+    private PalletContent palletContent;
+
+    public Pallet(Long palletBarcode, PalletType palletType, PalletContainer palletContainer, Integer amount, PalletContent palletContent, double weight, Inventory palletInventory) {
+        this.palletBarcode = palletBarcode;
+        this.palletWeightGross = weight;
         this.palletContainer = palletContainer;
         this.palletType = palletType;
         this.palletContent = palletContent;
-        this.palletLocation = palletLocation;
+        this.palletInventory = palletInventory;
         this.amount = amount;
-        this.weightNet = (weightGross - (palletContainer.getWeight() * amount) - palletType.getWeight());
-        this.transfer = transfer;
+        this.palletWeightNet = (palletWeightGross - (palletContainer.getWeight() * amount) - palletType.getWeight());
     }
 
     public Pallet(){
 
     }
 
-    public void setTransfer(Transfer transfer) {
-        this.transfer = transfer;
+    public double getPalletWeightGross() {
+        return palletWeightGross;
+    }
+
+    public double getPalletWeightNet() {
+        return palletWeightNet;
     }
 
     @Override
     public String toString() {
         return "Pallet{" +
-                "barcode=" + barcode +
-                ", weightGross=" + weightGross +
+                "palletBarcode=" + palletBarcode +
+                ", palletWeightGross=" + palletWeightGross +
+                ", palletWeightNet=" + palletWeightNet +
                 ", palletContainer=" + palletContainer +
-                ", palletType=" + palletType +
-                ", palletContent=" + palletContent +
-                ", palletLocation=" + palletLocation +
                 ", amount=" + amount +
-                ", weightNet=" + weightNet +
-                ", created_at=" + created_at +
+                ", palletType=" + palletType +
+                ", palletTimestamp=" + palletTimestamp +
+                ", palletInventory=" + palletInventory +
+                ", palletContent=" + palletContent +
                 '}';
     }
 }

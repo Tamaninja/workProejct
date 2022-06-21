@@ -7,11 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.Serializable;
 
-@Entity(name = "pallet_contents")
+@Entity(name = "palletContent")
 public class PalletContent implements Serializable {
 
     @Id
-    @Column(name = "pallet_content", nullable = false, unique = true)
+    @Column(name = "palletContent_name", nullable = false, unique = true)
     private String name;
 
     public PalletContent(String name) {
