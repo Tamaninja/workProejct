@@ -32,6 +32,7 @@ public class InventoryManagementService {
 
     public void addToDeliver(Pallet pallet, Transfer transfer) {
         transfer.addToDelivery(pallet);
+        pallet.setTransfer(transfer);
         palletRepo.save(pallet);
         transferRepo.save(transfer);
     }

@@ -46,6 +46,18 @@ public class Pallet implements Serializable {
     @JoinColumn(name = "pallet_content")
     private PalletContent palletContent;
 
+    @ManyToOne
+    @JoinColumn(name = "pallet_transfer_id")
+    private Transfer transfer;
+
+    public Transfer getTransfer() {
+        return transfer;
+    }
+
+    public void setTransfer(Transfer transfer) {
+        this.transfer = transfer;
+    }
+
     public Pallet(Long palletBarcode, PalletType palletType, PalletContainer palletContainer, Integer amount, PalletContent palletContent, double weight, Inventory palletInventory) {
         this.palletBarcode = palletBarcode;
         this.palletWeightGross = weight;

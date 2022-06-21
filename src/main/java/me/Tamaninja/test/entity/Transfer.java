@@ -36,14 +36,14 @@ public class Transfer implements Serializable {
     @Column(name = "transfer_weight_net")
     double weight_net;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "pallet_transfer_id")
-    private List<Pallet> pallets = new ArrayList<>();
+
 
     @Column(nullable = false, updatable = false, name = "transfer_timestamp")
     @CreationTimestamp
     private Date transferTimestamp;
 
+    @OneToMany(mappedBy = "transfer")
+    private List<Pallet> pallets = new ArrayList<>();
 
     public Transfer(Long transferId, Inventory transferFrom, Inventory transferUsing, Inventory transferTo) {
         this.transferId = transferId;
