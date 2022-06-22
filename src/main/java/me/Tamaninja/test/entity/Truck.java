@@ -8,11 +8,11 @@ import javax.persistence.Id;
 public class Truck {
     @Id
     @Column(nullable = false,name = "truck_id",unique = true)
-    private Long truckId;
+    private Integer truckId;
     @Column(name = "truck_driver")
     private String driverName;
 
-    public Truck(Long truckId, String driverName) {
+    public Truck(Integer truckId, String driverName) {
         this.truckId = truckId;
         this.driverName = driverName;
     }

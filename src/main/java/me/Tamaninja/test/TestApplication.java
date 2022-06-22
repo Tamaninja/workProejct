@@ -10,6 +10,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.util.Random;
+
 @SpringBootApplication
 public class TestApplication {
 	public static void main(String[] args) {
@@ -21,23 +23,31 @@ public class TestApplication {
 	public CommandLineRunner run(InventoryManagementService inventoryManagementService) throws Exception {
 		return args -> {
 			try {
-				inventoryManagementService.newPalletContainer("tray",0.97,100);
-				inventoryManagementService.newPalletContainer("smalltray",0.27,200);
+				inventoryManagementService.newPalletContainer("tray",0.97, (short) 100);
+				inventoryManagementService.newPalletContainer("smalltray",0.27,(short) 200);
+				inventoryManagementService.newPalletContainer("bigtray",0.72,(short) 150);
 				inventoryManagementService.newPalletType("wooden", 15);
 				inventoryManagementService.newPalletType("plastic", 20);
+				inventoryManagementService.newPalletType("bigwooden", 18);
 				inventoryManagementService.newPalletContent("dry");
 				inventoryManagementService.newPalletContent("wet");
-				Inventory inv150 = inventoryManagementService.newLocation(150L,"masua warehouse");
-				Inventory inv200 = inventoryManagementService.newLocation(200L,"tamar tov");
-				Pallet pallet1 = inventoryManagementService.savePallet(200L, 1L, 2L, null, "dry", 300, 150L);
-				Pallet pallet2 = inventoryManagementService.savePallet(null, 2L, 1L, null, "wet", 250, 200L);
-				Pallet pallet3 = inventoryManagementService.savePallet(null, 1L, 2L, null, "wet", 300, 200L);
-				Truck truck1 = inventoryManagementService.newTruck(999999999L,"tama ninja");
-				Transfer transfer = inventoryManagementService.newTransfer(303030L,inv150, truck1, inv200);
-				inventoryManagementService.addPalletToTransfer(pallet1, transfer);
-				inventoryManagementService.addPalletToTransfer(pallet2,transfer);
-				Transfer transfer1 = inventoryManagementService.newTransfer(303031L,inv150,truck1,inv200);
-				inventoryManagementService.addPalletToTransfer(pallet2,transfer1);
+				inventoryManagementService.newPalletContent("garbage");
+				Inventory inv150 = inventoryManagementService.newLocation(150,"masua warehouse");
+				Inventory inv200 = inventoryManagementService.newLocation(200,"tamar tov");
+				Truck truck1 = inventoryManagementService.newTruck(999999999,"tama ninja");
+				Transfer transfer = inventoryManagementService.newTransfer(303030,inv150, truck1, inv200);
+				Transfer transfer1 = inventoryManagementService.newTransfer(303031,inv150,truck1,inv200);
+
+
+				Random random = new Random();
+				for (int i = 0; i < 10000; i++) {
+					int randomType = random.nextInt(3) + 1;
+					int randomContainer = random.nextInt(3) + 1;
+					int randomContent = random.nextInt(3) + 1;
+					Short randomAmount = (short) random.nextInt(200);
+					float randomWeight = random.nextFloat();
+					inventoryManagementService.savePallet(null, randomType, randomContainer, randomAmount, randomContent, randomWeight, 150);
+				}
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
 			}

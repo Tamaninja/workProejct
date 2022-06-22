@@ -11,12 +11,12 @@ public class Inventory implements Serializable {
 
     @Id
     @Column(name = "inventory_id", nullable = false, unique = true)
-    private Long inventoryId;
+    private Integer inventoryId;
 
     @Column(name = "inventory_description")
     private String description;
 
-    public Inventory(Long inventoryId, String description) {
+    public Inventory(Integer inventoryId, String description) {
         this.inventoryId = inventoryId;
         this.description = description;
     }

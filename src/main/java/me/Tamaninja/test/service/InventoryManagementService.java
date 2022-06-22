@@ -26,13 +26,13 @@ public class InventoryManagementService {
     }
 
 
-    public Truck newTruck(Long truckId, String driverName) {
+    public Truck newTruck(Integer truckId, String driverName) {
         Truck truck = new Truck(truckId, driverName);
         truckRepo.save(truck);
         return (truck);
     }
 
-    public Transfer newTransfer(Long deliveryId, Inventory transferFrom, Truck transferTruck, Inventory transferTo) {
+    public Transfer newTransfer(Integer deliveryId, Inventory transferFrom, Truck transferTruck, Inventory transferTo) {
         Transfer transfer = new Transfer(deliveryId, transferFrom, transferTruck, transferTo);
         transferRepo.save(transfer);
         return (transfer);
@@ -49,23 +49,22 @@ public class InventoryManagementService {
     }
 
     public PalletContent newPalletContent(String name) {
-        if (palletContentRepo.existsById("name")) {System.out.println(Errors.ALREADY_EXISTS); return null;} //return if already exists
         PalletContent palletContent = new PalletContent(name);
         palletContentRepo.save(palletContent);
         return (palletContent);
     }
-    public PalletContainer newPalletContainer(String name, double weight, int defaultAmount) {
+    public PalletContainer newPalletContainer(String name, double weight, Short defaultAmount) {
         PalletContainer palletContainer = new PalletContainer(name,weight,defaultAmount);
         containerRepo.save(palletContainer);
         return (palletContainer);
     }
-    public Inventory newLocation(Long id, String description) {
+    public Inventory newLocation(Integer id, String description) {
         Inventory inventory = new Inventory(id, description);
         inventoryRepo.save(inventory);
         return (inventory);
     }
 
-    public Pallet savePallet(Long barcode, Long palletTypeId, Long palletContainerId, Integer amount, String content, double weightGross, Long locationId) {
+    public Pallet savePallet(Long barcode, Integer palletTypeId, Integer palletContainerId, Short amount, Integer content, float weightGross, Integer locationId) {
         PalletContainer palletContainer = containerRepo.findById(palletContainerId).orElseThrow(() -> new RuntimeException(Errors.PALLET_CONTAINER_NOT_FOUND.toString()));
         PalletType palletType = palletTypeRepo.findById(palletTypeId).orElseThrow(() -> new RuntimeException(Errors.PALLET_TYPE_NOT_FOUND.toString()));
         PalletContent palletContent = palletContentRepo.findById(content).orElseThrow(() -> new RuntimeException(Errors.PALLET_CONTENTS_NOT_FOUND.toString()));

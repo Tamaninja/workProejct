@@ -15,7 +15,7 @@ public class Transfer implements Serializable {
 
     @Id
     @Column(name = "transfer_id", unique = true)
-    private Long transferId;
+    private Integer transferId;
 
     @ManyToOne()
     @JoinColumn(name = "transfer_from", referencedColumnName = "INVENTORY_ID")
@@ -42,7 +42,7 @@ public class Transfer implements Serializable {
 
 
 
-    public Transfer(Long transferId, Inventory transferFrom, Truck transferTruck, Inventory transferTo) {
+    public Transfer(Integer transferId, Inventory transferFrom, Truck transferTruck, Inventory transferTo) {
         this.transferId = transferId;
         this.transferFrom = transferFrom;
         this.transferTruck = transferTruck;

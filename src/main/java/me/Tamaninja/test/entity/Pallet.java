@@ -4,6 +4,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
+
 import java.util.Date;
 
 @Entity(name = "pallet")
@@ -11,11 +12,11 @@ public class Pallet implements Serializable {
     @Id
     @Column(nullable = false,name = "pallet_barcode",unique = true)
     private Long palletBarcode;
-    @Column(nullable = false,name = "pallet_weight_gross")
-    private double palletWeightGross;
+    @Column(nullable = false,name = "pallet_weight_gross",precision = 6,scale = 2)
+    private float palletWeightGross;
 
-    @Column(name = "pallet_weight_net", nullable = false)
-    private double palletWeightNet;
+    @Column(name = "pallet_weight_net", nullable = false,precision = 6,scale = 2)
+    private float palletWeightNet;
 
 
     @ManyToOne
@@ -24,7 +25,7 @@ public class Pallet implements Serializable {
 
 
     @Column(name = "pallet_container_amount")
-    private Integer palletAmount;
+    private short palletAmount;
 
 
     @ManyToOne
@@ -45,20 +46,21 @@ public class Pallet implements Serializable {
     private PalletContent palletContent;
 
 
-    public Pallet(Long palletBarcode, PalletType palletType, PalletContainer palletContainer, Integer palletAmount, PalletContent palletContent, double weight, Inventory palletInventory) {
+    public Pallet(Long palletBarcode, PalletType palletType, PalletContainer palletContainer, short palletAmount, PalletContent palletContent, float weight, Inventory palletInventory) {
         this.palletBarcode = palletBarcode;
-        this.palletWeightGross = weight;
+        this.palletWeightGross = (float) weight;
         this.palletContainer = palletContainer;
         this.palletType = palletType;
         this.palletContent = palletContent;
         this.palletInventory = palletInventory;
         this.palletAmount = palletAmount;
-        this.palletWeightNet = (palletWeightGross - (palletContainer.getWeight() * palletAmount) - palletType.getWeight());
+        this.palletWeightNet = (float) (weight - (palletContainer.getWeight() * palletAmount) - palletType.getWeight());
     }
 
     public Pallet(){
 
     }
+
 
     @Override
     public String toString() {
@@ -67,7 +69,7 @@ public class Pallet implements Serializable {
                 ", palletWeightGross=" + palletWeightGross +
                 ", palletWeightNet=" + palletWeightNet +
                 ", palletContainer=" + palletContainer +
-                ", amount=" + palletAmount +
+                ", palletAmount=" + palletAmount +
                 ", palletType=" + palletType +
                 ", palletTimestamp=" + palletTimestamp +
                 ", palletInventory=" + palletInventory +

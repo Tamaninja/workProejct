@@ -21,12 +21,12 @@ public class ManagementController {
     @PostMapping("/create")
     public String test2(
             @RequestParam(required = false, value="barcode") Long barcode,
-            @RequestParam("weight") double weight,
-            @RequestParam("containerId") Long containerId,
-            @RequestParam("containerTypeId") Long containerTypeId,
-            @RequestParam("palletContent") String palletContent,
-            @RequestParam("location") Long locationId,
-            @RequestParam(required = false, value="amount") Integer amount) {
+            @RequestParam("weight") float weight,
+            @RequestParam("containerId") Integer containerId,
+            @RequestParam("containerTypeId") Integer containerTypeId,
+            @RequestParam("palletContent") Integer palletContent,
+            @RequestParam("location") Integer locationId,
+            @RequestParam(required = false, value="amount") Short amount) {
         return (inventoryManagementService.savePallet(barcode, containerTypeId, containerId, amount, palletContent, weight, locationId).toString());
     }
 }

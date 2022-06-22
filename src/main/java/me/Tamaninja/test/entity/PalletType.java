@@ -10,7 +10,7 @@ public class PalletType implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "palletType_id", nullable = false, unique = true)
-    private Long id;
+    private Integer id;
     @Column(name = "palletType_name", nullable = false, unique = true)
     private String name;
     @Column(name = "palletType_weight", nullable = false)
