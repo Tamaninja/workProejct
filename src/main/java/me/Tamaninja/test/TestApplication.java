@@ -48,6 +48,7 @@ public class TestApplication {
 					Pallet pallet = inventoryManagementService.savePallet(null, randomType, randomContainer, randomAmount, randomContent, randomWeight, 150);
 					inventoryManagementService.addTransfer(pallet, transfer);
 				}
+				System.out.println(inv150.getSentPallets());
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
 			}

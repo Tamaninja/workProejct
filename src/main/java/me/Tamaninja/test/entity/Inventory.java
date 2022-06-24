@@ -1,11 +1,9 @@
 package me.Tamaninja.test.entity;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "inventory")
@@ -14,23 +12,24 @@ public class Inventory implements Serializable {
     @Id
     @Column(nullable = false, unique = true)
     private Integer id;
-    private String description;
+
+    @Column(nullable = false, unique = true)
+    private String name;
 
 
-    @OneToMany(mappedBy = "inventory")
-    private List<Pallet> pallets;
-
-    @OneToMany(mappedBy = "origin")
+    @OneToMany(mappedBy = "origin", fetch = FetchType.LAZY)
     private List<Transfer> sent;
 
-    @OneToMany(mappedBy = "destination")
+
+    @OneToMany(mappedBy = "destination", fetch = FetchType.LAZY)
     private List<Transfer> received;
 
+    @OneToMany(mappedBy = "inventory", fetch = FetchType.LAZY)
+    private List<Pallet> pallets = new ArrayList<>();
 
-
-    public Inventory(Integer inventoryId, String description) {
+    public Inventory(Integer inventoryId, String name) {
         this.id = inventoryId;
-        this.description = description;
+        this.name = name;
     }
 
     public Inventory() {}
@@ -39,10 +38,7 @@ public class Inventory implements Serializable {
     public String toString() {
         return "Inventory{" +
                 "id=" + id +
-                ", description='" + description + '\'' +
-                ", pallets=" + pallets +
-                ", sent=" + sent +
-                ", received=" + received +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

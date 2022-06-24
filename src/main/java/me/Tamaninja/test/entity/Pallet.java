@@ -18,30 +18,29 @@ public class Pallet implements Serializable {
 
     @Column(nullable = false,precision = 6,scale = 2)
     private float weightGross;
-
     @Column(nullable = false,precision = 6,scale = 2)
     private float weightNet;
 
-
-
     @ManyToOne(optional = false)
+    @JoinColumn(referencedColumnName = "name")
     private PalletContainer palletContainer;
     @ManyToOne(optional = false)
+    @JoinColumn(referencedColumnName = "name")
     private PalletType palletType;
     @ManyToOne(optional = false)
+    @JoinColumn(referencedColumnName = "name")
     private Inventory inventory;
     @ManyToOne(optional = false)
+    @JoinColumn(referencedColumnName = "name")
     private PalletContent palletContent;
 
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<Transfer> transfers = new ArrayList<>();
 
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
     private Date timestamp;
-
-
 
     public Pallet(Long barcode, PalletType palletType, PalletContainer palletContainer, short palletAmount, PalletContent palletContent, float weightGross, Inventory palletInventory) {
         this.barcode = barcode;
