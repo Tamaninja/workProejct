@@ -4,20 +4,27 @@ package me.Tamaninja.test.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity(name = "inventory")
 public class Inventory implements Serializable {
 
     @Id
-    @Column(name = "inventory_id", nullable = false, unique = true)
-    private Integer inventoryId;
-
-    @Column(name = "inventory_description")
+    @Column(nullable = false, unique = true)
+    private Integer id;
     private String description;
 
+
+    @OneToMany(mappedBy = "inventory")
+    private List<Pallet> pallets;
+    @OneToMany(mappedBy = "transferTo")
+    private List<Transfer> transfers;
+
+
     public Inventory(Integer inventoryId, String description) {
-        this.inventoryId = inventoryId;
+        this.id = inventoryId;
         this.description = description;
     }
 
@@ -26,8 +33,9 @@ public class Inventory implements Serializable {
     @Override
     public String toString() {
         return "Inventory{" +
-                "inventoryId=" + inventoryId +
+                "id=" + id +
                 ", description='" + description + '\'' +
+                ", transfers=" + transfers +
                 '}';
     }
 }

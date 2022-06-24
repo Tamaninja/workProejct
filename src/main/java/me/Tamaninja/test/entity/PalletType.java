@@ -3,20 +3,23 @@ package me.Tamaninja.test.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity(name = "palletType")
 
 public class PalletType implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "palletType_id", nullable = false, unique = true)
     private Integer id;
-    @Column(name = "palletType_name", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String name;
-    @Column(name = "palletType_weight", nullable = false)
-    private double weight;
+    @Column(nullable = false)
+    private float weight;
 
-    public PalletType(String name, double weight) {
+    @OneToMany(mappedBy = "palletType")
+    private List<Pallet> pallets;
+
+    public PalletType(String name, float weight) {
         this.name = name;
         this.weight = weight;
     }

@@ -10,70 +10,58 @@ import java.util.Date;
 @Entity(name = "pallet")
 public class Pallet implements Serializable {
     @Id
-    @Column(nullable = false,name = "pallet_barcode",unique = true)
-    private Long palletBarcode;
-    @Column(nullable = false,name = "pallet_weight_gross",precision = 6,scale = 2)
-    private float palletWeightGross;
-
-    @Column(name = "pallet_weight_net", nullable = false,precision = 6,scale = 2)
-    private float palletWeightNet;
-
-
-    @ManyToOne
-    @JoinColumn(name = "pallet_container")
-    private PalletContainer palletContainer;
-
-
-    @Column(name = "pallet_container_amount")
+    @Column(nullable = false,unique = true)
+    private Long barcode;
     private short palletAmount;
 
-
-    @ManyToOne
-    @JoinColumn(name = "pallet_type")
-    private PalletType palletType;
-
-
-    @Column(nullable = false, updatable = false, name = "pallet_timestamp")
-    @CreationTimestamp
-    private Date palletTimestamp;
-
     @ManyToOne(optional = false)
-    @JoinColumn(name = "pallet_inventory_id", nullable = false)
-    private Inventory palletInventory;
-
-    @ManyToOne
-    @JoinColumn(name = "pallet_content")
+    private PalletContainer palletContainer;
+    @ManyToOne(optional = false)
+    private PalletType palletType;
+    @ManyToOne(optional = false)
+    private Inventory inventory;
+    @ManyToOne(optional = false)
     private PalletContent palletContent;
 
 
-    public Pallet(Long palletBarcode, PalletType palletType, PalletContainer palletContainer, short palletAmount, PalletContent palletContent, float weight, Inventory palletInventory) {
-        this.palletBarcode = palletBarcode;
-        this.palletWeightGross = (float) weight;
+    @Column(nullable = false,precision = 6,scale = 2)
+    private float weightGross;
+
+    @Column(nullable = false,precision = 6,scale = 2)
+    private float weightNet;
+
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
+    private Date timestamp;
+
+
+    public Pallet(Long barcode, PalletType palletType, PalletContainer palletContainer, short palletAmount, PalletContent palletContent, float weightGross, Inventory palletInventory) {
+        this.barcode = barcode;
+        this.weightGross = weightGross;
         this.palletContainer = palletContainer;
         this.palletType = palletType;
         this.palletContent = palletContent;
-        this.palletInventory = palletInventory;
+        this.inventory = palletInventory;
         this.palletAmount = palletAmount;
-        this.palletWeightNet = (float) (weight - (palletContainer.getWeight() * palletAmount) - palletType.getWeight());
+        this.weightNet = (float) (weightGross - (palletContainer.getWeight() * palletAmount) - palletType.getWeight());
     }
 
     public Pallet(){
 
     }
 
-
     @Override
     public String toString() {
         return "Pallet{" +
-                "palletBarcode=" + palletBarcode +
-                ", palletWeightGross=" + palletWeightGross +
-                ", palletWeightNet=" + palletWeightNet +
-                ", palletContainer=" + palletContainer +
+                "barcode=" + barcode +
                 ", palletAmount=" + palletAmount +
+                ", palletContainer=" + palletContainer +
                 ", palletType=" + palletType +
-                ", palletTimestamp=" + palletTimestamp +
-                ", palletInventory=" + palletInventory +
+                ", inventory=" + inventory +
                 ", palletContent=" + palletContent +
+                ", weightGross=" + weightGross +
+                ", weightNet=" + weightNet +
+                ", timestamp=" + timestamp +
                 '}';
     }
 }

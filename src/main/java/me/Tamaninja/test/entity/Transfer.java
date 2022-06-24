@@ -13,20 +13,19 @@ import java.util.Date;
 @Entity(name = "transfer")
 public class Transfer implements Serializable {
 
+    // need to actually implement
+
     @Id
     @Column(name = "transfer_id", unique = true)
     private Integer transferId;
 
     @ManyToOne()
-    @JoinColumn(name = "transfer_from", referencedColumnName = "INVENTORY_ID")
     private Inventory transferFrom;
 
     @ManyToOne()
-    @JoinColumn(name = "transfer_truck_id", referencedColumnName = "truck_id")
-    private Truck transferTruck;
+    private Inventory transferTruck;
 
     @ManyToOne()
-    @JoinColumn(name = "transfer_to", referencedColumnName = "INVENTORY_ID")
     private Inventory transferTo;
 
 
@@ -42,7 +41,7 @@ public class Transfer implements Serializable {
 
 
 
-    public Transfer(Integer transferId, Inventory transferFrom, Truck transferTruck, Inventory transferTo) {
+    public Transfer(Integer transferId, Inventory transferFrom, Inventory transferTruck, Inventory transferTo) {
         this.transferId = transferId;
         this.transferFrom = transferFrom;
         this.transferTruck = transferTruck;
@@ -54,5 +53,16 @@ public class Transfer implements Serializable {
 
     public void addToTransfer(Pallet pallet) {
         pallets.add(pallet);
+    }
+
+    @Override
+    public String toString() {
+        return "Transfer{" +
+                "transferId=" + transferId +
+                ", transferFrom=" + transferFrom +
+                ", transferTruck=" + transferTruck +
+                ", transferTo=" + transferTo +
+                ", transferTimestamp=" + transferTimestamp +
+                '}';
     }
 }

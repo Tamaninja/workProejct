@@ -1,9 +1,7 @@
 package me.Tamaninja.test;
 
 import me.Tamaninja.test.entity.Inventory;
-import me.Tamaninja.test.entity.Pallet;
 import me.Tamaninja.test.entity.Transfer;
-import me.Tamaninja.test.entity.Truck;
 import me.Tamaninja.test.service.InventoryManagementService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -23,9 +21,9 @@ public class TestApplication {
 	public CommandLineRunner run(InventoryManagementService inventoryManagementService) throws Exception {
 		return args -> {
 			try {
-				inventoryManagementService.newPalletContainer("tray",0.97, (short) 100);
-				inventoryManagementService.newPalletContainer("smalltray",0.27,(short) 200);
-				inventoryManagementService.newPalletContainer("bigtray",0.72,(short) 150);
+				inventoryManagementService.newPalletContainer("tray",0.97f, (short) 100);
+				inventoryManagementService.newPalletContainer("smalltray",0.27f,(short) 200);
+				inventoryManagementService.newPalletContainer("bigtray",0.72f,(short) 150);
 				inventoryManagementService.newPalletType("wooden", 15);
 				inventoryManagementService.newPalletType("plastic", 20);
 				inventoryManagementService.newPalletType("bigwooden", 18);
@@ -34,7 +32,7 @@ public class TestApplication {
 				inventoryManagementService.newPalletContent("garbage");
 				Inventory inv150 = inventoryManagementService.newLocation(150,"masua warehouse");
 				Inventory inv200 = inventoryManagementService.newLocation(200,"tamar tov");
-				Truck truck1 = inventoryManagementService.newTruck(999999999,"tama ninja");
+				Inventory truck1 = inventoryManagementService.newLocation(999999999,"tama ninja");
 				Transfer transfer = inventoryManagementService.newTransfer(303030,inv150, truck1, inv200);
 				Transfer transfer1 = inventoryManagementService.newTransfer(303031,inv150,truck1,inv200);
 

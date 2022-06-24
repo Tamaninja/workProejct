@@ -3,6 +3,7 @@ package me.Tamaninja.test.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity(name = "palletContainer")
 
@@ -10,17 +11,20 @@ public class PalletContainer implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "palletContainer_id", nullable = false, unique = true)
     private Integer id;
-    @Column(name = "palletContainer_name", nullable = false, unique = true)
-    private String name;
-    @Column(name = "palletContainer_weight", nullable = false)
-    private double weight;
 
-    @Column(name = "palletContainer_amount", nullable = false)
+    @Column(nullable = false, unique = true)
+    private String name;
+    @Column(nullable = false, precision = 6, scale = 2)
+    private float weight;
+
+    @Column(nullable = false)
     private Short defaultAmount;
 
-    public PalletContainer(String name, double weight, Short defaultAmount) {
+    @OneToMany(mappedBy = "palletContainer")
+    private List<Pallet> pallet;
+
+    public PalletContainer(String name, float weight, Short defaultAmount) {
         this.name = name;
         this.weight = weight;
         this.defaultAmount = defaultAmount;

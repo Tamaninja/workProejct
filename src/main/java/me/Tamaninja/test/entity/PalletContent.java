@@ -2,19 +2,20 @@ package me.Tamaninja.test.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity(name = "palletContent")
 public class PalletContent implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "palletContent_id", nullable = false, unique = true)
     private Integer id;
 
-
-
-    @Column(name = "palletContent_name", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String name;
+
+    @OneToMany(mappedBy = "palletContent")
+    private List<Pallet> pallet;
 
     public PalletContent(String name) {
         this.name = name;
@@ -29,7 +30,8 @@ public class PalletContent implements Serializable {
     @Override
     public String toString() {
         return "PalletContent{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

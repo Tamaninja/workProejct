@@ -13,36 +13,31 @@ public class InventoryManagementService {
     private final PalletContentRepo palletContentRepo;
     private final InventoryRepo inventoryRepo;
     private final TransferRepo transferRepo;
-    private final TruckRepo truckRepo;
-
-    public InventoryManagementService(PalletRepo palletRepo, PalletContainerRepo containerRepo, PalletTypeRepo palletTypeRepo, PalletContentRepo palletContentRepo, InventoryRepo inventoryRepo, TransferRepo transferRepo, TruckRepo truckRepo) {
+    public InventoryManagementService(PalletRepo palletRepo, PalletContainerRepo containerRepo, PalletTypeRepo palletTypeRepo, PalletContentRepo palletContentRepo, InventoryRepo inventoryRepo, TransferRepo transferRepo) {
         this.palletRepo = palletRepo;
         this.containerRepo = containerRepo;
         this.palletTypeRepo = palletTypeRepo;
         this.palletContentRepo = palletContentRepo;
         this.inventoryRepo = inventoryRepo;
         this.transferRepo = transferRepo;
-        this.truckRepo = truckRepo;
     }
 
-
-    public Truck newTruck(Integer truckId, String driverName) {
-        Truck truck = new Truck(truckId, driverName);
-        truckRepo.save(truck);
-        return (truck);
-    }
-
-    public Transfer newTransfer(Integer deliveryId, Inventory transferFrom, Truck transferTruck, Inventory transferTo) {
+    public Transfer newTransfer(Integer deliveryId, Inventory transferFrom, Inventory transferTruck, Inventory transferTo) {
         Transfer transfer = new Transfer(deliveryId, transferFrom, transferTruck, transferTo);
         transferRepo.save(transfer);
         return (transfer);
+    }
+
+    public Pallet lookup(Long barcode) {
+        Pallet pallet = palletRepo.findById(barcode).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString()));
+        return (pallet);
     }
 
     public void addPalletToTransfer(Pallet pallet, Transfer transfer) {
         transfer.addToTransfer(pallet);
         transferRepo.save(transfer);
     }
-    public PalletType newPalletType(String name, double weight) {
+    public PalletType newPalletType(String name, float weight) {
         PalletType palletType = new PalletType(name, weight);
         palletTypeRepo.save(palletType);
         return (palletType);
@@ -53,7 +48,7 @@ public class InventoryManagementService {
         palletContentRepo.save(palletContent);
         return (palletContent);
     }
-    public PalletContainer newPalletContainer(String name, double weight, Short defaultAmount) {
+    public PalletContainer newPalletContainer(String name, float weight, Short defaultAmount) {
         PalletContainer palletContainer = new PalletContainer(name,weight,defaultAmount);
         containerRepo.save(palletContainer);
         return (palletContainer);
