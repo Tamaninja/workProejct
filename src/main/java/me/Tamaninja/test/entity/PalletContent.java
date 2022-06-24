@@ -2,7 +2,6 @@ package me.Tamaninja.test.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity(name = "palletContent")
 public class PalletContent implements Serializable {
@@ -13,10 +12,6 @@ public class PalletContent implements Serializable {
 
     @Column(nullable = false, unique = true)
     private String name;
-
-    @OneToMany(mappedBy = "palletContent")
-    private List<Pallet> pallet;
-
     public PalletContent(String name) {
         this.name = name;
     }

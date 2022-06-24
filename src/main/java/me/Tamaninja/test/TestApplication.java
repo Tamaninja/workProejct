@@ -1,6 +1,7 @@
 package me.Tamaninja.test;
 
 import me.Tamaninja.test.entity.Inventory;
+import me.Tamaninja.test.entity.Pallet;
 import me.Tamaninja.test.entity.Transfer;
 import me.Tamaninja.test.service.InventoryManagementService;
 import org.springframework.boot.CommandLineRunner;
@@ -44,7 +45,8 @@ public class TestApplication {
 					int randomContent = random.nextInt(3) + 1;
 					Short randomAmount = (short) random.nextInt(200);
 					float randomWeight = random.nextFloat();
-					inventoryManagementService.savePallet(null, randomType, randomContainer, randomAmount, randomContent, randomWeight, 150);
+					Pallet pallet = inventoryManagementService.savePallet(null, randomType, randomContainer, randomAmount, randomContent, randomWeight, 150);
+					inventoryManagementService.addTransfer(pallet, transfer);
 				}
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();

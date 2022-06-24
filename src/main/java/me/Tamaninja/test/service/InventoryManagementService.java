@@ -33,9 +33,9 @@ public class InventoryManagementService {
         return (pallet);
     }
 
-    public void addPalletToTransfer(Pallet pallet, Transfer transfer) {
-        transfer.addToTransfer(pallet);
-        transferRepo.save(transfer);
+    public void addTransfer(Pallet pallet, Transfer transfer) {
+        pallet.addTransfer(transfer);
+        palletRepo.save(pallet);
     }
     public PalletType newPalletType(String name, float weight) {
         PalletType palletType = new PalletType(name, weight);

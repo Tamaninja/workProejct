@@ -15,10 +15,6 @@ public class PalletType implements Serializable {
     private String name;
     @Column(nullable = false)
     private float weight;
-
-    @OneToMany(mappedBy = "palletType")
-    private List<Pallet> pallets;
-
     public PalletType(String name, float weight) {
         this.name = name;
         this.weight = weight;

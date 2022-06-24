@@ -19,8 +19,13 @@ public class Inventory implements Serializable {
 
     @OneToMany(mappedBy = "inventory")
     private List<Pallet> pallets;
-    @OneToMany(mappedBy = "transferTo")
-    private List<Transfer> transfers;
+
+    @OneToMany(mappedBy = "origin")
+    private List<Transfer> sent;
+
+    @OneToMany(mappedBy = "destination")
+    private List<Transfer> received;
+
 
 
     public Inventory(Integer inventoryId, String description) {
@@ -35,7 +40,9 @@ public class Inventory implements Serializable {
         return "Inventory{" +
                 "id=" + id +
                 ", description='" + description + '\'' +
-                ", transfers=" + transfers +
+                ", pallets=" + pallets +
+                ", sent=" + sent +
+                ", received=" + received +
                 '}';
     }
 }
