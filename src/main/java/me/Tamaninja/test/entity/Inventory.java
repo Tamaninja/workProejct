@@ -27,6 +27,10 @@ public class Inventory implements Serializable {
     private List<Transfer> received;
 
 
+    @OneToMany(mappedBy = "location", fetch = FetchType.LAZY)
+    private List<Pallet> pallets;
+
+
     public Inventory(Integer inventoryId, String name) {
         this.id = inventoryId;
         this.name = name;
@@ -42,6 +46,14 @@ public class Inventory implements Serializable {
 
     public String getName() {
         return name;
+    }
+
+    public List<Pallet> getPallets() {
+        return pallets;
+    }
+
+    public void setPallets(List<Pallet> pallets) {
+        this.pallets = pallets;
     }
 
     public void setName(String name) {

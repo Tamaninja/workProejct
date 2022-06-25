@@ -1,6 +1,7 @@
 package me.Tamaninja.test.controller;
 
 
+import me.Tamaninja.test.dto.InventoryDto;
 import me.Tamaninja.test.dto.PalletContainerDto;
 import me.Tamaninja.test.dto.PalletContentDto;
 import me.Tamaninja.test.dto.PalletDto;
@@ -23,6 +24,13 @@ public class LookupController {
     public ResponseEntity<PalletDto> findPallet(@RequestParam(required = false, value="barcode") Long barcode) {
         PalletDto palletDto = lookupService.findPallet(barcode);
         ResponseEntity<PalletDto> response = new ResponseEntity<PalletDto>(palletDto, HttpStatus.OK);
+        return (response);
+    }
+
+    @GetMapping("/inventory")
+    public ResponseEntity<InventoryDto> findInventory(@RequestParam(required = false, value="id") Integer id) {
+        InventoryDto inventoryDto = lookupService.findInventory(id);
+        ResponseEntity<InventoryDto> response = new ResponseEntity<InventoryDto>(inventoryDto, HttpStatus.OK);
         return (response);
     }
 }

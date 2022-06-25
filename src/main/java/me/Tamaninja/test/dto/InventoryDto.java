@@ -1,6 +1,5 @@
 package me.Tamaninja.test.dto;
 
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;
@@ -13,14 +12,18 @@ public class InventoryDto implements Serializable {
     private String name;
     private List<TransferDto> sent;
     private List<TransferDto> received;
+    private List<PalletDto> pallets;
 
-    public InventoryDto(Integer id, String name, List<TransferDto> sent, List<TransferDto> received) {
+    public InventoryDto() {
+    }
+
+    public InventoryDto(Integer id, String name, List<TransferDto> sent, List<TransferDto> received, List<PalletDto> pallets) {
         this.id = id;
         this.name = name;
         this.sent = sent;
         this.received = received;
+        this.pallets = pallets;
     }
-    public InventoryDto() {}
 
     public Integer getId() {
         return id;
@@ -54,6 +57,14 @@ public class InventoryDto implements Serializable {
         this.received = received;
     }
 
+    public List<PalletDto> getPallets() {
+        return pallets;
+    }
+
+    public void setPallets(List<PalletDto> pallets) {
+        this.pallets = pallets;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -62,12 +73,13 @@ public class InventoryDto implements Serializable {
         return Objects.equals(this.id, entity.id) &&
                 Objects.equals(this.name, entity.name) &&
                 Objects.equals(this.sent, entity.sent) &&
-                Objects.equals(this.received, entity.received);
+                Objects.equals(this.received, entity.received) &&
+                Objects.equals(this.pallets, entity.pallets);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, sent, received);
+        return Objects.hash(id, name, sent, received, pallets);
     }
 
     @Override
@@ -76,6 +88,7 @@ public class InventoryDto implements Serializable {
                 "id = " + id + ", " +
                 "name = " + name + ", " +
                 "sent = " + sent + ", " +
-                "received = " + received + ")";
+                "received = " + received + ", " +
+                "pallets = " + pallets + ")";
     }
 }
