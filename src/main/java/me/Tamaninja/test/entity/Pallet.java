@@ -1,7 +1,6 @@
 package me.Tamaninja.test.entity;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,6 +14,7 @@ public class Pallet implements Serializable {
     @Id
     @Column(nullable = false,unique = true)
     private Long barcode;
+
     private short containerAmount;
 
     @Column(nullable = false, scale = 2)
@@ -28,6 +28,7 @@ public class Pallet implements Serializable {
     @ManyToOne(optional = false)
     @JoinColumn(referencedColumnName = "name")
     private PalletContainer palletContainer;
+
     @ManyToOne(optional = false)
     @JoinColumn(referencedColumnName = "name")
     private PalletType palletType;

@@ -1,13 +1,18 @@
 package me.Tamaninja.test.service;
 
+import me.Tamaninja.test.dto.PalletDto;
 import me.Tamaninja.test.entity.Inventory;
 import me.Tamaninja.test.entity.Pallet;
 import me.Tamaninja.test.enums.Errors;
 import me.Tamaninja.test.repository.*;
+import me.Tamaninja.test.util.ClassMapperUtil;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static me.Tamaninja.test.util.ClassMapperUtil.mapClass;
+import static me.Tamaninja.test.util.ClassMapperUtil.mapClassIgnoreLazy;
 
 @Service
 public class LookupService {
@@ -27,8 +32,9 @@ public class LookupService {
         this.transferRepo = transferRepo;
     }
 
-    public Pallet findPallet(Long barcode) {
+    public PalletDto findPallet(Long barcode) {
         Pallet pallet = palletRepo.findById(barcode).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString()));
-        return (pallet);
+        PalletDto palletDto = mapClass(pallet, PalletDto.class);
+        return (palletDto);
     }
 }

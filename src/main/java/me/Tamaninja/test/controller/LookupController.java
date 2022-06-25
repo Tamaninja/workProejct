@@ -1,6 +1,7 @@
 package me.Tamaninja.test.controller;
 
 
+import me.Tamaninja.test.dto.PalletDto;
 import me.Tamaninja.test.entity.Pallet;
 import me.Tamaninja.test.service.LookupService;
 import org.springframework.http.HttpStatus;
@@ -17,10 +18,8 @@ public class LookupController {
     }
 
     @GetMapping("/pallet")
-    public ResponseEntity<Pallet> findPallet(@RequestParam(required = false, value="barcode") Long barcode) {
-        Pallet pallet = lookupService.findPallet(barcode);
-        System.out.println("=======================================================" + pallet.toString());
-        ResponseEntity<Pallet> response = new ResponseEntity<Pallet>(pallet, HttpStatus.I_AM_A_TEAPOT);
-        return (response);
+    public PalletDto findPallet(@RequestParam(required = false, value="barcode") Long barcode) {
+        PalletDto pallet = lookupService.findPallet(barcode);
+        return (pallet);
     }
 }
