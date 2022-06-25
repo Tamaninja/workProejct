@@ -39,7 +39,7 @@ public class TestApplication {
 
 
 				Random random = new Random();
-				for (int i = 0; i < 10000; i++) {
+				for (int i = 0; i < 500; i++) {
 					int randomType = random.nextInt(3) + 1;
 					int randomContainer = random.nextInt(3) + 1;
 					int randomContent = random.nextInt(3) + 1;
@@ -48,7 +48,7 @@ public class TestApplication {
 					Pallet pallet = inventoryManagementService.savePallet(null, randomType, randomContainer, randomAmount, randomContent, randomWeight, 150);
 					inventoryManagementService.addTransfer(pallet, transfer);
 				}
-				System.out.println(inv150.getSentPallets());
+				System.out.println(inv150);
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
 			}

@@ -31,10 +31,10 @@ public class PalletContainer implements Serializable {
     public String getName() {
         return (name);
     }
-    public double getWeight() {
+    public double weight() {
         return (weight);
     }
-    public Short getDefaultAmount() {
+    public Short defaultAmount() {
         return (defaultAmount);
     }
 

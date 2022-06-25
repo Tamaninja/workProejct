@@ -24,12 +24,18 @@ public class Inventory implements Serializable {
     @OneToMany(mappedBy = "destination", fetch = FetchType.LAZY)
     private List<Transfer> received;
 
-    @OneToMany(mappedBy = "inventory", fetch = FetchType.LAZY)
-    private List<Pallet> pallets = new ArrayList<>();
 
     public Inventory(Integer inventoryId, String name) {
         this.id = inventoryId;
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public Inventory() {}

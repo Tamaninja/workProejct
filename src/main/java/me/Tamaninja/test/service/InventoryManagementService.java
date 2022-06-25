@@ -28,13 +28,9 @@ public class InventoryManagementService {
         return (transfer);
     }
 
-    public Pallet lookup(Long barcode) {
-        Pallet pallet = palletRepo.findById(barcode).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString()));
-        return (pallet);
-    }
-
     public void addTransfer(Pallet pallet, Transfer transfer) {
-        pallet.addTransfer(transfer);
+        transfer.addPallet(pallet);
+        transferRepo.save(transfer);
         palletRepo.save(pallet);
     }
     public PalletType newPalletType(String name, float weight) {
@@ -66,7 +62,7 @@ public class InventoryManagementService {
         Inventory inventory = inventoryRepo.findById(locationId).orElseThrow(() -> new RuntimeException(Errors.PALLET_CONTENTS_NOT_FOUND.toString()));
 
         if (barcode == null) barcode = generatePalletBarcode();
-        if (amount == null) amount = palletContainer.getDefaultAmount();
+        if (amount == null) amount = palletContainer.defaultAmount();
         if (palletRepo.existsById(barcode)) {System.out.println(Errors.ALREADY_EXISTS); return null;} //return if barcode already exists
 
 

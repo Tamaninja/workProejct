@@ -13,11 +13,6 @@ public class ManagementController {
         this.inventoryManagementService = inventoryManagementService;
     }
 
-    @GetMapping("/lookup")
-    public String test(@RequestParam(required = false, value="barcode") Long barcode) {
-        return (inventoryManagementService.lookup(barcode).toString());
-    }
-
     @PostMapping("/create")
     public String test2(
             @RequestParam(required = false, value="barcode") Long barcode,
