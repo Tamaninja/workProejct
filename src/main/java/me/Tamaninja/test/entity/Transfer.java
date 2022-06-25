@@ -1,7 +1,6 @@
 package me.Tamaninja.test.entity;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -28,7 +27,7 @@ public class Transfer implements Serializable {
     @CreationTimestamp
     private Date transferTimestamp;
 
-    @ManyToMany
+    @ManyToMany()
     @JoinTable(name = "transfer_pallets",
             joinColumns = @JoinColumn(name = "transfer_id"),
             inverseJoinColumns = @JoinColumn(name = "pallets_barcode"))
@@ -47,15 +46,40 @@ public class Transfer implements Serializable {
         return id;
     }
 
-    public Date getTransferTimestamp() {
-        return transferTimestamp;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Inventory getOrigin() {
         return origin;
     }
+
+    public void setOrigin(Inventory origin) {
+        this.origin = origin;
+    }
+
     public Inventory getDestination() {
         return destination;
+    }
+
+    public void setDestination(Inventory destination) {
+        this.destination = destination;
+    }
+
+    public Date getTransferTimestamp() {
+        return transferTimestamp;
+    }
+
+    public void setTransferTimestamp(Date transferTimestamp) {
+        this.transferTimestamp = transferTimestamp;
+    }
+
+    public List<Pallet> getPallets() {
+        return pallets;
+    }
+
+    public void setPallets(List<Pallet> pallets) {
+        this.pallets = pallets;
     }
 
     public void addPallet(Pallet pallet) {

@@ -23,11 +23,16 @@ public class PalletType implements Serializable {
 
     }
 
-    public String getName() {
-        return (name);
+    public Integer getId() {
+        return id;
     }
-    public double getWeight() {
-        return (weight);
+
+    public String getName() {
+        return name;
+    }
+
+    public float getWeight() {
+        return weight;
     }
 
     @Override

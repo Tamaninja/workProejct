@@ -39,7 +39,7 @@ public class Pallet implements Serializable {
     private Inventory location;
 
 
-    @ManyToMany(mappedBy = "pallets", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "pallets")
     private List<Transfer> transfers = new ArrayList<>();
 
 
@@ -64,7 +64,7 @@ public class Pallet implements Serializable {
 
     public void setWeight(float weightGross) {
         this.weightGross = weightGross;
-        this.weightNet = (float) (weightGross - (palletContainer.weight() * containerAmount) - palletType.getWeight());
+        this.weightNet = (float) (weightGross - (palletContainer.getWeight() * containerAmount) - palletType.getWeight());
     }
 
     public Long getBarcode() {

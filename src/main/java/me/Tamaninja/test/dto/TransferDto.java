@@ -1,10 +1,13 @@
 package me.Tamaninja.test.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TransferDto implements Serializable {
     private Integer id;
     private InventoryDto origin;

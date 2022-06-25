@@ -32,12 +32,36 @@ public class Inventory implements Serializable {
         this.name = name;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
 
-    public Integer getId() {
-        return id;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<Transfer> getSent() {
+        return sent;
+    }
+
+    public void setSent(List<Transfer> sent) {
+        this.sent = sent;
+    }
+
+    public List<Transfer> getReceived() {
+        return received;
+    }
+
+    public void setReceived(List<Transfer> received) {
+        this.received = received;
     }
 
     public Inventory() {}

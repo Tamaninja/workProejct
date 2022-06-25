@@ -28,14 +28,21 @@ public class PalletContainer implements Serializable {
     public PalletContainer() {
 
     }
+
+    public Integer getId() {
+        return id;
+    }
+
     public String getName() {
-        return (name);
+        return name;
     }
-    public double weight() {
-        return (weight);
+
+    public double getWeight() {
+        return weight;
     }
-    public Short defaultAmount() {
-        return (defaultAmount);
+
+    public Short getDefaultAmount() {
+        return defaultAmount;
     }
 
     @Override

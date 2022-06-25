@@ -1,8 +1,11 @@
 package me.Tamaninja.test.service;
 
+import me.Tamaninja.test.dto.PalletContainerDto;
 import me.Tamaninja.test.dto.PalletDto;
+import me.Tamaninja.test.dto.TransferDto;
 import me.Tamaninja.test.entity.Inventory;
 import me.Tamaninja.test.entity.Pallet;
+import me.Tamaninja.test.entity.PalletContainer;
 import me.Tamaninja.test.enums.Errors;
 import me.Tamaninja.test.repository.*;
 import me.Tamaninja.test.util.ClassMapperUtil;
@@ -34,7 +37,8 @@ public class LookupService {
 
     public PalletDto findPallet(Long barcode) {
         Pallet pallet = palletRepo.findById(barcode).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString()));
-        PalletDto palletDto = mapClass(pallet, PalletDto.class);
+        PalletDto palletDto = mapClassIgnoreLazy(pallet, PalletDto.class);
+        palletDto.setTransfers(ClassMapperUtil.mapListIgnoreLazyCollection(pallet.getTransfers(), TransferDto.class));
         return (palletDto);
     }
 }

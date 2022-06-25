@@ -70,8 +70,8 @@ public class InventoryManagementService {
         PalletContent palletContent = palletContentRepo.findById(content).orElseThrow(() -> new RuntimeException(Errors.PALLET_CONTENTS_NOT_FOUND.toString()));
         Inventory inventory = inventoryRepo.findById(locationId).orElseThrow(() -> new RuntimeException(Errors.PALLET_CONTENTS_NOT_FOUND.toString()));
 
-        if (amount == null) amount = palletContainer.defaultAmount();
-        float minWeight = (float) (palletType.getWeight() + (palletContainer.weight() * amount));
+        if (amount == null) amount = palletContainer.getDefaultAmount();
+        float minWeight = (float) (palletType.getWeight() + (palletContainer.getWeight() * amount));
         if (weightGross <= minWeight) return null;
 
 
