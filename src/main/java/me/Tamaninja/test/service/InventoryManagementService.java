@@ -22,13 +22,15 @@ public class InventoryManagementService {
         this.transferRepo = transferRepo;
     }
 
-    public Transfer newTransfer(Integer deliveryId, Inventory transferFrom, Inventory transferTruck, Inventory transferTo) {
-        Transfer transfer = new Transfer(deliveryId, transferFrom, transferTruck, transferTo);
+    public Transfer newTransfer(Integer deliveryId, Inventory transferFrom,  Inventory transferTo) {
+        Transfer transfer = new Transfer(deliveryId, transferFrom, transferTo);
         transferRepo.save(transfer);
         return (transfer);
     }
 
-    public void addTransfer(Pallet pallet, Transfer transfer) {
+    public void addToTransfer(Pallet pallet, Transfer transfer) {
+        if (!pallet.getLocation().equals(transfer.getOrigin())) return;
+
         transfer.addPallet(pallet);
         transferRepo.save(transfer);
         palletRepo.save(pallet);
@@ -44,7 +46,7 @@ public class InventoryManagementService {
         palletContentRepo.save(palletContent);
         return (palletContent);
     }
-    public PalletContainer newPalletContainer(String name, float weight, Short defaultAmount) {
+    public PalletContainer newPalletContainer(String name, double weight, Short defaultAmount) {
         PalletContainer palletContainer = new PalletContainer(name,weight,defaultAmount);
         containerRepo.save(palletContainer);
         return (palletContainer);
@@ -55,24 +57,26 @@ public class InventoryManagementService {
         return (inventory);
     }
 
-    public Pallet savePallet(Long barcode, Integer palletTypeId, Integer palletContainerId, Short amount, Integer content, float weightGross, Integer locationId) {
+    public Pallet savePallet(Long barcode, Integer palletTypeId, Integer palletContainerId, Short amount, Integer content, double weightGross, Integer locationId) {
+        if (barcode == null) {
+            barcode = palletRepo.generateBarcode();
+        } else if (palletRepo.existsById(barcode)){
+            System.out.println(Errors.ALREADY_EXISTS);
+            return null;
+        }
+
         PalletContainer palletContainer = containerRepo.findById(palletContainerId).orElseThrow(() -> new RuntimeException(Errors.PALLET_CONTAINER_NOT_FOUND.toString()));
         PalletType palletType = palletTypeRepo.findById(palletTypeId).orElseThrow(() -> new RuntimeException(Errors.PALLET_TYPE_NOT_FOUND.toString()));
         PalletContent palletContent = palletContentRepo.findById(content).orElseThrow(() -> new RuntimeException(Errors.PALLET_CONTENTS_NOT_FOUND.toString()));
         Inventory inventory = inventoryRepo.findById(locationId).orElseThrow(() -> new RuntimeException(Errors.PALLET_CONTENTS_NOT_FOUND.toString()));
 
-        if (barcode == null) barcode = generatePalletBarcode();
         if (amount == null) amount = palletContainer.defaultAmount();
-        if (palletRepo.existsById(barcode)) {System.out.println(Errors.ALREADY_EXISTS); return null;} //return if barcode already exists
+        float minWeight = (float) (palletType.getWeight() + (palletContainer.weight() * amount));
+        if (weightGross <= minWeight) return null;
 
 
-        Pallet pallet = new Pallet(barcode, palletType, palletContainer, amount, palletContent, weightGross, inventory);
-        return (palletRepo.save(pallet));
-    }
-    private Long generatePalletBarcode() {
-        if (palletRepo.maxId() == null) {
-            return (1L);
-        }
-        return (palletRepo.maxId() + 1);
+        Pallet pallet = new Pallet(barcode, palletType, palletContainer, amount, palletContent, weightGross, weightGross-minWeight, inventory);
+        palletRepo.save(pallet);
+        return (pallet);
     }
 }

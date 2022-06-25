@@ -22,9 +22,9 @@ public class TestApplication {
 	public CommandLineRunner run(InventoryManagementService inventoryManagementService) throws Exception {
 		return args -> {
 			try {
-				inventoryManagementService.newPalletContainer("tray",0.97f, (short) 100);
-				inventoryManagementService.newPalletContainer("smalltray",0.27f,(short) 200);
-				inventoryManagementService.newPalletContainer("bigtray",0.72f,(short) 150);
+				inventoryManagementService.newPalletContainer("tray",0.97, (short) 100);
+				inventoryManagementService.newPalletContainer("smalltray",0.27,(short) 200);
+				inventoryManagementService.newPalletContainer("bigtray",0.72,(short) 150);
 				inventoryManagementService.newPalletType("wooden", 15);
 				inventoryManagementService.newPalletType("plastic", 20);
 				inventoryManagementService.newPalletType("bigwooden", 18);
@@ -33,9 +33,8 @@ public class TestApplication {
 				inventoryManagementService.newPalletContent("garbage");
 				Inventory inv150 = inventoryManagementService.newLocation(150,"masua warehouse");
 				Inventory inv200 = inventoryManagementService.newLocation(200,"tamar tov");
-				Inventory truck1 = inventoryManagementService.newLocation(999999999,"tama ninja");
-				Transfer transfer = inventoryManagementService.newTransfer(303030,inv150, truck1, inv200);
-				Transfer transfer1 = inventoryManagementService.newTransfer(303031,inv150,truck1,inv200);
+				Transfer transfer = inventoryManagementService.newTransfer(303030,inv150, inv200);
+				Transfer transfer1 = inventoryManagementService.newTransfer(303031,inv200, inv150);
 
 
 				Random random = new Random();
@@ -43,12 +42,12 @@ public class TestApplication {
 					int randomType = random.nextInt(3) + 1;
 					int randomContainer = random.nextInt(3) + 1;
 					int randomContent = random.nextInt(3) + 1;
-					Short randomAmount = (short) random.nextInt(200);
-					float randomWeight = random.nextFloat();
+					Short randomAmount = (short) random.nextInt(100);
+					double randomWeight = random.nextInt(700) + 150f;
 					Pallet pallet = inventoryManagementService.savePallet(null, randomType, randomContainer, randomAmount, randomContent, randomWeight, 150);
-					inventoryManagementService.addTransfer(pallet, transfer);
+					inventoryManagementService.addToTransfer(pallet, transfer);
+					inventoryManagementService.addToTransfer(pallet, transfer1);
 				}
-				System.out.println(inv150);
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
 			}

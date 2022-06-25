@@ -21,9 +21,6 @@ public class Transfer implements Serializable {
     private Inventory origin;
 
     @ManyToOne()
-    private Inventory transferTruck;
-
-    @ManyToOne()
     private Inventory destination;
 
 
@@ -37,29 +34,41 @@ public class Transfer implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "pallets_barcode"))
     private List<Pallet> pallets = new ArrayList<>();
 
-    public Transfer(Integer id, Inventory origin, Inventory transferTruck, Inventory destination) {
+    public Transfer(Integer id, Inventory origin, Inventory destination) {
         this.id = id;
         this.origin = origin;
-        this.transferTruck = transferTruck;
         this.destination = destination;
     }
     public Transfer() {
 
     }
 
+    public Integer getId() {
+        return id;
+    }
 
+    public Date getTransferTimestamp() {
+        return transferTimestamp;
+    }
+
+    public Inventory getOrigin() {
+        return origin;
+    }
+    public Inventory getDestination() {
+        return destination;
+    }
 
     public void addPallet(Pallet pallet) {
         pallets.add(pallet);
         pallet.setInventory(destination);
     }
 
+
     @Override
     public String toString() {
         return "Transfer{" +
                 "id=" + id +
                 ", origin=" + origin +
-                ", transferTruck=" + transferTruck +
                 ", destination=" + destination +
                 ", pallets=" + pallets +
                 ", transferTimestamp=" + transferTimestamp +

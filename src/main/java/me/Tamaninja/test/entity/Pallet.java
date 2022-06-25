@@ -17,10 +17,10 @@ public class Pallet implements Serializable {
     private Long barcode;
     private short containerAmount;
 
-    @Column(nullable = false,precision = 6,scale = 2)
-    private float weightGross;
-    @Column(nullable = false,precision = 6,scale = 2)
-    private float weightNet;
+    @Column(nullable = false, scale = 2)
+    private double weightGross;
+    @Column(nullable = false, scale = 2)
+    private double weightNet;
 
     @ManyToOne(optional = false)
     @JoinColumn(referencedColumnName = "name")
@@ -46,19 +46,24 @@ public class Pallet implements Serializable {
     @CreationTimestamp
     private Date timestamp;
 
-    public Pallet(Long barcode, PalletType palletType, PalletContainer palletContainer, short containerAmount, PalletContent palletContent, float weightGross, Inventory palletInventory) {
+    public Pallet(Long barcode, PalletType palletType, PalletContainer palletContainer, short containerAmount, PalletContent palletContent, double weightGross, double weightNet, Inventory palletInventory) {
         this.barcode = barcode;
         this.weightGross = weightGross;
+        this.weightNet = weightNet;
         this.palletContainer = palletContainer;
         this.palletType = palletType;
         this.palletContent = palletContent;
         this.location = palletInventory;
         this.containerAmount = containerAmount;
-        this.weightNet = (float) (weightGross - (palletContainer.weight() * containerAmount) - palletType.getWeight());
     }
 
     public Pallet(){
 
+    }
+
+    public void setWeight(float weightGross) {
+        this.weightGross = weightGross;
+        this.weightNet = (float) (weightGross - (palletContainer.weight() * containerAmount) - palletType.getWeight());
     }
 
     public Long getBarcode() {
@@ -69,11 +74,11 @@ public class Pallet implements Serializable {
         return timestamp;
     }
 
-    public float getWeightGross() {
+    public double getWeightGross() {
         return weightGross;
     }
 
-    public float getWeightNet() {
+    public double getWeightNet() {
         return weightNet;
     }
 
@@ -102,7 +107,7 @@ public class Pallet implements Serializable {
     }
 
     public void setInventory(Inventory inventory) {
-        this.location = location;
+        this.location = inventory;
     }
     @Override
     public String toString() {

@@ -14,13 +14,13 @@ public class PalletContainer implements Serializable {
 
     @Column(nullable = false, unique = true)
     private String name;
-    @Column(nullable = false, precision = 6, scale = 2)
-    private float weight;
+    @Column(nullable = false, scale = 2)
+    private double weight;
 
     @Column(nullable = false)
     private Short defaultAmount;
 
-    public PalletContainer(String name, float weight, Short defaultAmount) {
+    public PalletContainer(String name, double weight, Short defaultAmount) {
         this.name = name;
         this.weight = weight;
         this.defaultAmount = defaultAmount;

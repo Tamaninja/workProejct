@@ -1,10 +1,12 @@
 package me.Tamaninja.test.entity;
 
 
+import org.hibernate.Hibernate;
+
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity(name = "inventory")
 public class Inventory implements Serializable {
@@ -46,5 +48,18 @@ public class Inventory implements Serializable {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Inventory inventory = (Inventory) o;
+        return id != null && Objects.equals(id, inventory.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }
