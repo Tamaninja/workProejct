@@ -5,6 +5,7 @@ import me.Tamaninja.test.dto.PalletDto;
 import me.Tamaninja.test.dto.TransferDto;
 import me.Tamaninja.test.entity.Inventory;
 import me.Tamaninja.test.entity.Pallet;
+import me.Tamaninja.test.entity.Transfer;
 import me.Tamaninja.test.enums.Errors;
 import me.Tamaninja.test.repository.*;
 import me.Tamaninja.test.util.ClassMapperUtil;
@@ -42,5 +43,11 @@ public class LookupService {
         InventoryDto inventoryDto = mapClassIgnoreLazy(inventory, InventoryDto.class);
         inventoryDto.setPallets(ClassMapperUtil.mapListIgnoreLazyCollection(inventory.getPallets(), PalletDto.class));
         return (inventoryDto);
+    }
+    public TransferDto findTransfer(Integer id) {
+        Transfer transfer = transferRepo.findById(id).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString()));
+        TransferDto transferDto = mapClassIgnoreLazy(transfer, TransferDto.class);
+        transferDto.setPallets(ClassMapperUtil.mapListIgnoreLazyCollection(transfer.getPallets(), PalletDto.class));
+        return (transferDto);
     }
 }
