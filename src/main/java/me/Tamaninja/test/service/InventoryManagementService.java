@@ -1,9 +1,12 @@
 package me.Tamaninja.test.service;
 
+import me.Tamaninja.test.dto.PalletDto;
 import me.Tamaninja.test.entity.*;
 import me.Tamaninja.test.enums.Errors;
 import me.Tamaninja.test.repository.*;
 import org.springframework.stereotype.Service;
+
+import static me.Tamaninja.test.util.ClassMapperUtil.mapClassIgnoreLazy;
 
 @Service
 public class InventoryManagementService {
@@ -57,42 +60,51 @@ public class InventoryManagementService {
         return (inventory);
     }
 
-    public Pallet savePallet(Long barcode, Integer palletTypeId, Integer palletContainerId, Short amount, Integer content, double weightGross, Integer locationId) {
+    public PalletDto savePallet(Long barcode, Integer palletTypeId, Integer palletContainerId, Short containerAmount, Integer palletContentId, double grossWeight, Integer locationId) {
         if (locationId == null) return null;
         if (barcode == null) barcode = palletRepo.generateBarcode();
         else if (palletRepo.existsById(barcode)) return null;
-        Inventory inventory = inventoryRepo.findById(locationId).orElseThrow(() -> new RuntimeException(Errors.PALLET_CONTENTS_NOT_FOUND.toString()));
+        Inventory inventory = inventoryRepo.findById(locationId).orElseThrow(() -> new RuntimeException(Errors.INVALID_ID.toString()));
 
+        PalletContainer palletContainer = findPalletContainer(palletContainerId, inventory.getName());
+        PalletContent palletContent = findPalletContent(palletContentId, inventory.getName());
+        PalletType palletType = findPalletType(palletTypeId, inventory.getName());
 
-        PalletType palletType;
-        PalletContent palletContent;
-        PalletContainer palletContainer;
+        if (containerAmount == null) containerAmount = palletContainer.getDefaultAmount();
+        double MIN_WEIGHT = (palletType.getWeight() + (palletContainer.getWeight() * containerAmount));
+        if (grossWeight <= MIN_WEIGHT) return null;
 
-        if (palletTypeId == null) {
-            palletType = palletTypeRepo.suggestPalletType(inventory.getName()).orElseThrow(() -> new RuntimeException(Errors.PALLET_TYPE_NOT_FOUND.toString()));
-        } else {
-            palletType = palletTypeRepo.findById(palletTypeId).orElseThrow(() -> new RuntimeException(Errors.PALLET_TYPE_NOT_FOUND.toString()));
-        }
-        if (content == null) {
-            palletContent = palletContentRepo.suggestContent(inventory.getName()).orElseThrow(() -> new RuntimeException(Errors.PALLET_CONTENTS_NOT_FOUND.toString()));
-        } else {
-            palletContent = palletContentRepo.findById(content).orElseThrow(() -> new RuntimeException(Errors.PALLET_CONTENTS_NOT_FOUND.toString()));
-        }
-        if (palletContainerId == null) {
-            palletContainer = containerRepo.suggestContainer(inventory.getName()).orElseThrow(() -> new RuntimeException(Errors.PALLET_CONTAINER_NOT_FOUND.toString()));
-        } else {
-            palletContainer = containerRepo.findById(palletContainerId).orElseThrow(() -> new RuntimeException(Errors.PALLET_CONTAINER_NOT_FOUND.toString()));
-        }
-
-
-
-        if (amount == null) amount = palletContainer.getDefaultAmount();
-        float minWeight = (float) (palletType.getWeight() + (palletContainer.getWeight() * amount));
-        if (weightGross <= minWeight) return null;
-
-
-        Pallet pallet = new Pallet(barcode, palletType, palletContainer, amount, palletContent, weightGross, weightGross-minWeight, inventory);
+        Pallet pallet = new Pallet(barcode, palletType, palletContainer, containerAmount, palletContent, grossWeight, grossWeight-MIN_WEIGHT, inventory);
         palletRepo.save(pallet);
-        return (pallet);
+        PalletDto palletDto = mapClassIgnoreLazy(pallet, PalletDto.class);
+        return (palletDto);
+    }
+    public PalletType findPalletType(Integer id, String inventoryName) {
+        PalletType palletType;
+        if (id == null) {
+            palletType = palletTypeRepo.mostUsedPalletType(inventoryName).orElseThrow(() -> new RuntimeException(Errors.INVALID_ID.toString()));
+        } else {
+            palletType = palletTypeRepo.findById(id).orElseThrow(() -> new RuntimeException(Errors.INVALID_ID.toString()));
+        }
+        return (palletType);
+    }
+
+    public PalletContent findPalletContent(Integer id, String inventoryName) {
+        PalletContent palletContent;
+        if (id == null) {
+            palletContent = palletContentRepo.mostUsedContent(inventoryName).orElseThrow(() -> new RuntimeException(Errors.INVALID_ID.toString()));
+        } else {
+            palletContent = palletContentRepo.findById(id).orElseThrow(() -> new RuntimeException(Errors.INVALID_ID.toString()));
+        }
+        return (palletContent);
+    }
+    public PalletContainer findPalletContainer(Integer id, String inventoryName) {
+        PalletContainer palletContainer;
+        if (id == null) {
+            palletContainer = containerRepo.mostUsedContainer(inventoryName).orElseThrow(() -> new RuntimeException(Errors.INVALID_ID.toString()));
+        } else {
+            palletContainer = containerRepo.findById(id).orElseThrow(() -> new RuntimeException(Errors.INVALID_ID.toString()));
+        }
+        return (palletContainer);
     }
 }

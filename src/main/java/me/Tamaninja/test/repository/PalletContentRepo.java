@@ -15,5 +15,5 @@ public interface PalletContentRepo extends JpaRepository<PalletContent, Integer>
             "WHERE p.pallet_content_name = pc.name " +
             "AND p.location_name = :locName " +
             "GROUP BY pc.id ORDER BY used DESC LIMIT 1", nativeQuery = true)
-    Optional<PalletContent> suggestContent(@Param("locName") String locName);
+    Optional<PalletContent> mostUsedContent(@Param("locName") String inventoryName);
 }

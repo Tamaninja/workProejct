@@ -17,11 +17,11 @@ public class ClassMapperUtil {
     static {
         mapper = new ModelMapper();
         mapper.getConfiguration()
-                .setMatchingStrategy(MatchingStrategies.LOOSE);
+                .setMatchingStrategy(MatchingStrategies.STRICT);
 
         lazyMapper = new ModelMapper();
         lazyMapper.getConfiguration()
-                .setMatchingStrategy(MatchingStrategies.LOOSE)
+                .setMatchingStrategy(MatchingStrategies.STRICT)
                 .setPropertyCondition(context -> !(context.getSource() instanceof PersistentCollection));
     }
 

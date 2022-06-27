@@ -1,6 +1,8 @@
 package me.Tamaninja.test.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -17,6 +19,7 @@ public class PalletContainer implements Serializable {
     @Column(nullable = false, scale = 2)
     private double weight;
 
+    @JsonIgnore
     @Column(nullable = false)
     private Short defaultAmount;
 

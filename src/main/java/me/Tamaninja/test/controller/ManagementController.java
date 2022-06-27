@@ -1,7 +1,10 @@
 package me.Tamaninja.test.controller;
 
 
+import me.Tamaninja.test.dto.PalletDto;
 import me.Tamaninja.test.service.InventoryManagementService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,14 +17,17 @@ public class ManagementController {
     }
 
     @PostMapping("/create")
-    public String test2(
+    public ResponseEntity<PalletDto> createPallet(
             @RequestParam(required = false, value="barcode") Long barcode,
-            @RequestParam("weight") float weight,
-            @RequestParam("containerId") Integer containerId,
-            @RequestParam("containerTypeId") Integer containerTypeId,
-            @RequestParam("palletContent") Integer palletContent,
+            @RequestParam(required = false, value="amount") Short amount,
+            @RequestParam(required = false, value = "containerId") Integer containerId,
+            @RequestParam(required = false, value = "containerTypeId") Integer containerTypeId,
+            @RequestParam(required = false, value = "palletContent") Integer palletContent,
             @RequestParam("location") Integer locationId,
-            @RequestParam(required = false, value="amount") Short amount) {
-        return (inventoryManagementService.savePallet(barcode, containerTypeId, containerId, amount, palletContent, weight, locationId).toString());
+            @RequestParam("weight") float weight
+    ) {
+        PalletDto palletDto = inventoryManagementService.savePallet(barcode, containerTypeId, containerId, amount, palletContent, weight, locationId);
+        ResponseEntity<PalletDto> response = new ResponseEntity<PalletDto>(palletDto, HttpStatus.OK);
+        return (response);
     }
 }

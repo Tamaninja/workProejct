@@ -17,5 +17,5 @@ public interface PalletContainerRepo extends JpaRepository<PalletContainer,Integ
             "WHERE p.pallet_container_name = pc.name " +
             "AND p.location_name = :locName " +
             "GROUP BY pc.id ORDER BY used DESC LIMIT 1", nativeQuery = true)
-    Optional<PalletContainer> suggestContainer(@Param("locName") String locName);
+    Optional<PalletContainer> mostUsedContainer(@Param("locName") String inventoryName);
 }

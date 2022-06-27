@@ -50,4 +50,14 @@ public class LookupService {
         transferDto.setPallets(ClassMapperUtil.mapListIgnoreLazyCollection(transfer.getPallets(), PalletDto.class));
         return (transferDto);
     }
+
+    public Pallet getPallet(Long barcode) {
+        return (palletRepo.findById(barcode).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString())));
+    }
+    public Inventory getInventory(Integer id) {
+        return (inventoryRepo.findById(id).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString())));
+    }
+    public Transfer getTransfer(Integer id) {
+        return (transferRepo.findById(id).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString())));
+    }
 }

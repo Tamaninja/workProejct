@@ -1,9 +1,11 @@
 package me.Tamaninja.test;
 
+import me.Tamaninja.test.dto.PalletDto;
 import me.Tamaninja.test.entity.Inventory;
 import me.Tamaninja.test.entity.Pallet;
 import me.Tamaninja.test.entity.Transfer;
 import me.Tamaninja.test.service.InventoryManagementService;
+import me.Tamaninja.test.service.LookupService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,7 +21,7 @@ public class TestApplication {
 
 	}
 	@Bean
-	public CommandLineRunner run(InventoryManagementService inventoryManagementService) throws Exception {
+	public CommandLineRunner run(InventoryManagementService inventoryManagementService, LookupService lookupService) throws Exception {
 		return args -> {
 			try {
 				inventoryManagementService.newPalletContainer("tray",0.97, (short) 100);
@@ -44,7 +46,8 @@ public class TestApplication {
 					int randomContent = random.nextInt(3) + 1;
 					Short randomAmount = (short) random.nextInt(100);
 					double randomWeight = random.nextInt(700) + 150f;
-					Pallet pallet = inventoryManagementService.savePallet(null, randomType, randomContainer, randomAmount, randomContent, randomWeight, 150);
+					PalletDto palletDto = inventoryManagementService.savePallet(null, randomType, randomContainer, randomAmount, randomContent, randomWeight, 150);
+					Pallet pallet = lookupService.getPallet(palletDto.getBarcode());
 					inventoryManagementService.addToTransfer(pallet, transfer);
 					inventoryManagementService.addToTransfer(pallet, transfer1);
 				}

@@ -18,6 +18,6 @@ public interface PalletTypeRepo extends JpaRepository<PalletType,Integer> {
             "WHERE p.pallet_type_name = pt.name " +
             "AND p.location_name = :locName " +
             "GROUP BY pt.id ORDER BY used DESC LIMIT 1", nativeQuery = true)
-    Optional<PalletType> suggestPalletType(@Param("locName") String locName);
+    Optional<PalletType> mostUsedPalletType(@Param("locName") String inventoryName);
 
 }
