@@ -38,8 +38,9 @@ public class LookupService {
         return (palletDto);
     }
 
-    public InventoryDto findInventory(Integer id) {
-        Inventory inventory = inventoryRepo.findById(id).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString()));
+    public InventoryDto findInventory(String name) {
+
+        Inventory inventory = inventoryRepo.findByName(name).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString()));
         InventoryDto inventoryDto = mapClassIgnoreLazy(inventory, InventoryDto.class);
         inventoryDto.setPallets(ClassMapperUtil.mapListIgnoreLazyCollection(inventory.getPallets(), PalletDto.class));
         return (inventoryDto);
@@ -54,7 +55,7 @@ public class LookupService {
     public Pallet getPallet(Long barcode) {
         return (palletRepo.findById(barcode).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString())));
     }
-    public Inventory getInventory(Integer id) {
+    public Inventory getInventory(Long id) {
         return (inventoryRepo.findById(id).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString())));
     }
     public Transfer getTransfer(Integer id) {

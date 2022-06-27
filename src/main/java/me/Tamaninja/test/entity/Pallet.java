@@ -47,7 +47,11 @@ public class Pallet implements Serializable {
     @CreationTimestamp
     private Date timestamp;
 
-    public Pallet(Long barcode, PalletType palletType, PalletContainer palletContainer, short containerAmount, PalletContent palletContent, double weightGross, double weightNet, Inventory palletInventory) {
+    @ManyToOne
+    @JoinColumn(name = "pool_id")
+    private Pool pool;
+
+    public Pallet(Long barcode, PalletType palletType, PalletContainer palletContainer, short containerAmount, PalletContent palletContent, double weightGross, double weightNet, Inventory palletInventory, Pool pool) {
         this.barcode = barcode;
         this.weightGross = weightGross;
         this.weightNet = weightNet;
@@ -56,15 +60,24 @@ public class Pallet implements Serializable {
         this.palletContent = palletContent;
         this.location = palletInventory;
         this.containerAmount = containerAmount;
+        this.pool = pool;
     }
 
     public Pallet(){
 
     }
 
-    public void setWeight(float weightGross) {
+    public void setWeight(double weightGross) {
         this.weightGross = weightGross;
-        this.weightNet = (float) (weightGross - (palletContainer.getWeight() * containerAmount) - palletType.getWeight());
+        this.weightNet = weightGross - (palletContainer.getWeight() * containerAmount) - palletType.getWeight();
+    }
+
+    public Pool getPool() {
+        return pool;
+    }
+
+    public void setPool(Pool pool) {
+        this.pool = pool;
     }
 
     public Long getBarcode() {

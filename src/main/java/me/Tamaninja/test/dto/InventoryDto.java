@@ -1,35 +1,27 @@
 package me.Tamaninja.test.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class InventoryDto implements Serializable {
-    private Integer id;
     private String name;
     private List<TransferDto> sent;
     private List<TransferDto> received;
     private List<PalletDto> pallets;
+    private PoolDto pool;
+    private UUID id;
 
     public InventoryDto() {
     }
 
-    public InventoryDto(Integer id, String name, List<TransferDto> sent, List<TransferDto> received, List<PalletDto> pallets) {
-        this.id = id;
+    public InventoryDto(String name, List<TransferDto> sent, List<TransferDto> received, List<PalletDto> pallets, PoolDto pool, UUID id) {
         this.name = name;
         this.sent = sent;
         this.received = received;
         this.pallets = pallets;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
+        this.pool = pool;
         this.id = id;
     }
 
@@ -65,30 +57,48 @@ public class InventoryDto implements Serializable {
         this.pallets = pallets;
     }
 
+    public PoolDto getPool() {
+        return pool;
+    }
+
+    public void setPool(PoolDto pool) {
+        this.pool = pool;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         InventoryDto entity = (InventoryDto) o;
-        return Objects.equals(this.id, entity.id) &&
-                Objects.equals(this.name, entity.name) &&
+        return Objects.equals(this.name, entity.name) &&
                 Objects.equals(this.sent, entity.sent) &&
                 Objects.equals(this.received, entity.received) &&
-                Objects.equals(this.pallets, entity.pallets);
+                Objects.equals(this.pallets, entity.pallets) &&
+                Objects.equals(this.pool, entity.pool) &&
+                Objects.equals(this.id, entity.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, sent, received, pallets);
+        return Objects.hash(name, sent, received, pallets, pool, id);
     }
 
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" +
-                "id = " + id + ", " +
                 "name = " + name + ", " +
                 "sent = " + sent + ", " +
                 "received = " + received + ", " +
-                "pallets = " + pallets + ")";
+                "pallets = " + pallets + ", " +
+                "pool = " + pool + ", " +
+                "id = " + id + ")";
     }
 }

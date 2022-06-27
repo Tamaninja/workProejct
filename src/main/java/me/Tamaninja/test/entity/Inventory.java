@@ -7,15 +7,14 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity(name = "inventory")
 public class Inventory implements Serializable {
 
-    @Id
-    @Column(nullable = false, unique = true)
-    private Integer id;
 
-    @Column(nullable = false, unique = true)
+
+    @Column(unique = true)
     private String name;
 
 
@@ -31,17 +30,33 @@ public class Inventory implements Serializable {
     private List<Pallet> pallets;
 
 
-    public Inventory(Integer inventoryId, String name) {
+    @OneToOne(mappedBy = "poolInventory")
+    private Pool pool;
+
+    @Id
+    @Column(name = "id", nullable = false)
+    private UUID id;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public Inventory(UUID inventoryId, String name) {
         this.id = inventoryId;
         this.name = name;
     }
 
-    public Integer getId() {
-        return id;
+    public Inventory(Pool pool) {
+        this.pool = pool;
+        this.id = pool.getId();
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public Pool getPool() {
+        return pool;
     }
 
     public String getName() {

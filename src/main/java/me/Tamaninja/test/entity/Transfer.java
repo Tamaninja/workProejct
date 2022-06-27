@@ -17,9 +17,12 @@ public class Transfer implements Serializable {
     private Integer id;
 
     @ManyToOne()
+    @JoinColumn(referencedColumnName = "name")
     private Inventory origin;
 
     @ManyToOne()
+    @JoinColumn(referencedColumnName = "name")
+
     private Inventory destination;
 
 

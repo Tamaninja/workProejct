@@ -24,8 +24,8 @@ public class LookupController {
     }
 
     @GetMapping("/inventory")
-    public ResponseEntity<InventoryDto> findInventory(@RequestParam(value="id") Integer id) {
-        InventoryDto inventoryDto = lookupService.findInventory(id);
+    public ResponseEntity<InventoryDto> findInventory(@RequestParam(value="name") String name) {
+        InventoryDto inventoryDto = lookupService.findInventory(name);
         ResponseEntity<InventoryDto> response = new ResponseEntity<InventoryDto>(inventoryDto, HttpStatus.OK);
         return (response);
     }

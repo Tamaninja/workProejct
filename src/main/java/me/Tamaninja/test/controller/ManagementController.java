@@ -2,6 +2,7 @@ package me.Tamaninja.test.controller;
 
 
 import me.Tamaninja.test.dto.PalletDto;
+import me.Tamaninja.test.entity.Pool;
 import me.Tamaninja.test.service.InventoryManagementService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +24,10 @@ public class ManagementController {
             @RequestParam(required = false, value = "containerId") Integer containerId,
             @RequestParam(required = false, value = "containerTypeId") Integer containerTypeId,
             @RequestParam(required = false, value = "palletContent") Integer palletContent,
-            @RequestParam("location") Integer locationId,
+            @RequestParam("location") String inventoryName,
             @RequestParam("weight") float weight
     ) {
-        PalletDto palletDto = inventoryManagementService.savePallet(barcode, containerTypeId, containerId, amount, palletContent, weight, locationId);
+        PalletDto palletDto = inventoryManagementService.savePallet(barcode, containerTypeId, containerId, amount, palletContent, weight, inventoryName, new Pool());
         ResponseEntity<PalletDto> response = new ResponseEntity<PalletDto>(palletDto, HttpStatus.OK);
         return (response);
     }

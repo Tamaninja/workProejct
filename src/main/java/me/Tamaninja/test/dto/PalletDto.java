@@ -1,14 +1,11 @@
 package me.Tamaninja.test.dto;
 
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PalletDto implements Serializable {
     private Long barcode;
     private short containerAmount;
@@ -18,10 +15,14 @@ public class PalletDto implements Serializable {
     private PalletContainerDto palletContainer;
     private PalletTypeDto palletType;
     private InventoryDto location;
-    private List<TransferDto> transfers;
+    private List<TransferDto> transfers = new ArrayList<>();
     private Date timestamp;
+    private PoolDto pool;
 
-    public PalletDto(Long barcode, short containerAmount, double weightGross, double weightNet, PalletContentDto palletContent, PalletContainerDto palletContainer, PalletTypeDto palletType, InventoryDto location, List<TransferDto> transfers, Date timestamp) {
+    public PalletDto() {
+    }
+
+    public PalletDto(Long barcode, short containerAmount, double weightGross, double weightNet, PalletContentDto palletContent, PalletContainerDto palletContainer, PalletTypeDto palletType, InventoryDto location, List<TransferDto> transfers, Date timestamp, PoolDto pool) {
         this.barcode = barcode;
         this.containerAmount = containerAmount;
         this.weightGross = weightGross;
@@ -32,8 +33,8 @@ public class PalletDto implements Serializable {
         this.location = location;
         this.transfers = transfers;
         this.timestamp = timestamp;
+        this.pool = pool;
     }
-    public PalletDto() {}
 
     public Long getBarcode() {
         return barcode;
@@ -115,6 +116,14 @@ public class PalletDto implements Serializable {
         this.timestamp = timestamp;
     }
 
+    public PoolDto getPool() {
+        return pool;
+    }
+
+    public void setPool(PoolDto pool) {
+        this.pool = pool;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -129,12 +138,13 @@ public class PalletDto implements Serializable {
                 Objects.equals(this.palletType, entity.palletType) &&
                 Objects.equals(this.location, entity.location) &&
                 Objects.equals(this.transfers, entity.transfers) &&
-                Objects.equals(this.timestamp, entity.timestamp);
+                Objects.equals(this.timestamp, entity.timestamp) &&
+                Objects.equals(this.pool, entity.pool);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(barcode, containerAmount, weightGross, weightNet, palletContent, palletContainer, palletType, location, transfers, timestamp);
+        return Objects.hash(barcode, containerAmount, weightGross, weightNet, palletContent, palletContainer, palletType, location, transfers, timestamp, pool);
     }
 
     @Override
@@ -149,6 +159,7 @@ public class PalletDto implements Serializable {
                 "palletType = " + palletType + ", " +
                 "location = " + location + ", " +
                 "transfers = " + transfers + ", " +
-                "timestamp = " + timestamp + ")";
+                "timestamp = " + timestamp + ", " +
+                "pool = " + pool + ")";
     }
 }

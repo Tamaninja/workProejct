@@ -6,6 +6,8 @@ import me.Tamaninja.test.enums.Errors;
 import me.Tamaninja.test.repository.*;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 import static me.Tamaninja.test.util.ClassMapperUtil.mapClassIgnoreLazy;
 
 @Service
@@ -16,13 +18,15 @@ public class InventoryManagementService {
     private final PalletContentRepo palletContentRepo;
     private final InventoryRepo inventoryRepo;
     private final TransferRepo transferRepo;
-    public InventoryManagementService(PalletRepo palletRepo, PalletContainerRepo containerRepo, PalletTypeRepo palletTypeRepo, PalletContentRepo palletContentRepo, InventoryRepo inventoryRepo, TransferRepo transferRepo) {
+    private final PoolRepository poolRepo;
+    public InventoryManagementService(PalletRepo palletRepo, PalletContainerRepo containerRepo, PalletTypeRepo palletTypeRepo, PalletContentRepo palletContentRepo, InventoryRepo inventoryRepo, TransferRepo transferRepo, PoolRepository poolRepo) {
         this.palletRepo = palletRepo;
         this.containerRepo = containerRepo;
         this.palletTypeRepo = palletTypeRepo;
         this.palletContentRepo = palletContentRepo;
         this.inventoryRepo = inventoryRepo;
         this.transferRepo = transferRepo;
+        this.poolRepo = poolRepo;
     }
 
     public Transfer newTransfer(Integer deliveryId, Inventory transferFrom,  Inventory transferTo) {
@@ -31,9 +35,15 @@ public class InventoryManagementService {
         return (transfer);
     }
 
+    public Pool newPool(String description) {
+        Pool pool = new Pool(description);
+        inventoryRepo.save(pool.getPoolInventory());
+        poolRepo.save(pool);
+        return (pool);
+    }
+
     public void addToTransfer(Pallet pallet, Transfer transfer) {
         if (!pallet.getLocation().equals(transfer.getOrigin())) return;
-
         transfer.addPallet(pallet);
         transferRepo.save(transfer);
         palletRepo.save(pallet);
@@ -54,17 +64,17 @@ public class InventoryManagementService {
         containerRepo.save(palletContainer);
         return (palletContainer);
     }
-    public Inventory newLocation(Integer id, String description) {
-        Inventory inventory = new Inventory(id, description);
+    public Inventory newLocation(UUID id, String name) {
+        Inventory inventory = new Inventory(id, name);
         inventoryRepo.save(inventory);
         return (inventory);
     }
 
-    public PalletDto savePallet(Long barcode, Integer palletTypeId, Integer palletContainerId, Short containerAmount, Integer palletContentId, double grossWeight, Integer locationId) {
-        if (locationId == null) return null;
+    public PalletDto savePallet(Long barcode, Integer palletTypeId, Integer palletContainerId, Short containerAmount, Integer palletContentId, double grossWeight, String inventoryName, Pool origin) {
+        if (inventoryName == null) return null;
         if (barcode == null) barcode = palletRepo.generateBarcode();
         else if (palletRepo.existsById(barcode)) return null;
-        Inventory inventory = inventoryRepo.findById(locationId).orElseThrow(() -> new RuntimeException(Errors.INVALID_ID.toString()));
+        Inventory inventory = inventoryRepo.findByName(inventoryName).orElseThrow(() -> new RuntimeException(Errors.INVALID_ID.toString()));
 
         PalletContainer palletContainer = findPalletContainer(palletContainerId, inventory.getName());
         PalletContent palletContent = findPalletContent(palletContentId, inventory.getName());
@@ -74,7 +84,7 @@ public class InventoryManagementService {
         double MIN_WEIGHT = (palletType.getWeight() + (palletContainer.getWeight() * containerAmount));
         if (grossWeight <= MIN_WEIGHT) return null;
 
-        Pallet pallet = new Pallet(barcode, palletType, palletContainer, containerAmount, palletContent, grossWeight, grossWeight-MIN_WEIGHT, inventory);
+        Pallet pallet = new Pallet(barcode, palletType, palletContainer, containerAmount, palletContent, grossWeight, grossWeight-MIN_WEIGHT, inventory, origin);
         palletRepo.save(pallet);
         PalletDto palletDto = mapClassIgnoreLazy(pallet, PalletDto.class);
         return (palletDto);
