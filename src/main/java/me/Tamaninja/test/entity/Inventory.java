@@ -5,6 +5,7 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -17,6 +18,10 @@ public class Inventory implements Serializable {
     @Column(unique = true)
     private String name;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
 
     @OneToMany(mappedBy = "origin", fetch = FetchType.LAZY)
     private List<Transfer> sent;
@@ -27,36 +32,47 @@ public class Inventory implements Serializable {
 
 
     @OneToMany(mappedBy = "location", fetch = FetchType.LAZY)
+    @OrderBy("barcode")
     private List<Pallet> pallets;
 
 
-    @OneToOne(mappedBy = "poolInventory")
-    private Pool pool;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Inventory parent;
 
-    @Id
-    @Column(name = "id", nullable = false)
-    private UUID id;
 
-    public UUID getId() {
+    @OneToMany(mappedBy = "parent")
+    private List<Inventory> children;
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Inventory(UUID inventoryId, String name) {
-        this.id = inventoryId;
+    public Inventory getParent() {
+        return parent;
+    }
+
+    public void setParent(Inventory parent) {
+        this.parent = parent;
+    }
+
+    public List<Inventory> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<Inventory> children) {
+        this.children = children;
+    }
+
+    public Inventory(String name) {
         this.name = name;
     }
 
-    public Inventory(Pool pool) {
-        this.pool = pool;
-        this.id = pool.getId();
-    }
-
-    public Pool getPool() {
-        return pool;
+    public Inventory(Inventory parent) {
+        this.parent = parent;
     }
 
     public String getName() {

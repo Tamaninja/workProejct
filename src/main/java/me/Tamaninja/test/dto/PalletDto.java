@@ -1,28 +1,33 @@
 package me.Tamaninja.test.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder(alphabetic = false)
 public class PalletDto implements Serializable {
     private Long barcode;
-    private short containerAmount;
+    private Integer containerAmount;
     private double weightGross;
     private double weightNet;
     private PalletContentDto palletContent;
     private PalletContainerDto palletContainer;
     private PalletTypeDto palletType;
     private InventoryDto location;
-    private List<TransferDto> transfers = new ArrayList<>();
+    private List<TransferDto> transfers;
+    private InventoryDto origin;
     private Date timestamp;
-    private PoolDto pool;
 
     public PalletDto() {
     }
 
-    public PalletDto(Long barcode, short containerAmount, double weightGross, double weightNet, PalletContentDto palletContent, PalletContainerDto palletContainer, PalletTypeDto palletType, InventoryDto location, List<TransferDto> transfers, Date timestamp, PoolDto pool) {
+    public PalletDto(Long barcode, Integer containerAmount, double weightGross, double weightNet, PalletContentDto palletContent, PalletContainerDto palletContainer, PalletTypeDto palletType, InventoryDto location, List<TransferDto> transfers, InventoryDto origin, Date timestamp) {
         this.barcode = barcode;
         this.containerAmount = containerAmount;
         this.weightGross = weightGross;
@@ -32,8 +37,8 @@ public class PalletDto implements Serializable {
         this.palletType = palletType;
         this.location = location;
         this.transfers = transfers;
+        this.origin = origin;
         this.timestamp = timestamp;
-        this.pool = pool;
     }
 
     public Long getBarcode() {
@@ -44,11 +49,11 @@ public class PalletDto implements Serializable {
         this.barcode = barcode;
     }
 
-    public short getContainerAmount() {
+    public Integer getContainerAmount() {
         return containerAmount;
     }
 
-    public void setContainerAmount(short containerAmount) {
+    public void setContainerAmount(Integer containerAmount) {
         this.containerAmount = containerAmount;
     }
 
@@ -108,20 +113,20 @@ public class PalletDto implements Serializable {
         this.transfers = transfers;
     }
 
+    public InventoryDto getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(InventoryDto origin) {
+        this.origin = origin;
+    }
+
     public Date getTimestamp() {
         return timestamp;
     }
 
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
-    }
-
-    public PoolDto getPool() {
-        return pool;
-    }
-
-    public void setPool(PoolDto pool) {
-        this.pool = pool;
     }
 
     @Override
@@ -138,13 +143,13 @@ public class PalletDto implements Serializable {
                 Objects.equals(this.palletType, entity.palletType) &&
                 Objects.equals(this.location, entity.location) &&
                 Objects.equals(this.transfers, entity.transfers) &&
-                Objects.equals(this.timestamp, entity.timestamp) &&
-                Objects.equals(this.pool, entity.pool);
+                Objects.equals(this.origin, entity.origin) &&
+                Objects.equals(this.timestamp, entity.timestamp);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(barcode, containerAmount, weightGross, weightNet, palletContent, palletContainer, palletType, location, transfers, timestamp, pool);
+        return Objects.hash(barcode, containerAmount, weightGross, weightNet, palletContent, palletContainer, palletType, location, transfers, origin, timestamp);
     }
 
     @Override
@@ -159,7 +164,7 @@ public class PalletDto implements Serializable {
                 "palletType = " + palletType + ", " +
                 "location = " + location + ", " +
                 "transfers = " + transfers + ", " +
-                "timestamp = " + timestamp + ", " +
-                "pool = " + pool + ")";
+                "origin = " + origin + ", " +
+                "timestamp = " + timestamp + ")";
     }
 }

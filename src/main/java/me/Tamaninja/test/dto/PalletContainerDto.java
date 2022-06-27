@@ -10,9 +10,9 @@ public class PalletContainerDto implements Serializable {
     private Integer id;
     private String name;
     private double weight;
-    private Short defaultAmount;
+    private Integer defaultAmount;
 
-    public PalletContainerDto(Integer id, String name, double weight, Short defaultAmount) {
+    public PalletContainerDto(Integer id, String name, double weight, Integer defaultAmount) {
         this.id = id;
         this.name = name;
         this.weight = weight;
@@ -45,11 +45,11 @@ public class PalletContainerDto implements Serializable {
         this.weight = weight;
     }
 
-    public Short getDefaultAmount() {
+    public Integer getDefaultAmount() {
         return defaultAmount;
     }
 
-    public void setDefaultAmount(Short defaultAmount) {
+    public void setDefaultAmount(Integer defaultAmount) {
         this.defaultAmount = defaultAmount;
     }
 

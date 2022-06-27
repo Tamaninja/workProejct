@@ -2,11 +2,8 @@ package me.Tamaninja.test.service;
 
 import me.Tamaninja.test.dto.PalletDto;
 import me.Tamaninja.test.entity.*;
-import me.Tamaninja.test.enums.Errors;
 import me.Tamaninja.test.repository.*;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 import static me.Tamaninja.test.util.ClassMapperUtil.mapClassIgnoreLazy;
 
@@ -18,28 +15,24 @@ public class InventoryManagementService {
     private final PalletContentRepo palletContentRepo;
     private final InventoryRepo inventoryRepo;
     private final TransferRepo transferRepo;
-    private final PoolRepository poolRepo;
-    public InventoryManagementService(PalletRepo palletRepo, PalletContainerRepo containerRepo, PalletTypeRepo palletTypeRepo, PalletContentRepo palletContentRepo, InventoryRepo inventoryRepo, TransferRepo transferRepo, PoolRepository poolRepo) {
+    public InventoryManagementService(PalletRepo palletRepo, PalletContainerRepo containerRepo, PalletTypeRepo palletTypeRepo, PalletContentRepo palletContentRepo, InventoryRepo inventoryRepo, TransferRepo transferRepo) {
         this.palletRepo = palletRepo;
         this.containerRepo = containerRepo;
         this.palletTypeRepo = palletTypeRepo;
         this.palletContentRepo = palletContentRepo;
         this.inventoryRepo = inventoryRepo;
         this.transferRepo = transferRepo;
-        this.poolRepo = poolRepo;
     }
 
-    public Transfer newTransfer(Integer deliveryId, Inventory transferFrom,  Inventory transferTo) {
-        Transfer transfer = new Transfer(deliveryId, transferFrom, transferTo);
+    public Transfer newTransfer(String identifier, Inventory transferFrom,  Inventory transferTo) {
+        Transfer transfer = new Transfer(identifier, transferFrom, transferTo);
         transferRepo.save(transfer);
         return (transfer);
     }
-
-    public Pool newPool(String description) {
-        Pool pool = new Pool(description);
-        inventoryRepo.save(pool.getPoolInventory());
-        poolRepo.save(pool);
-        return (pool);
+    public Transfer newTransfer(Inventory transferFrom, Inventory transferTo) {
+        Transfer transfer = new Transfer(transferFrom,transferTo);
+        transferRepo.save(transfer);
+        return (transfer);
     }
 
     public void addToTransfer(Pallet pallet, Transfer transfer) {
@@ -59,61 +52,78 @@ public class InventoryManagementService {
         palletContentRepo.save(palletContent);
         return (palletContent);
     }
-    public PalletContainer newPalletContainer(String name, double weight, Short defaultAmount) {
+    public PalletContainer newPalletContainer(String name, double weight, Integer defaultAmount) {
         PalletContainer palletContainer = new PalletContainer(name,weight,defaultAmount);
         containerRepo.save(palletContainer);
         return (palletContainer);
     }
-    public Inventory newLocation(UUID id, String name) {
-        Inventory inventory = new Inventory(id, name);
+    public Inventory newLocation(String name) {
+        Inventory inventory = new Inventory(name);
         inventoryRepo.save(inventory);
         return (inventory);
     }
+    public Inventory newInventory(Inventory inventory) {
+        Inventory inventory1 = new Inventory(inventory);
+        inventoryRepo.save(inventory1);
+        return (inventory1);
+    }
 
-    public PalletDto savePallet(Long barcode, Integer palletTypeId, Integer palletContainerId, Short containerAmount, Integer palletContentId, double grossWeight, String inventoryName, Pool origin) {
-        if (inventoryName == null) return null;
+    public Pallet savePallet(Long barcode, Integer palletTypeId, Integer palletContainerId, Integer containerAmount, Integer palletContentId, double grossWeight, Inventory origin) {
+        if (origin == null) {
+            System.out.println("origin is nal");
+            return null;
+        }
         if (barcode == null) barcode = palletRepo.generateBarcode();
-        else if (palletRepo.existsById(barcode)) return null;
-        Inventory inventory = inventoryRepo.findByName(inventoryName).orElseThrow(() -> new RuntimeException(Errors.INVALID_ID.toString()));
+        else if (palletRepo.existsById(barcode)) {
+            System.out.printf("barcode already exists");
+            return null;
+        }
 
-        PalletContainer palletContainer = findPalletContainer(palletContainerId, inventory.getName());
-        PalletContent palletContent = findPalletContent(palletContentId, inventory.getName());
-        PalletType palletType = findPalletType(palletTypeId, inventory.getName());
+        PalletContainer palletContainer = findPalletContainer(palletContainerId, origin);
+        PalletContent palletContent = findPalletContent(palletContentId, origin);
+        PalletType palletType = findPalletType(palletTypeId, origin);
+        if (palletContainer == null || palletContent == null || palletType == null) {
+            System.out.printf("types are null");
+            return null;
+        }
 
         if (containerAmount == null) containerAmount = palletContainer.getDefaultAmount();
         double MIN_WEIGHT = (palletType.getWeight() + (palletContainer.getWeight() * containerAmount));
-        if (grossWeight <= MIN_WEIGHT) return null;
+        if (grossWeight <= MIN_WEIGHT)  {
+            System.out.printf("invalid weight");
+            return null;
+        }
 
-        Pallet pallet = new Pallet(barcode, palletType, palletContainer, containerAmount, palletContent, grossWeight, grossWeight-MIN_WEIGHT, inventory, origin);
+        Pallet pallet = new Pallet(barcode, palletType, palletContainer, containerAmount, palletContent, grossWeight, grossWeight-MIN_WEIGHT, origin);
         palletRepo.save(pallet);
         PalletDto palletDto = mapClassIgnoreLazy(pallet, PalletDto.class);
-        return (palletDto);
+        return (pallet);
     }
-    public PalletType findPalletType(Integer id, String inventoryName) {
+    public PalletType findPalletType(Integer id, Inventory inventory) {
         PalletType palletType;
         if (id == null) {
-            palletType = palletTypeRepo.mostUsedPalletType(inventoryName).orElseThrow(() -> new RuntimeException(Errors.INVALID_ID.toString()));
+            palletType = palletTypeRepo.mostUsedPalletType(inventory.getId());
         } else {
-            palletType = palletTypeRepo.findById(id).orElseThrow(() -> new RuntimeException(Errors.INVALID_ID.toString()));
+            palletType = palletTypeRepo.findById(id).orElse(null);
         }
         return (palletType);
     }
 
-    public PalletContent findPalletContent(Integer id, String inventoryName) {
+    public PalletContent findPalletContent(Integer id, Inventory inventory) {
         PalletContent palletContent;
         if (id == null) {
-            palletContent = palletContentRepo.mostUsedContent(inventoryName).orElseThrow(() -> new RuntimeException(Errors.INVALID_ID.toString()));
+            palletContent = palletContentRepo.mostUsedContent(inventory.getId());
         } else {
-            palletContent = palletContentRepo.findById(id).orElseThrow(() -> new RuntimeException(Errors.INVALID_ID.toString()));
+            palletContent = palletContentRepo.findById(id).orElse(null);
         }
         return (palletContent);
     }
-    public PalletContainer findPalletContainer(Integer id, String inventoryName) {
+    public PalletContainer findPalletContainer(Integer id, Inventory inventory) {
         PalletContainer palletContainer;
         if (id == null) {
-            palletContainer = containerRepo.mostUsedContainer(inventoryName).orElseThrow(() -> new RuntimeException(Errors.INVALID_ID.toString()));
+            palletContainer = containerRepo.mostUsedContainer(inventory.getId());
         } else {
-            palletContainer = containerRepo.findById(id).orElseThrow(() -> new RuntimeException(Errors.INVALID_ID.toString()));
+            palletContainer = containerRepo.findById(id).orElse(null);
         }
         return (palletContainer);
     }

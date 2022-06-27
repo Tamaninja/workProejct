@@ -11,7 +11,11 @@ import me.Tamaninja.test.repository.*;
 import me.Tamaninja.test.util.ClassMapperUtil;
 import org.springframework.stereotype.Service;
 
-import static me.Tamaninja.test.util.ClassMapperUtil.mapClassIgnoreLazy;
+import javax.persistence.criteria.CriteriaBuilder;
+import java.util.ArrayList;
+import java.util.List;
+
+import static me.Tamaninja.test.util.ClassMapperUtil.*;
 
 @Service
 public class LookupService {
@@ -38,14 +42,33 @@ public class LookupService {
         return (palletDto);
     }
 
-    public InventoryDto findInventory(String name) {
+    public InventoryDto findInventory(Long name) {
+        Inventory inventory = inventoryRepo.findById(name).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString()));
+        return (getInventory(inventory.getId()));
+    }
 
-        Inventory inventory = inventoryRepo.findByName(name).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString()));
+    public InventoryDto getInventory(Long id) {
+        Inventory inventory = inventoryRepo.findById(id).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString()));
         InventoryDto inventoryDto = mapClassIgnoreLazy(inventory, InventoryDto.class);
         inventoryDto.setPallets(ClassMapperUtil.mapListIgnoreLazyCollection(inventory.getPallets(), PalletDto.class));
+        inventoryDto.setChildren(getChildren(inventory.getChildren()));
         return (inventoryDto);
     }
-    public TransferDto findTransfer(Integer id) {
+
+    public List<InventoryDto> getChildren(List<Inventory> children) {
+        if (children.size() < 1) {
+            return null;
+        }
+        List<InventoryDto> inventoryDtos = mapListIgnoreLazyCollection(children, InventoryDto.class);
+        for (InventoryDto inventoryDto:inventoryDtos) {
+            Inventory inventory = getInventoryById(inventoryDto.getId());
+            inventoryDto.setPallets(ClassMapperUtil.mapListIgnoreLazyCollection(inventory.getPallets(), PalletDto.class));
+            inventoryDto.setChildren(getChildren(inventory.getChildren()));
+            inventoryDto.setParent(null);
+        }
+        return (inventoryDtos);
+    }
+    public TransferDto findTransfer(Long id) {
         Transfer transfer = transferRepo.findById(id).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString()));
         TransferDto transferDto = mapClassIgnoreLazy(transfer, TransferDto.class);
         transferDto.setPallets(ClassMapperUtil.mapListIgnoreLazyCollection(transfer.getPallets(), PalletDto.class));
@@ -55,10 +78,14 @@ public class LookupService {
     public Pallet getPallet(Long barcode) {
         return (palletRepo.findById(barcode).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString())));
     }
-    public Inventory getInventory(Long id) {
-        return (inventoryRepo.findById(id).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString())));
-    }
-    public Transfer getTransfer(Integer id) {
+    public Transfer getTransfer(Long id) {
         return (transferRepo.findById(id).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString())));
+    }
+    public Inventory getInventoryById(Long id) {
+        return (inventoryRepo.findById(id).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString())));
+
+    }
+    public Inventory getInventoryByName(String name) {
+        return (inventoryRepo.findByName(name).orElse(null));
     }
 }

@@ -1,28 +1,32 @@
 package me.Tamaninja.test.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class InventoryDto implements Serializable {
     private String name;
+    private Long id;
     private List<TransferDto> sent;
     private List<TransferDto> received;
     private List<PalletDto> pallets;
-    private PoolDto pool;
-    private UUID id;
+    private InventoryDto parent;
+    private List<InventoryDto> children;
 
     public InventoryDto() {
     }
 
-    public InventoryDto(String name, List<TransferDto> sent, List<TransferDto> received, List<PalletDto> pallets, PoolDto pool, UUID id) {
+    public InventoryDto(String name, Long id, List<TransferDto> sent, List<TransferDto> received, List<PalletDto> pallets, InventoryDto parent, List<InventoryDto> children) {
         this.name = name;
+        this.id = id;
         this.sent = sent;
         this.received = received;
         this.pallets = pallets;
-        this.pool = pool;
-        this.id = id;
+        this.parent = parent;
+        this.children = children;
     }
 
     public String getName() {
@@ -31,6 +35,14 @@ public class InventoryDto implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public List<TransferDto> getSent() {
@@ -57,20 +69,20 @@ public class InventoryDto implements Serializable {
         this.pallets = pallets;
     }
 
-    public PoolDto getPool() {
-        return pool;
+    public InventoryDto getParent() {
+        return parent;
     }
 
-    public void setPool(PoolDto pool) {
-        this.pool = pool;
+    public void setParent(InventoryDto parent) {
+        this.parent = parent;
     }
 
-    public UUID getId() {
-        return id;
+    public List<InventoryDto> getChildren() {
+        return children;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setChildren(List<InventoryDto> children) {
+        this.children = children;
     }
 
     @Override
@@ -79,26 +91,28 @@ public class InventoryDto implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         InventoryDto entity = (InventoryDto) o;
         return Objects.equals(this.name, entity.name) &&
+                Objects.equals(this.id, entity.id) &&
                 Objects.equals(this.sent, entity.sent) &&
                 Objects.equals(this.received, entity.received) &&
                 Objects.equals(this.pallets, entity.pallets) &&
-                Objects.equals(this.pool, entity.pool) &&
-                Objects.equals(this.id, entity.id);
+                Objects.equals(this.parent, entity.parent) &&
+                Objects.equals(this.children, entity.children);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, sent, received, pallets, pool, id);
+        return Objects.hash(name, id, sent, received, pallets, parent, children);
     }
 
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" +
                 "name = " + name + ", " +
+                "id = " + id + ", " +
                 "sent = " + sent + ", " +
                 "received = " + received + ", " +
                 "pallets = " + pallets + ", " +
-                "pool = " + pool + ", " +
-                "id = " + id + ")";
+                "parent = " + parent + ", " +
+                "children = " + children + ")";
     }
 }

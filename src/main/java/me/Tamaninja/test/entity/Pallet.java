@@ -15,7 +15,7 @@ public class Pallet implements Serializable {
     @Column(nullable = false,unique = true)
     private Long barcode;
 
-    private short containerAmount;
+    private Integer containerAmount;
 
     @Column(nullable = false, scale = 2)
     private double weightGross;
@@ -34,33 +34,79 @@ public class Pallet implements Serializable {
     private PalletType palletType;
 
 
-    @ManyToOne(optional = false)
-    @JoinColumn(referencedColumnName = "name")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Inventory location;
 
 
-    @ManyToMany(mappedBy = "pallets")
+    @ManyToMany(mappedBy = "pallets", fetch = FetchType.LAZY)
     private List<Transfer> transfers = new ArrayList<>();
 
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Inventory origin;
+
+    public void setBarcode(Long barcode) {
+        this.barcode = barcode;
+    }
+
+    public void setContainerAmount(Integer containerAmount) {
+        this.containerAmount = containerAmount;
+    }
+
+    public void setWeightGross(double weightGross) {
+        this.weightGross = weightGross;
+    }
+
+    public void setWeightNet(double weightNet) {
+        this.weightNet = weightNet;
+    }
+
+    public void setPalletContent(PalletContent palletContent) {
+        this.palletContent = palletContent;
+    }
+
+    public void setPalletContainer(PalletContainer palletContainer) {
+        this.palletContainer = palletContainer;
+    }
+
+    public void setPalletType(PalletType palletType) {
+        this.palletType = palletType;
+    }
+
+    public void setLocation(Inventory location) {
+        this.location = location;
+    }
+
+    public void setTransfers(List<Transfer> transfers) {
+        this.transfers = transfers;
+    }
+
+    public Inventory getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(Inventory origin) {
+        this.origin = origin;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
     private Date timestamp;
 
-    @ManyToOne
-    @JoinColumn(name = "pool_id")
-    private Pool pool;
-
-    public Pallet(Long barcode, PalletType palletType, PalletContainer palletContainer, short containerAmount, PalletContent palletContent, double weightGross, double weightNet, Inventory palletInventory, Pool pool) {
+    public Pallet(Long barcode, PalletType palletType, PalletContainer palletContainer, Integer containerAmount, PalletContent palletContent, double weightGross, double weightNet, Inventory origin) {
         this.barcode = barcode;
         this.weightGross = weightGross;
         this.weightNet = weightNet;
         this.palletContainer = palletContainer;
         this.palletType = palletType;
         this.palletContent = palletContent;
-        this.location = palletInventory;
+        this.location = origin;
         this.containerAmount = containerAmount;
-        this.pool = pool;
+        this.origin = origin;
     }
 
     public Pallet(){
@@ -71,15 +117,6 @@ public class Pallet implements Serializable {
         this.weightGross = weightGross;
         this.weightNet = weightGross - (palletContainer.getWeight() * containerAmount) - palletType.getWeight();
     }
-
-    public Pool getPool() {
-        return pool;
-    }
-
-    public void setPool(Pool pool) {
-        this.pool = pool;
-    }
-
     public Long getBarcode() {
         return barcode;
     }
@@ -112,7 +149,7 @@ public class Pallet implements Serializable {
         return palletContent;
     }
 
-    public short getContainerAmount() {
+    public Integer getContainerAmount() {
         return containerAmount;
     }
 

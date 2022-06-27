@@ -21,9 +21,9 @@ public class PalletContainer implements Serializable {
 
     @JsonIgnore
     @Column(nullable = false)
-    private Short defaultAmount;
+    private Integer defaultAmount;
 
-    public PalletContainer(String name, double weight, Short defaultAmount) {
+    public PalletContainer(String name, double weight, Integer defaultAmount) {
         this.name = name;
         this.weight = weight;
         this.defaultAmount = defaultAmount;
@@ -44,7 +44,7 @@ public class PalletContainer implements Serializable {
         return weight;
     }
 
-    public Short getDefaultAmount() {
+    public Integer getDefaultAmount() {
         return defaultAmount;
     }
 

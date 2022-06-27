@@ -13,16 +13,16 @@ import java.util.List;
 public class Transfer implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
     @Column(unique = true)
-    private Integer id;
+    private String identifier;
 
     @ManyToOne()
-    @JoinColumn(referencedColumnName = "name")
     private Inventory origin;
 
     @ManyToOne()
-    @JoinColumn(referencedColumnName = "name")
-
     private Inventory destination;
 
 
@@ -36,21 +36,36 @@ public class Transfer implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "pallets_barcode"))
     private List<Pallet> pallets = new ArrayList<>();
 
-    public Transfer(Integer id, Inventory origin, Inventory destination) {
-        this.id = id;
+
+
+    public Transfer(String identifier, Inventory origin, Inventory destination) {
+        this.identifier = identifier;
         this.origin = origin;
         this.destination = destination;
     }
+    public Transfer(Inventory origin, Inventory destination) {
+        this.origin = origin;
+        this.destination = destination;
+    }
+
     public Transfer() {
 
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
     public Inventory getOrigin() {

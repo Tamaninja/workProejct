@@ -1,9 +1,7 @@
 package me.Tamaninja.test;
 
-import me.Tamaninja.test.dto.PalletDto;
 import me.Tamaninja.test.entity.Inventory;
 import me.Tamaninja.test.entity.Pallet;
-import me.Tamaninja.test.entity.Pool;
 import me.Tamaninja.test.entity.Transfer;
 import me.Tamaninja.test.service.InventoryManagementService;
 import me.Tamaninja.test.service.LookupService;
@@ -13,7 +11,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.util.Random;
-import java.util.UUID;
 
 @SpringBootApplication
 public class TestApplication {
@@ -26,40 +23,44 @@ public class TestApplication {
 	public CommandLineRunner run(InventoryManagementService inventoryManagementService, LookupService lookupService) throws Exception {
 		return args -> {
 			try {
-				inventoryManagementService.newPalletContainer("tray",0.97, (short) 100);
-				inventoryManagementService.newPalletContainer("smalltray",0.27,(short) 200);
-				inventoryManagementService.newPalletContainer("bigtray",0.72,(short) 150);
+				inventoryManagementService.newPalletContainer("tray",0.97, 100);
+				inventoryManagementService.newPalletContainer("smalltray",0.27,200);
+				inventoryManagementService.newPalletContainer("bigtray",0.72, 150);
 				inventoryManagementService.newPalletType("wooden", 15);
 				inventoryManagementService.newPalletType("plastic", 20);
 				inventoryManagementService.newPalletType("bigwooden", 18);
 				inventoryManagementService.newPalletContent("dry");
 				inventoryManagementService.newPalletContent("wet");
 				inventoryManagementService.newPalletContent("garbage");
-				Inventory inv150 = inventoryManagementService.newLocation(UUID.randomUUID(),"150");
-				Inventory inv200 = inventoryManagementService.newLocation(UUID.randomUUID(),"200");
-				Transfer transfer = inventoryManagementService.newTransfer(303030,inv150, inv200);
-				Transfer transfer1 = inventoryManagementService.newTransfer(303031,inv200, inv150);
+				Inventory inv150 = inventoryManagementService.newLocation("150");
+				Inventory inv200 = inventoryManagementService.newLocation("200");
+				Transfer transfer = inventoryManagementService.newTransfer("303030",inv150, inv200);
+				Transfer transfer1 = inventoryManagementService.newTransfer("303031",inv200, inv150);
+				inventoryManagementService.savePallet(null, 1, 2, 2, 2, 200, inv150);
 
 
 				Random random = new Random();
-				Pool pool = inventoryManagementService.newPool("hahaha");
+				Inventory inventory = inventoryManagementService.newInventory(inv150);
+				inventoryManagementService.savePallet(null, 1, 2, 2, 2, 200, inventory);
 				for (int i = 0; i < 250; i++) {
-					Pool pool1 = inventoryManagementService.newPool("bababa");
-					pool1.setParent(pool);
+					Inventory inventory1 = inventoryManagementService.newInventory(inventory);
 					int randomType = random.nextInt(3) + 1;
 					int randomContainer = random.nextInt(3) + 1;
 					int randomContent = random.nextInt(3) + 1;
-					Short randomAmount = (short) random.nextInt(100);
-					double randomWeight = random.nextInt(700) + 150f;
-					PalletDto palletDto = inventoryManagementService.savePallet(null, randomType, randomContainer, randomAmount, randomContent, randomWeight, "150", pool1);
-					Pallet pallet = lookupService.getPallet(palletDto.getBarcode());
-					inventoryManagementService.addToTransfer(pallet, transfer);
-					inventoryManagementService.addToTransfer(pallet, transfer1);
+					int randomAmount = random.nextInt(100);
+					double randomWeight = random.nextInt(700) + 150;
+					Pallet pallet = inventoryManagementService.savePallet(null, randomType, randomContainer, randomAmount, randomContent, randomWeight, inventory1);
+					Transfer transfer2 = inventoryManagementService.newTransfer(inventory1,inv150);
+					Transfer transfer3 = inventoryManagementService.newTransfer(inv150, inventory1);
+					Transfer transfer4 = inventoryManagementService.newTransfer(inventory1, inv200);
+					inventoryManagementService.addToTransfer(pallet, transfer2);
+					inventoryManagementService.addToTransfer(pallet, transfer3);
+//					inventoryManagementService.addToTransfer(pallet, transfer4);
 				}
 				for (int i = 0; i < 250; i++) {
-					Short randomAmount = (short) random.nextInt(100);
-					double randomWeight = random.nextInt(700) + 150f;
-					inventoryManagementService.savePallet(null, null, null, randomAmount, null, randomWeight, "150",pool);
+					int randomAmount = random.nextInt(100);
+					double randomWeight = random.nextInt(700) + 150;
+					inventoryManagementService.savePallet(null, null, null, randomAmount, null, randomWeight,inventory);
 				}
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();

@@ -3,34 +3,46 @@ package me.Tamaninja.test.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TransferDto implements Serializable {
-    private Integer id;
+    private Long id;
+    private String identifier;
     private InventoryDto origin;
     private InventoryDto destination;
     private Date transferTimestamp;
-    private List<PalletDto> pallets;
+    private List<PalletDto> pallets = new ArrayList<>();
 
-    public TransferDto(Integer id, InventoryDto origin, InventoryDto destination, Date transferTimestamp, List<PalletDto> pallets) {
+    public TransferDto() {
+    }
+
+    public TransferDto(Long id, String identifier, InventoryDto origin, InventoryDto destination, Date transferTimestamp, List<PalletDto> pallets) {
         this.id = id;
+        this.identifier = identifier;
         this.origin = origin;
         this.destination = destination;
         this.transferTimestamp = transferTimestamp;
         this.pallets = pallets;
     }
 
-    public TransferDto() {}
-
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
     public InventoryDto getOrigin() {
@@ -71,6 +83,7 @@ public class TransferDto implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         TransferDto entity = (TransferDto) o;
         return Objects.equals(this.id, entity.id) &&
+                Objects.equals(this.identifier, entity.identifier) &&
                 Objects.equals(this.origin, entity.origin) &&
                 Objects.equals(this.destination, entity.destination) &&
                 Objects.equals(this.transferTimestamp, entity.transferTimestamp) &&
@@ -79,13 +92,14 @@ public class TransferDto implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, origin, destination, transferTimestamp, pallets);
+        return Objects.hash(id, identifier, origin, destination, transferTimestamp, pallets);
     }
 
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" +
                 "id = " + id + ", " +
+                "identifier = " + identifier + ", " +
                 "origin = " + origin + ", " +
                 "destination = " + destination + ", " +
                 "transferTimestamp = " + transferTimestamp + ", " +
