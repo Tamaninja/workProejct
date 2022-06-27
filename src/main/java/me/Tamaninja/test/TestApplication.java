@@ -41,25 +41,22 @@ public class TestApplication {
 
 				Random random = new Random();
 				Inventory inventory = inventoryManagementService.newInventory(inv150);
+				Inventory inventory1 = inventoryManagementService.newInventory(inv150);
 				inventoryManagementService.savePallet(null, 1, 2, 2, 2, 200, inventory);
 				for (int i = 0; i < 250; i++) {
-					Inventory inventory1 = inventoryManagementService.newInventory(inventory);
 					int randomType = random.nextInt(3) + 1;
 					int randomContainer = random.nextInt(3) + 1;
 					int randomContent = random.nextInt(3) + 1;
 					int randomAmount = random.nextInt(100);
 					double randomWeight = random.nextInt(700) + 150;
-					Pallet pallet = inventoryManagementService.savePallet(null, randomType, randomContainer, randomAmount, randomContent, randomWeight, inventory1);
-					Transfer transfer2 = inventoryManagementService.newTransfer(inventory1,inv150);
-					Transfer transfer3 = inventoryManagementService.newTransfer(inv150, inventory1);
-					Transfer transfer4 = inventoryManagementService.newTransfer(inventory1, inv200);
+					Pallet pallet = inventoryManagementService.savePallet(null, randomType, randomContainer, randomAmount, randomContent, randomWeight, inventory);
+					Transfer transfer2 = inventoryManagementService.newTransfer(inventory,inv150);
 					inventoryManagementService.addToTransfer(pallet, transfer2);
-//					inventoryManagementService.addToTransfer(pallet, transfer4);
 				}
 				for (int i = 0; i < 250; i++) {
 					int randomAmount = random.nextInt(100);
 					double randomWeight = random.nextInt(700) + 150;
-					inventoryManagementService.savePallet(null, null, null, randomAmount, null, randomWeight,inventory);
+					inventoryManagementService.savePallet(null, 1, 1, randomAmount, 1, randomWeight,inventory1);
 				}
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();

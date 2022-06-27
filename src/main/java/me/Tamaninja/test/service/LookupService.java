@@ -44,7 +44,8 @@ public class LookupService {
 
     public InventoryDto findInventory(Long name) {
         Inventory inventory = inventoryRepo.findById(name).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString()));
-        return (getInventory(inventory.getId()));
+        InventoryDto inventoryDto = getInventory(inventory.getId());
+        return (inventoryDto);
     }
 
     public InventoryDto getInventory(Long id) {
