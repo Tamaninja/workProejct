@@ -17,10 +17,12 @@ public class LookupController {
     }
 
     @GetMapping("/pallet")
-    public PalletDto findPallet(@RequestParam(value="barcode") Long barcode) {
-        return (lookupService.findPallet(barcode));
+    public ResponseEntity<PalletDto> findPallet(@RequestParam(value="barcode") Long barcode) {
+        PalletDto palletDto = lookupService.findPallet(barcode);
+        ResponseEntity<PalletDto> response = new ResponseEntity<PalletDto>(palletDto, HttpStatus.OK);
+        return (response);
     }
-
+    
     @GetMapping("/inventory")
     public ResponseEntity<InventoryDto> findInventory(@RequestParam(value="name") Long name) {
         InventoryDto inventoryDto = lookupService.findInventory(name);

@@ -102,7 +102,7 @@ public class Transfer implements Serializable {
 
     public void addPallet(Pallet pallet) {
         pallets.add(pallet);
-        pallet.setInventory(destination);
+        pallet.setLocation(destination);
     }
 
 

@@ -23,6 +23,7 @@ public class TestApplication {
 	public CommandLineRunner run(InventoryManagementService inventoryManagementService, LookupService lookupService) throws Exception {
 		return args -> {
 			try {
+
 				inventoryManagementService.newPalletContainer("tray",0.97, 100);
 				inventoryManagementService.newPalletContainer("smalltray",0.27,200);
 				inventoryManagementService.newPalletContainer("bigtray",0.72, 150);
@@ -49,9 +50,9 @@ public class TestApplication {
 					int randomContent = random.nextInt(3) + 1;
 					int randomAmount = random.nextInt(100);
 					double randomWeight = random.nextInt(700) + 150;
-					Pallet pallet = inventoryManagementService.savePallet(null, randomType, randomContainer, randomAmount, randomContent, randomWeight, inventory);
+					Pallet pallet1 = inventoryManagementService.savePallet(null, randomType, randomContainer, randomAmount, randomContent, randomWeight, inventory);
 					Transfer transfer2 = inventoryManagementService.newTransfer(inventory,inv150);
-					inventoryManagementService.addToTransfer(pallet, transfer2);
+					inventoryManagementService.addToTransfer(pallet1, transfer2);
 				}
 				for (int i = 0; i < 250; i++) {
 					int randomAmount = random.nextInt(100);

@@ -1,5 +1,6 @@
 package me.Tamaninja.test.service;
 
+import me.Tamaninja.test.dto.ContentDto;
 import me.Tamaninja.test.dto.InventoryDto;
 import me.Tamaninja.test.dto.PalletDto;
 import me.Tamaninja.test.dto.TransferDto;
@@ -11,8 +12,6 @@ import me.Tamaninja.test.repository.*;
 import me.Tamaninja.test.util.ClassMapperUtil;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import java.util.ArrayList;
 import java.util.List;
 
 import static me.Tamaninja.test.util.ClassMapperUtil.*;
@@ -39,6 +38,8 @@ public class LookupService {
         Pallet pallet = palletRepo.findById(barcode).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString()));
         PalletDto palletDto = mapClassIgnoreLazy(pallet, PalletDto.class);
         palletDto.setTransfers(ClassMapperUtil.mapListIgnoreLazyCollection(pallet.getTransfers(), TransferDto.class));
+        palletDto.setContents(ClassMapperUtil.mapListIgnoreLazyCollection(pallet.getContents(), ContentDto.class));
+
         return (palletDto);
     }
 
