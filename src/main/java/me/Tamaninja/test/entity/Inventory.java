@@ -35,13 +35,20 @@ public class Inventory implements Serializable {
     @OrderBy("barcode")
     private List<Pallet> pallets;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     private Inventory parent;
 
 
     @OneToMany(mappedBy = "parent")
     private List<Inventory> children;
+
+    public Inventory(String name) {
+        this.name = name;
+    }
+
+    public Inventory(Inventory parent) {
+        this.parent = parent;
+    }
 
     public Long getId() {
         return id;
@@ -65,14 +72,6 @@ public class Inventory implements Serializable {
 
     public void setChildren(List<Inventory> children) {
         this.children = children;
-    }
-
-    public Inventory(String name) {
-        this.name = name;
-    }
-
-    public Inventory(Inventory parent) {
-        this.parent = parent;
     }
 
     public String getName() {

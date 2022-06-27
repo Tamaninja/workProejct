@@ -54,7 +54,6 @@ public class TestApplication {
 					Transfer transfer3 = inventoryManagementService.newTransfer(inv150, inventory1);
 					Transfer transfer4 = inventoryManagementService.newTransfer(inventory1, inv200);
 					inventoryManagementService.addToTransfer(pallet, transfer2);
-					inventoryManagementService.addToTransfer(pallet, transfer3);
 //					inventoryManagementService.addToTransfer(pallet, transfer4);
 				}
 				for (int i = 0; i < 250; i++) {

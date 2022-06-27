@@ -28,7 +28,7 @@ public class ManagementController {
             @RequestParam(required = false, value="containerTypeId") Integer containerTypeId,
             @RequestParam(required = false, value="palletContent") Integer palletContent,
             @RequestParam(required = false, value="amount") Integer amount,
-            @RequestParam("locationName") String locationName,
+            @RequestParam("origin") String locationName,
             @RequestParam("weight") float weight )
     {
         Inventory inventory = lookupService.getInventoryByName(locationName);

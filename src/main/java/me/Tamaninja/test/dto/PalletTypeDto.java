@@ -1,5 +1,6 @@
 package me.Tamaninja.test.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;
@@ -7,6 +8,8 @@ import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PalletTypeDto implements Serializable {
+
+    @JsonIgnore
     private Integer id;
     private String name;
     private float weight;

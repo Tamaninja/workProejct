@@ -15,7 +15,7 @@ public class TransferDto implements Serializable {
     private InventoryDto origin;
     private InventoryDto destination;
     private Date transferTimestamp;
-    private List<PalletDto> pallets = new ArrayList<>();
+    private List<PalletDto> pallets;
 
     public TransferDto() {
     }

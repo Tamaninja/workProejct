@@ -39,7 +39,7 @@ public class Pallet implements Serializable {
 
 
     @ManyToMany(mappedBy = "pallets", fetch = FetchType.LAZY)
-    private List<Transfer> transfers = new ArrayList<>();
+    private List<Transfer> transfers;
 
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)

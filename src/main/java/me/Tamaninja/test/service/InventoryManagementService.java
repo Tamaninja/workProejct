@@ -62,10 +62,12 @@ public class InventoryManagementService {
         inventoryRepo.save(inventory);
         return (inventory);
     }
-    public Inventory newInventory(Inventory inventory) {
-        Inventory inventory1 = new Inventory(inventory);
-        inventoryRepo.save(inventory1);
-        return (inventory1);
+    public Inventory newInventory(Inventory parent) {
+        Inventory inventory = new Inventory(parent);
+        inventoryRepo.save(inventory);
+        inventory.setName(inventory.getId() + ">" + parent.getName());
+        inventoryRepo.save(inventory);
+        return (inventory);
     }
 
     public Pallet savePallet(Long barcode, Integer palletTypeId, Integer palletContainerId, Integer containerAmount, Integer palletContentId, double grossWeight, Inventory origin) {
@@ -75,7 +77,7 @@ public class InventoryManagementService {
         }
         if (barcode == null) barcode = palletRepo.generateBarcode();
         else if (palletRepo.existsById(barcode)) {
-            System.out.printf("barcode already exists");
+            System.out.println("barcode already exists");
             return null;
         }
 
@@ -83,14 +85,14 @@ public class InventoryManagementService {
         PalletContent palletContent = findPalletContent(palletContentId, origin);
         PalletType palletType = findPalletType(palletTypeId, origin);
         if (palletContainer == null || palletContent == null || palletType == null) {
-            System.out.printf("types are null");
+            System.out.println("types are null");
             return null;
         }
 
         if (containerAmount == null) containerAmount = palletContainer.getDefaultAmount();
         double MIN_WEIGHT = (palletType.getWeight() + (palletContainer.getWeight() * containerAmount));
         if (grossWeight <= MIN_WEIGHT)  {
-            System.out.printf("invalid weight");
+            System.out.println("invalid weight");
             return null;
         }
 
