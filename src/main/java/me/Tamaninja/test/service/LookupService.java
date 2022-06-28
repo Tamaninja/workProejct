@@ -12,6 +12,7 @@ import me.Tamaninja.test.repository.*;
 import me.Tamaninja.test.util.ClassMapperUtil;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static me.Tamaninja.test.util.ClassMapperUtil.*;
@@ -19,73 +20,68 @@ import static me.Tamaninja.test.util.ClassMapperUtil.*;
 @Service
 public class LookupService {
     private final PalletRepo palletRepo;
-    private final PalletContainerRepo containerRepo;
-    private final PalletTypeRepo palletTypeRepo;
-    private final PalletContentRepo palletContentRepo;
     private final InventoryRepo inventoryRepo;
     private final TransferRepo transferRepo;
 
-    public LookupService(PalletRepo palletRepo, PalletContainerRepo containerRepo, PalletTypeRepo palletTypeRepo, PalletContentRepo palletContentRepo, InventoryRepo inventoryRepo, TransferRepo transferRepo) {
+    public LookupService(PalletRepo palletRepo, InventoryRepo inventoryRepo, TransferRepo transferRepo) {
         this.palletRepo = palletRepo;
-        this.containerRepo = containerRepo;
-        this.palletTypeRepo = palletTypeRepo;
-        this.palletContentRepo = palletContentRepo;
         this.inventoryRepo = inventoryRepo;
         this.transferRepo = transferRepo;
     }
 
-    public PalletDto findPallet(Long barcode) {
-        Pallet pallet = palletRepo.findById(barcode).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString()));
+    public PalletDto mapPallet(Pallet pallet, boolean withTransfers) {
         PalletDto palletDto = mapClassIgnoreLazy(pallet, PalletDto.class);
-        palletDto.setTransfers(ClassMapperUtil.mapListIgnoreLazyCollection(pallet.getTransfers(), TransferDto.class));
-        palletDto.setContents(ClassMapperUtil.mapListIgnoreLazyCollection(pallet.getContents(), ContentDto.class));
-
+        palletDto.setContents(ClassMapperUtil.mapList(pallet.getContents(), ContentDto.class));
+        if (withTransfers) {
+            palletDto.setTransfers(ClassMapperUtil.mapListIgnoreLazyCollection(pallet.getTransfers(), TransferDto.class));
+        }
         return (palletDto);
     }
 
-    public InventoryDto findInventory(Long name) {
-        Inventory inventory = inventoryRepo.findById(name).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString()));
-        InventoryDto inventoryDto = getInventory(inventory.getId());
-        return (inventoryDto);
-    }
-
-    public InventoryDto getInventory(Long id) {
-        Inventory inventory = inventoryRepo.findById(id).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString()));
+    public InventoryDto mapInventory(Inventory inventory, boolean withPallets) {
         InventoryDto inventoryDto = mapClassIgnoreLazy(inventory, InventoryDto.class);
-        inventoryDto.setPallets(ClassMapperUtil.mapListIgnoreLazyCollection(inventory.getPallets(), PalletDto.class));
-        inventoryDto.setChildren(getChildren(inventory.getChildren()));
+        if (inventory.getChildren().size() > 0) {
+            List<InventoryDto> children = new ArrayList<>();
+            for (Inventory child:inventory.getChildren()) {
+                InventoryDto childDTO = mapInventory(child, withPallets);
+                childDTO.setParent(null);
+                children.add(childDTO);
+            }
+            inventoryDto.setChildren(children);
+        }
+
+        if (!withPallets) return (inventoryDto);
+
+        List<PalletDto> palletDtos = new ArrayList<>();
+        for (Pallet pallet:inventory.getPallets()) {
+            palletDtos.add(mapPallet(pallet, false));
+        }
+        inventoryDto.setPallets(palletDtos);
+
         return (inventoryDto);
     }
 
-    public List<InventoryDto> getChildren(List<Inventory> children) {
-        if (children.size() < 1) {
-            return null;
-        }
-        List<InventoryDto> inventoryDtos = mapListIgnoreLazyCollection(children, InventoryDto.class);
-        for (InventoryDto inventoryDto:inventoryDtos) {
-            Inventory inventory = getInventoryById(inventoryDto.getId());
-            inventoryDto.setPallets(ClassMapperUtil.mapListIgnoreLazyCollection(inventory.getPallets(), PalletDto.class));
-            inventoryDto.setChildren(getChildren(inventory.getChildren()));
-            inventoryDto.setParent(null);
-        }
-        return (inventoryDtos);
-    }
-    public TransferDto findTransfer(Long id) {
-        Transfer transfer = transferRepo.findById(id).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString()));
+    public TransferDto mapTransfer(Transfer transfer, boolean withPallets) {
         TransferDto transferDto = mapClassIgnoreLazy(transfer, TransferDto.class);
-        transferDto.setPallets(ClassMapperUtil.mapListIgnoreLazyCollection(transfer.getPallets(), PalletDto.class));
+        if (!withPallets) return (transferDto);
+
+        List<PalletDto> palletDtos = new ArrayList<>();
+        for (Pallet pallet:transfer.getPallets()) {
+            palletDtos.add(mapPallet(pallet, false));
+        }
+        transferDto.setPallets(palletDtos);
+
         return (transferDto);
     }
 
+    public Inventory getInventory(Long id) {
+        return (inventoryRepo.findById(id).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString())));
+    }
     public Pallet getPallet(Long barcode) {
         return (palletRepo.findById(barcode).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString())));
     }
     public Transfer getTransfer(Long id) {
         return (transferRepo.findById(id).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString())));
-    }
-    public Inventory getInventoryById(Long id) {
-        return (inventoryRepo.findById(id).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString())));
-
     }
     public Inventory getInventoryByName(String name) {
         return (inventoryRepo.findByName(name).orElse(null));

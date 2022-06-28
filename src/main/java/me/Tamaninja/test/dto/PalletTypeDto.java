@@ -12,6 +12,8 @@ public class PalletTypeDto implements Serializable {
     @JsonIgnore
     private Integer id;
     private String name;
+
+    @JsonIgnore
     private float weight;
 
     public PalletTypeDto(Integer id, String name, float weight) {

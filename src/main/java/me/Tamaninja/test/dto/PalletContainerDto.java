@@ -12,6 +12,8 @@ public class PalletContainerDto implements Serializable {
     @JsonIgnore
     private Integer id;
     private String name;
+
+    @JsonIgnore
     private double weight;
     @JsonIgnore
     private Integer defaultAmount;

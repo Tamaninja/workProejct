@@ -18,21 +18,21 @@ public class LookupController {
 
     @GetMapping("/pallet")
     public ResponseEntity<PalletDto> findPallet(@RequestParam(value="barcode") Long barcode) {
-        PalletDto palletDto = lookupService.findPallet(barcode);
+        PalletDto palletDto = lookupService.mapPallet(lookupService.getPallet(barcode), true);
         ResponseEntity<PalletDto> response = new ResponseEntity<PalletDto>(palletDto, HttpStatus.OK);
         return (response);
     }
     
     @GetMapping("/inventory")
-    public ResponseEntity<InventoryDto> findInventory(@RequestParam(value="name") Long name) {
-        InventoryDto inventoryDto = lookupService.findInventory(name);
+    public ResponseEntity<InventoryDto> findInventory(@RequestParam(value="identifier") String identifier) {
+        InventoryDto inventoryDto = lookupService.mapInventory(lookupService.getInventoryByName(identifier), true);
         ResponseEntity<InventoryDto> response = new ResponseEntity<InventoryDto>(inventoryDto, HttpStatus.OK);
         return (response);
     }
 
     @GetMapping("/transfer")
     public ResponseEntity<TransferDto> findTransfer(@RequestParam(value="id") Long id) {
-        TransferDto transferDto = lookupService.findTransfer(id);
+        TransferDto transferDto = lookupService.mapTransfer(lookupService.getTransfer(id), true);
         ResponseEntity<TransferDto> response = new ResponseEntity<TransferDto>(transferDto, HttpStatus.OK);
         return (response);
     }

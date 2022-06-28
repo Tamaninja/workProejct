@@ -34,7 +34,7 @@ public class ManagementController {
         Inventory inventory = lookupService.getInventoryByName(locationName);
         Pallet pallet = inventoryManagementService.savePallet(barcode, containerTypeId, containerId, amount, palletContent, weight, inventory);
 
-        ResponseEntity<PalletDto> response = new ResponseEntity<PalletDto>(lookupService.findPallet(pallet.getBarcode()), HttpStatus.OK);
+        ResponseEntity<PalletDto> response = new ResponseEntity<PalletDto>(lookupService.mapPallet(pallet, false), HttpStatus.I_AM_A_TEAPOT);
         return (response);
     }
 }
