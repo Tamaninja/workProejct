@@ -1,5 +1,6 @@
 package me.Tamaninja.test.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import me.Tamaninja.test.entity.PalletContainer;
 
 import java.io.Serializable;
@@ -7,6 +8,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PalletDto implements Serializable {
     private Long id;
     private Long barcode;
