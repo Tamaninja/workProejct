@@ -21,6 +21,7 @@ public class ExportController {
 
     @GetMapping("/inventory/{identifier}/export")
     public void inventory(@PathVariable String identifier, HttpServletResponse response) throws IOException {
-        importExportService.inventoryExport(lookupService.getInventoryByName(identifier), response);
+
+        importExportService.inventoryExport(identifier, response);
     }
 }

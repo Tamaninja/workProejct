@@ -1,5 +1,7 @@
 package me.Tamaninja.test.dto;
 
+import me.Tamaninja.test.entity.PalletContainer;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
@@ -15,14 +17,14 @@ public class PalletDto implements Serializable {
     private Integer containerAmount;
     private double weightGross;
     private double weightNet;
-    private PalletTypeDto palletType;
+    private PalletContainer palletType;
     private InventoryDto origin;
     private Timestamp timestamp;
 
     public PalletDto() {
     }
 
-    public PalletDto(Long id, Long barcode, InventoryDto location, List<TransferDto> transfers, PalletContentDto palletContent, PalletContainerDto palletContainer, Integer containerAmount, double weightGross, double weightNet, PalletTypeDto palletType, InventoryDto origin, Timestamp timestamp) {
+    public PalletDto(Long id, Long barcode, InventoryDto location, List<TransferDto> transfers, PalletContentDto palletContent, PalletContainerDto palletContainer, Integer containerAmount, double weightGross, double weightNet, PalletContainer palletType, InventoryDto origin, Timestamp timestamp) {
         this.id = id;
         this.barcode = barcode;
         this.location = location;
@@ -109,11 +111,11 @@ public class PalletDto implements Serializable {
         this.weightNet = weightNet;
     }
 
-    public PalletTypeDto getPalletType() {
+    public PalletContainer getPalletType() {
         return palletType;
     }
 
-    public void setPalletType(PalletTypeDto palletType) {
+    public void setPalletType(PalletContainer palletType) {
         this.palletType = palletType;
     }
 

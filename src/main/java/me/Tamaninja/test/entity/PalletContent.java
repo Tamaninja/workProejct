@@ -12,15 +12,25 @@ public class PalletContent implements Serializable {
 
     @Column(nullable = false, unique = true)
     private String name;
-    public PalletContent(String name) {
+    private Double weightModifier;
+    public PalletContent(String name, Double weightModifier) {
         this.name = name;
+        this.weightModifier = weightModifier;
     }
 
 
     public PalletContent() {}
 
-    public Integer getId() {
-        return id;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Double getWeightModifier() {
+        return weightModifier;
+    }
+
+    public void setWeightModifier(double weightModifier) {
+        this.weightModifier = weightModifier;
     }
 
     public String getName() {

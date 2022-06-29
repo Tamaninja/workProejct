@@ -44,7 +44,7 @@ public class Pallet implements Serializable {
 
     @ManyToOne()
     @JoinColumn(referencedColumnName = "name")
-    private PalletType palletType;
+    private PalletContainer palletType;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Inventory origin;
@@ -52,7 +52,7 @@ public class Pallet implements Serializable {
     @Column(nullable = false, updatable = false)
     private Timestamp timestamp;
 
-    public Pallet(Long barcode, Inventory origin, PalletType palletType, PalletContent palletContent, PalletContainer palletContainer, Integer containerAmount, double weightGross, double weightNet) {
+    public Pallet(Long barcode, Inventory origin, PalletContainer palletType, PalletContent palletContent, PalletContainer palletContainer, Integer containerAmount, double weightGross, double weightNet) {
         this.barcode = barcode;
         this.location = origin;
         this.origin = origin;
@@ -141,11 +141,11 @@ public class Pallet implements Serializable {
         this.weightNet = weightNet;
     }
 
-    public PalletType getPalletType() {
+    public PalletContainer getPalletType() {
         return palletType;
     }
 
-    public void setPalletType(PalletType palletType) {
+    public void setPalletType(PalletContainer palletType) {
         this.palletType = palletType;
     }
 

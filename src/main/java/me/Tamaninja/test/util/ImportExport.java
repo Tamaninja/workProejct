@@ -1,11 +1,12 @@
 package me.Tamaninja.test.util;
-import me.Tamaninja.test.entity.Inventory;
 import me.Tamaninja.test.entity.Pallet;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
@@ -14,35 +15,38 @@ import java.util.List;
 public class ImportExport {
     private CellStyle defaultCellStyle;
     private CellStyle timestampCellStyle;
-    private Workbook workbook;
-    private Sheet sheet;
+    private final Workbook workbook;
+    private final Sheet sheet;
 
 
-    public ImportExport(Object object, HttpServletResponse response) throws IOException {
+
+    public ImportExport() throws IOException {
         this.workbook = new XSSFWorkbook();
         this.createCellStyles();
         this.sheet = workbook.createSheet();
-        this.export(response, object);
     }
-    public void export(HttpServletResponse response, Object object) throws IOException {
-        if (object instanceof Inventory) {
-            inventoryExport((Inventory)object);
-        }
-
+    private void alignColumns() {
         for (int i = 0; i < sheet.getPhysicalNumberOfRows(); i++) {
             sheet.autoSizeColumn(i);
         }
-        ServletOutputStream outputStream = response.getOutputStream();
+    }
+    public void export(ServletOutputStream outputStream) throws IOException {
+        this.alignColumns();
         sheet.getWorkbook().write(outputStream);
         sheet.getWorkbook().close();
         outputStream.close();
     }
-
-    private void inventoryExport(Inventory inventory) {
-        int rowCount = 0;
-        for (Pallet pallet:inventory.getPallets()) {
-            Row row = sheet.createRow(rowCount++);
-            this.writePallet(row, pallet);
+    private void export(FileOutputStream fileOutputStream) throws IOException {
+        this.alignColumns();
+        workbook.write(fileOutputStream);
+        workbook.close();
+        fileOutputStream.close();
+    }
+    public void fillSheet(List<Object[]> data) {
+        for (int i = 0; i < data.size(); i++) {
+            Row excelRow = sheet.createRow(i);
+            Object[] dbRow = data.get(i);
+            fillRow(excelRow, dbRow);
         }
     }
 
@@ -67,10 +71,9 @@ public class ImportExport {
             cell.setCellValue(value.toString());
         }
     }
-    public void writeRow(Row row, List<Object> values) {
-        int cellCount = 0;
-        for (Object value:values) {
-            this.writeCell(value, row.createCell(cellCount++));
+    private void fillRow(final Row row, final Object[] dbRow) {
+        for (int i = 0; i < dbRow.length; i++) {
+            writeCell(dbRow[i], row.createCell(i));
         }
     }
     private void writePallet(Row row, Pallet pallet) {
