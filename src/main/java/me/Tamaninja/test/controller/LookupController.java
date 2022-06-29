@@ -1,17 +1,20 @@
 package me.Tamaninja.test.controller;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import me.Tamaninja.test.dto.*;
 import me.Tamaninja.test.service.ImportExportService;
 import me.Tamaninja.test.service.LookupService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@RestController
+@Controller
 @RequestMapping("/lookup")
 public class LookupController {
 
@@ -30,8 +33,11 @@ public class LookupController {
     }
     
     @GetMapping("/inventory")
-    public void findInventory(@RequestParam(value="identifier") String identifier, HttpServletResponse response) throws IOException {
-        importExportService.inventoryExport(lookupService.getInventoryByName(identifier), response);
+    public String findInventory(@RequestParam(value="identifier") String identifier, HttpServletResponse response, Model model) throws IOException {
+        InventoryDto inventoryDto = lookupService.mapInventory(lookupService.getInventoryByName(identifier), true);
+        model.addAttribute("exportLink","/inventory/"+identifier+"/export");
+        model.addAttribute("body", new ObjectMapper().writeValueAsString(inventoryDto));
+        return ("inventory");
     }
 
     @GetMapping("/transfer")

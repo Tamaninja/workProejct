@@ -1,6 +1,5 @@
 package me.Tamaninja.test.service;
 
-import me.Tamaninja.test.dto.ContentDto;
 import me.Tamaninja.test.dto.InventoryDto;
 import me.Tamaninja.test.dto.PalletDto;
 import me.Tamaninja.test.dto.TransferDto;
@@ -31,7 +30,6 @@ public class LookupService {
 
     public PalletDto mapPallet(Pallet pallet, boolean withTransfers) {
         PalletDto palletDto = mapClassIgnoreLazy(pallet, PalletDto.class);
-        palletDto.setContents(ClassMapperUtil.mapList(pallet.getContents(), ContentDto.class));
         if (withTransfers) {
             palletDto.setTransfers(ClassMapperUtil.mapListIgnoreLazyCollection(pallet.getTransfers(), TransferDto.class));
         }

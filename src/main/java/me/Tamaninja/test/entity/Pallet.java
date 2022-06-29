@@ -1,16 +1,23 @@
 package me.Tamaninja.test.entity;
 
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
-import java.util.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Entity(name = "pallet")
+@Table(indexes = {
+        @Index(name = "idx_pallet_barcode", columnList = "barcode")
+})
 public class Pallet implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
     @Column(nullable = false,unique = true)
     private Long barcode;
 
@@ -20,9 +27,20 @@ public class Pallet implements Serializable {
     @ManyToMany(mappedBy = "pallets", fetch = FetchType.LAZY)
     private List<Transfer> transfers;
 
-    private double weightGross;
-    private double weightNet;
+    @ManyToOne(optional = false)
+    @JoinColumn(referencedColumnName = "name")
+    private PalletContent palletContent;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(referencedColumnName = "name")
+    private PalletContainer palletContainer;
+
+    private Integer containerAmount;
+
+    @Column(nullable = false, scale = 2)
+    private double weightGross;
+    @Column(nullable = false, scale = 2)
+    private double weightNet;
 
     @ManyToOne()
     @JoinColumn(referencedColumnName = "name")
@@ -31,37 +49,32 @@ public class Pallet implements Serializable {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Inventory origin;
 
-
-    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
-    private List<Content> contents;
-
     @Column(nullable = false, updatable = false)
-    @CreationTimestamp
-    private Date timestamp;
+    private Timestamp timestamp;
 
-    public Pallet(Long barcode, Inventory origin, PalletType palletType) {
+    public Pallet(Long barcode, Inventory origin, PalletType palletType, PalletContent palletContent, PalletContainer palletContainer, Integer containerAmount, double weightGross, double weightNet) {
         this.barcode = barcode;
         this.location = origin;
         this.origin = origin;
         this.palletType = palletType;
-        this.weightGross = palletType.getWeight();
+        this.palletContainer = palletContainer;
+        this.palletContent = palletContent;
+        this.containerAmount = containerAmount;
+        this.weightGross = weightGross;
+        this.weightNet = weightNet;
+        this.timestamp = Timestamp.valueOf(LocalDateTime.now(ZoneId.of("Asia/Jerusalem")));
     }
 
     public Pallet(){
 
     }
-    public void addWeight(double weightGross, double weightNet) {
-        this.weightGross += weightGross;
-        this.weightNet += weightNet;
+
+    public Long getId() {
+        return id;
     }
 
-
-    public List<Content> getContents() {
-        return contents;
-    }
-
-    public void setContents(List<Content> contents) {
-        this.contents = contents;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getBarcode() {
@@ -86,6 +99,30 @@ public class Pallet implements Serializable {
 
     public void setTransfers(List<Transfer> transfers) {
         this.transfers = transfers;
+    }
+
+    public PalletContent getPalletContent() {
+        return palletContent;
+    }
+
+    public void setPalletContent(PalletContent palletContent) {
+        this.palletContent = palletContent;
+    }
+
+    public PalletContainer getPalletContainer() {
+        return palletContainer;
+    }
+
+    public void setPalletContainer(PalletContainer palletContainer) {
+        this.palletContainer = palletContainer;
+    }
+
+    public Integer getContainerAmount() {
+        return containerAmount;
+    }
+
+    public void setContainerAmount(Integer containerAmount) {
+        this.containerAmount = containerAmount;
     }
 
     public double getWeightGross() {
@@ -120,11 +157,11 @@ public class Pallet implements Serializable {
         this.origin = origin;
     }
 
-    public Date getTimestamp() {
+    public Timestamp getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
 }

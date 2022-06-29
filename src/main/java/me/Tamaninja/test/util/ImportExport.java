@@ -1,5 +1,4 @@
 package me.Tamaninja.test.util;
-import me.Tamaninja.test.entity.Content;
 import me.Tamaninja.test.entity.Inventory;
 import me.Tamaninja.test.entity.Pallet;
 import org.apache.poi.ss.usermodel.*;
@@ -42,10 +41,8 @@ public class ImportExport {
     private void inventoryExport(Inventory inventory) {
         int rowCount = 0;
         for (Pallet pallet:inventory.getPallets()) {
-            for (Content content:pallet.getContents()) {
-                Row row = sheet.createRow(rowCount++);
-                this.writePallet(row, pallet, content);
-            }
+            Row row = sheet.createRow(rowCount++);
+            this.writePallet(row, pallet);
         }
     }
 
@@ -76,16 +73,16 @@ public class ImportExport {
             this.writeCell(value, row.createCell(cellCount++));
         }
     }
-    private void writePallet(Row row, Pallet parent, Content content) {
+    private void writePallet(Row row, Pallet pallet) {
         int cellCount = 0;
-        writeCell(parent.getBarcode(), row.createCell(cellCount++));
-        writeCell(content.getPalletContent().getName(), row.createCell(cellCount++));
-        writeCell(content.getContainerAmount(), row.createCell(cellCount++));
-        writeCell(content.getPalletContainer().getName(), row.createCell(cellCount++));
-        writeCell(content.getWeightGross(), row.createCell(cellCount++));
-        writeCell(content.getWeightNet(), row.createCell(cellCount++));
-        writeCell(parent.getPalletType().getName(), row.createCell(cellCount++));
-        writeCell(parent.getLocation().getName(), row.createCell(cellCount++));
-        writeCell(content.getTimestamp(), row.createCell(cellCount));
+        writeCell(pallet.getBarcode(), row.createCell(cellCount++));
+        writeCell(pallet.getPalletContent().getName(), row.createCell(cellCount++));
+        writeCell(pallet.getContainerAmount(), row.createCell(cellCount++));
+        writeCell(pallet.getPalletContainer().getName(), row.createCell(cellCount++));
+        writeCell(pallet.getWeightGross(), row.createCell(cellCount++));
+        writeCell(pallet.getWeightNet(), row.createCell(cellCount++));
+        writeCell(pallet.getPalletType().getName(), row.createCell(cellCount++));
+        writeCell(pallet.getLocation().getName(), row.createCell(cellCount++));
+        writeCell(pallet.getTimestamp(), row.createCell(cellCount));
     }
 }

@@ -15,16 +15,13 @@ public class InventoryManagementService {
     private final PalletContentRepository palletContentRepository;
     private final InventoryRepository inventoryRepository;
     private final TransferRepository transferRepository;
-    private final ContentRepository contentRepository;
-    public InventoryManagementService(PalletRepository palletRepository, PalletContainerRepository containerRepo, PalletTypeRepository palletTypeRepository, PalletContentRepository palletContentRepository, InventoryRepository inventoryRepository, TransferRepository transferRepository, ContentRepository contentRepository) {
+    public InventoryManagementService(PalletRepository palletRepository, PalletContainerRepository containerRepo, PalletTypeRepository palletTypeRepository, PalletContentRepository palletContentRepository, InventoryRepository inventoryRepository, TransferRepository transferRepository) {
         this.palletRepository = palletRepository;
         this.palletContainerRepository = containerRepo;
         this.palletTypeRepository = palletTypeRepository;
         this.palletContentRepository = palletContentRepository;
         this.inventoryRepository = inventoryRepository;
         this.transferRepository = transferRepository;
-        this.contentRepository = contentRepository;
-
     }
     public Transfer newTransfer(String identifier, Inventory transferFrom,  Inventory transferTo) {
         Transfer transfer = new Transfer(identifier, transferFrom, transferTo);
@@ -97,9 +94,8 @@ public class InventoryManagementService {
             System.out.println("invalid weight");
             return null;
         }
-        Pallet pallet = new Pallet(barcode, origin, palletType);
+        Pallet pallet = new Pallet(barcode, origin, palletType,palletContent, palletContainer, containerAmount, grossWeight, netWeight);
         palletRepository.save(pallet);
-        Content content = newContent(pallet, palletContent, palletContainer, containerAmount, grossWeight, netWeight, origin);
         PalletDto palletDto = mapClassIgnoreLazy(pallet, PalletDto.class);
         return (pallet);
     }
@@ -111,14 +107,6 @@ public class InventoryManagementService {
             palletType = palletTypeRepository.findById(id).orElse(null);
         }
         return (palletType);
-    }
-
-    public Content newContent(Pallet parent, PalletContent palletContent, PalletContainer palletContainer, Integer amount, double weight, double netWeight, Inventory origin) {
-        Content content = new Content(parent, palletContent, palletContainer, amount, weight, netWeight, origin);
-        parent.addWeight(content.getWeightGross(), content.getWeightNet());
-        contentRepository.save(content);
-        palletRepository.save(parent);
-        return (content);
     }
 
     public PalletContent findPalletContent(Integer id, Inventory inventory) {
