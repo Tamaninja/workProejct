@@ -2,14 +2,13 @@ package me.Tamaninja.test.controller;
 
 
 import me.Tamaninja.test.dto.*;
-import me.Tamaninja.test.entity.Inventory;
 import me.Tamaninja.test.service.ImportExportService;
 import me.Tamaninja.test.service.LookupService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RestController
@@ -31,13 +30,8 @@ public class LookupController {
     }
     
     @GetMapping("/inventory")
-    public ResponseEntity<InventoryDto> findInventory(@RequestParam(value="identifier") String identifier) throws IOException {
-        Inventory inventory = lookupService.getInventoryByName(identifier);
-        String fileLocation = new File("src\\main\\resources\\exports\\inventory").getAbsolutePath() + "\\" + "150.xls";
-        InventoryDto inventoryDto = lookupService.mapInventory(inventory, true);
-        importExportService.export(inventory.getPallets(), fileLocation);
-        ResponseEntity<InventoryDto> response = new ResponseEntity<InventoryDto>(inventoryDto, HttpStatus.OK);
-        return (response);
+    public void findInventory(@RequestParam(value="identifier") String identifier, HttpServletResponse response) throws IOException {
+        importExportService.inventoryExport(lookupService.getInventoryByName(identifier), response);
     }
 
     @GetMapping("/transfer")
@@ -46,4 +40,5 @@ public class LookupController {
         ResponseEntity<TransferDto> response = new ResponseEntity<TransferDto>(transferDto, HttpStatus.OK);
         return (response);
     }
+
 }

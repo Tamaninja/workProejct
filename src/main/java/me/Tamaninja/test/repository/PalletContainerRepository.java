@@ -1,16 +1,13 @@
 package me.Tamaninja.test.repository;
 
 import me.Tamaninja.test.entity.PalletContainer;
-import me.Tamaninja.test.entity.PalletType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
-public interface PalletContainerRepo extends JpaRepository<PalletContainer,Integer> {
+public interface PalletContainerRepository extends JpaRepository<PalletContainer,Integer> {
 
 
     @Query(value = "SELECT pc.*, COUNT(p.pallet_container_name) AS used " +

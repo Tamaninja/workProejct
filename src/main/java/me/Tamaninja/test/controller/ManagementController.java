@@ -37,4 +37,6 @@ public class ManagementController {
         ResponseEntity<PalletDto> response = new ResponseEntity<PalletDto>(lookupService.mapPallet(pallet, false), HttpStatus.I_AM_A_TEAPOT);
         return (response);
     }
+
+
 }

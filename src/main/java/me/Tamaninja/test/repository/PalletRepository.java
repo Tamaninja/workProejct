@@ -1,17 +1,12 @@
 package me.Tamaninja.test.repository;
 
 import me.Tamaninja.test.entity.Pallet;
-import me.Tamaninja.test.entity.Transfer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
-public interface PalletRepo extends JpaRepository<Pallet,Long> {
+public interface PalletRepository extends JpaRepository<Pallet,Long> {
     @Query(value = "SELECT COALESCE(MAX(p.barcode), 0)+1 FROM pallet p")
     Long generateBarcode();
 

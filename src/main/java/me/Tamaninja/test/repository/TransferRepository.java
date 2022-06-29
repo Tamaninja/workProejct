@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface TransferRepo extends JpaRepository<Transfer, Long> {
+public interface TransferRepository extends JpaRepository<Transfer, Long> {
 }

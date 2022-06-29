@@ -6,11 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 
 @Repository
-public interface PalletTypeRepo extends JpaRepository<PalletType,Integer> {
+public interface PalletTypeRepository extends JpaRepository<PalletType,Integer> {
 
 
     @Query(value = "SELECT pt.*, COUNT(p.pallet_type_name) AS used " +

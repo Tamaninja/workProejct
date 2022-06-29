@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface InventoryRepo extends JpaRepository<Inventory, Long> {
+public interface InventoryRepository extends JpaRepository<Inventory, Long> {
 
     @Query(value = "SELECT i.* FROM inventory i WHERE i.name = :inventoryName", nativeQuery = true)
     Optional<Inventory> findByName(@Param("inventoryName") String inventoryName);

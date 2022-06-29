@@ -12,7 +12,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import java.util.List;
 import java.util.Random;
 
 @SpringBootApplication
@@ -22,6 +21,7 @@ public class TestApplication {
 		SpringApplication.run(TestApplication.class, args);
 
 	}
+
 	@Bean
 	public CommandLineRunner run(InventoryManagementService inventoryManagementService, ImportExportService importExportService, LookupService lookupService) throws Exception {
 		return args -> {

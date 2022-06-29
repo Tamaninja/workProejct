@@ -9,66 +9,66 @@ import static me.Tamaninja.test.util.ClassMapperUtil.mapClassIgnoreLazy;
 
 @Service
 public class InventoryManagementService {
-    private final PalletRepo palletRepo;
-    private final PalletContainerRepo containerRepo;
-    private final PalletTypeRepo palletTypeRepo;
-    private final PalletContentRepo palletContentRepo;
-    private final InventoryRepo inventoryRepo;
-    private final TransferRepo transferRepo;
+    private final PalletRepository palletRepository;
+    private final PalletContainerRepository palletContainerRepository;
+    private final PalletTypeRepository palletTypeRepository;
+    private final PalletContentRepository palletContentRepository;
+    private final InventoryRepository inventoryRepository;
+    private final TransferRepository transferRepository;
     private final ContentRepository contentRepository;
-    public InventoryManagementService(PalletRepo palletRepo, PalletContainerRepo containerRepo, PalletTypeRepo palletTypeRepo, PalletContentRepo palletContentRepo, InventoryRepo inventoryRepo, TransferRepo transferRepo, ContentRepository contentRepository) {
-        this.palletRepo = palletRepo;
-        this.containerRepo = containerRepo;
-        this.palletTypeRepo = palletTypeRepo;
-        this.palletContentRepo = palletContentRepo;
-        this.inventoryRepo = inventoryRepo;
-        this.transferRepo = transferRepo;
+    public InventoryManagementService(PalletRepository palletRepository, PalletContainerRepository containerRepo, PalletTypeRepository palletTypeRepository, PalletContentRepository palletContentRepository, InventoryRepository inventoryRepository, TransferRepository transferRepository, ContentRepository contentRepository) {
+        this.palletRepository = palletRepository;
+        this.palletContainerRepository = containerRepo;
+        this.palletTypeRepository = palletTypeRepository;
+        this.palletContentRepository = palletContentRepository;
+        this.inventoryRepository = inventoryRepository;
+        this.transferRepository = transferRepository;
         this.contentRepository = contentRepository;
 
     }
     public Transfer newTransfer(String identifier, Inventory transferFrom,  Inventory transferTo) {
         Transfer transfer = new Transfer(identifier, transferFrom, transferTo);
-        transferRepo.save(transfer);
+        transferRepository.save(transfer);
         return (transfer);
     }
     public Transfer newTransfer(Inventory transferFrom, Inventory transferTo) {
         Transfer transfer = new Transfer(transferFrom,transferTo);
-        transferRepo.save(transfer);
+        transferRepository.save(transfer);
         return (transfer);
     }
 
     public void addToTransfer(Pallet pallet, Transfer transfer) {
         if (!pallet.getLocation().equals(transfer.getOrigin())) return;
         transfer.addPallet(pallet);
-        transferRepo.save(transfer);
-        palletRepo.save(pallet);
+        transferRepository.save(transfer);
+        palletRepository.save(pallet);
     }
     public PalletType newPalletType(String name, float weight) {
         PalletType palletType = new PalletType(name, weight);
-        palletTypeRepo.save(palletType);
+        palletTypeRepository.save(palletType);
         return (palletType);
     }
 
     public PalletContent newPalletContent(String name) {
         PalletContent palletContent = new PalletContent(name);
-        palletContentRepo.save(palletContent);
+        palletContentRepository.save(palletContent);
         return (palletContent);
     }
     public PalletContainer newPalletContainer(String name, double weight, Integer defaultAmount) {
         PalletContainer palletContainer = new PalletContainer(name,weight,defaultAmount);
-        containerRepo.save(palletContainer);
+        palletContainerRepository.save(palletContainer);
         return (palletContainer);
     }
     public Inventory newLocation(String name) {
         Inventory inventory = new Inventory(name);
-        inventoryRepo.save(inventory);
+        inventoryRepository.save(inventory);
         return (inventory);
     }
     public Inventory newInventory(Inventory parent) {
         Inventory inventory = new Inventory(parent);
-        inventoryRepo.save(inventory);
+        inventoryRepository.save(inventory);
         inventory.setName(inventory.getId() + ">" + parent.getName());
-        inventoryRepo.save(inventory);
+        inventoryRepository.save(inventory);
         return (inventory);
     }
 
@@ -77,8 +77,8 @@ public class InventoryManagementService {
             System.out.println("origin is nal");
             return null;
         }
-        if (barcode == null) barcode = palletRepo.generateBarcode();
-        else if (palletRepo.existsById(barcode)) {
+        if (barcode == null) barcode = palletRepository.generateBarcode();
+        else if (palletRepository.existsById(barcode)) {
             System.out.println("barcode already exists");
             return null;
         }
@@ -98,7 +98,7 @@ public class InventoryManagementService {
             return null;
         }
         Pallet pallet = new Pallet(barcode, origin, palletType);
-        palletRepo.save(pallet);
+        palletRepository.save(pallet);
         Content content = newContent(pallet, palletContent, palletContainer, containerAmount, grossWeight, netWeight, origin);
         PalletDto palletDto = mapClassIgnoreLazy(pallet, PalletDto.class);
         return (pallet);
@@ -106,9 +106,9 @@ public class InventoryManagementService {
     public PalletType findPalletType(Integer id, Inventory inventory) {
         PalletType palletType;
         if (id == null) {
-            palletType = palletTypeRepo.mostUsedPalletType(inventory.getId());
+            palletType = palletTypeRepository.mostUsedPalletType(inventory.getId());
         } else {
-            palletType = palletTypeRepo.findById(id).orElse(null);
+            palletType = palletTypeRepository.findById(id).orElse(null);
         }
         return (palletType);
     }
@@ -117,24 +117,24 @@ public class InventoryManagementService {
         Content content = new Content(parent, palletContent, palletContainer, amount, weight, netWeight, origin);
         parent.addWeight(content.getWeightGross(), content.getWeightNet());
         contentRepository.save(content);
-        palletRepo.save(parent);
+        palletRepository.save(parent);
         return (content);
     }
 
     public PalletContent findPalletContent(Integer id, Inventory inventory) {
         PalletContent palletContent;
-        if (id == null) {            palletContent = palletContentRepo.mostUsedContent(inventory.getId());
+        if (id == null) {            palletContent = palletContentRepository.mostUsedContent(inventory.getId());
         } else {
-            palletContent = palletContentRepo.findById(id).orElse(null);
+            palletContent = palletContentRepository.findById(id).orElse(null);
         }
         return (palletContent);
     }
     public PalletContainer findPalletContainer(Integer id, Inventory inventory) {
         PalletContainer palletContainer;
         if (id == null) {
-            palletContainer = containerRepo.mostUsedContainer(inventory.getId());
+            palletContainer = palletContainerRepository.mostUsedContainer(inventory.getId());
         } else {
-            palletContainer = containerRepo.findById(id).orElse(null);
+            palletContainer = palletContainerRepository.findById(id).orElse(null);
         }
         return (palletContainer);
     }

@@ -19,14 +19,14 @@ import static me.Tamaninja.test.util.ClassMapperUtil.*;
 
 @Service
 public class LookupService {
-    private final PalletRepo palletRepo;
-    private final InventoryRepo inventoryRepo;
-    private final TransferRepo transferRepo;
+    private final PalletRepository palletRepository;
+    private final InventoryRepository inventoryRepository;
+    private final TransferRepository transferRepository;
 
-    public LookupService(PalletRepo palletRepo, InventoryRepo inventoryRepo, TransferRepo transferRepo) {
-        this.palletRepo = palletRepo;
-        this.inventoryRepo = inventoryRepo;
-        this.transferRepo = transferRepo;
+    public LookupService(PalletRepository palletRepository, InventoryRepository inventoryRepository, TransferRepository transferRepository) {
+        this.palletRepository = palletRepository;
+        this.inventoryRepository = inventoryRepository;
+        this.transferRepository = transferRepository;
     }
 
     public PalletDto mapPallet(Pallet pallet, boolean withTransfers) {
@@ -75,15 +75,15 @@ public class LookupService {
     }
 
     public Inventory getInventory(Long id) {
-        return (inventoryRepo.findById(id).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString())));
+        return (inventoryRepository.findById(id).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString())));
     }
     public Pallet getPallet(Long barcode) {
-        return (palletRepo.findById(barcode).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString())));
+        return (palletRepository.findById(barcode).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString())));
     }
     public Transfer getTransfer(Long id) {
-        return (transferRepo.findById(id).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString())));
+        return (transferRepository.findById(id).orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND.toString())));
     }
     public Inventory getInventoryByName(String name) {
-        return (inventoryRepo.findByName(name).orElse(null));
+        return (inventoryRepository.findByName(name).orElse(null));
     }
 }
