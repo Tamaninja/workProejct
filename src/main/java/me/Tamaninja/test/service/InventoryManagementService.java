@@ -92,14 +92,14 @@ public class InventoryManagementService {
         }
 
         if (containerAmount == null) containerAmount = palletContainer.getDefaultAmount();
-        double MIN_WEIGHT = (palletType.getWeight() + (palletContainer.getWeight() * containerAmount));
-        if (grossWeight <= MIN_WEIGHT)  {
+        double netWeight = grossWeight - containerAmount*palletContainer.getWeight() - palletType.getWeight();
+        if (netWeight < 0)  {
             System.out.println("invalid weight");
             return null;
         }
         Pallet pallet = new Pallet(barcode, origin, palletType);
         palletRepo.save(pallet);
-        Content content = newContent(pallet, palletContent, palletContainer, containerAmount, grossWeight, origin);
+        Content content = newContent(pallet, palletContent, palletContainer, containerAmount, grossWeight, netWeight, origin);
         PalletDto palletDto = mapClassIgnoreLazy(pallet, PalletDto.class);
         return (pallet);
     }
@@ -113,8 +113,8 @@ public class InventoryManagementService {
         return (palletType);
     }
 
-    public Content newContent(Pallet parent, PalletContent palletContent, PalletContainer palletContainer, Integer amount, double weight, Inventory origin) {
-        Content content = new Content(parent, palletContent, palletContainer, amount, weight, origin);
+    public Content newContent(Pallet parent, PalletContent palletContent, PalletContainer palletContainer, Integer amount, double weight, double netWeight, Inventory origin) {
+        Content content = new Content(parent, palletContent, palletContainer, amount, weight, netWeight, origin);
         parent.addWeight(content.getWeightGross(), content.getWeightNet());
         contentRepository.save(content);
         palletRepo.save(parent);
@@ -123,8 +123,7 @@ public class InventoryManagementService {
 
     public PalletContent findPalletContent(Integer id, Inventory inventory) {
         PalletContent palletContent;
-        if (id == null) {
-            palletContent = palletContentRepo.mostUsedContent(inventory.getId());
+        if (id == null) {            palletContent = palletContentRepo.mostUsedContent(inventory.getId());
         } else {
             palletContent = palletContentRepo.findById(id).orElse(null);
         }

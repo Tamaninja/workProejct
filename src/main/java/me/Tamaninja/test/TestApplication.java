@@ -3,13 +3,16 @@ package me.Tamaninja.test;
 import me.Tamaninja.test.entity.Inventory;
 import me.Tamaninja.test.entity.Pallet;
 import me.Tamaninja.test.entity.Transfer;
+import me.Tamaninja.test.service.ImportExportService;
 import me.Tamaninja.test.service.InventoryManagementService;
 import me.Tamaninja.test.service.LookupService;
+import org.hibernate.Hibernate;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.util.List;
 import java.util.Random;
 
 @SpringBootApplication
@@ -20,7 +23,7 @@ public class TestApplication {
 
 	}
 	@Bean
-	public CommandLineRunner run(InventoryManagementService inventoryManagementService, LookupService lookupService) throws Exception {
+	public CommandLineRunner run(InventoryManagementService inventoryManagementService, ImportExportService importExportService, LookupService lookupService) throws Exception {
 		return args -> {
 			try {
 
@@ -37,6 +40,8 @@ public class TestApplication {
 				Inventory inv200 = inventoryManagementService.newLocation("200");
 				Transfer transfer = inventoryManagementService.newTransfer("303030",inv150, inv200);
 				Transfer transfer1 = inventoryManagementService.newTransfer("303031",inv200, inv150);
+
+
 				inventoryManagementService.savePallet(null, 1, 2, 2, 2, 200, inv150);
 
 
@@ -59,6 +64,7 @@ public class TestApplication {
 					double randomWeight = random.nextInt(700) + 150;
 					inventoryManagementService.savePallet(null, 1, 1, randomAmount, 1, randomWeight,inventory1);
 				}
+				Hibernate.initialize(inv150.getPallets());
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
 			}

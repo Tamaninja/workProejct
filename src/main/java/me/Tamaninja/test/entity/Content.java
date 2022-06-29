@@ -1,9 +1,10 @@
 package me.Tamaninja.test.entity;
 
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 
 @Entity
@@ -34,21 +35,19 @@ public class Content {
     @ManyToOne()
     private Inventory origin;
 
-    @Column(nullable = false, updatable = false)
-    @CreationTimestamp
-    private Date timestamp;
-
+    private Timestamp timestamp;
     public Content() {
     }
 
-    public Content(Pallet parent, PalletContent palletContent, PalletContainer palletContainer, Integer containerAmount, double weightGross, Inventory origin) {
+    public Content(Pallet parent, PalletContent palletContent, PalletContainer palletContainer, Integer containerAmount, double weightGross, double weightNet, Inventory origin) {
         this.parent = parent;
         this.palletContent = palletContent;
         this.palletContainer = palletContainer;
         this.containerAmount = containerAmount;
         this.weightGross = weightGross;
-        this.weightNet = weightGross - (containerAmount * palletContainer.getWeight());
+        this.weightNet = weightNet;
         this.origin = origin;
+        this.timestamp = Timestamp.valueOf(LocalDateTime.now(ZoneId.of("Asia/Jerusalem")));
     }
 
     public Long getId() {
@@ -99,11 +98,11 @@ public class Content {
         this.weightNet = weightNet;
     }
 
-    public Date getTimestamp() {
+    public Timestamp getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
 }
