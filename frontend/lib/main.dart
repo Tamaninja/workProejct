@@ -1,8 +1,9 @@
 
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+
 
 void main() {
-  print('test');
   runApp(const MyApp());
 }
 
@@ -16,20 +17,20 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: _title,
-      home: MyStatefulWidget(),
+      home: HomeScreen(),
     );
   }
 
 
 }
-class MyStatefulWidget extends StatefulWidget {
-  const MyStatefulWidget({Key? key}) : super(key: key);
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
   @override
-  State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  int _count = 0;
+class _HomeScreenState extends State<HomeScreen> {
+
 
   @override
   Widget build(BuildContext context) {
@@ -37,44 +38,98 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       appBar: AppBar(
         title: const Text('Tmarim test'),
       ),
-      body: Center(child: Text('You have pressed the button $_count times.')),
+
+
       floatingActionButton: FloatingActionButton(
-        tooltip: 'Increment Counter',
-        child: const Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(
-                builder:(_) => newPallet()));
-        },
+          child: const Icon(Icons.add),
+          onPressed: () {
+            final List<String> values = <String>['1', '2', '3', '4'];
+            final List<String> titles = <String>['Pallet type', 'Pallet weight', 'Amount', 'Content'];
+            Navigator.push(context,
+                MaterialPageRoute(
+                    builder:(_) => DynamicList(titles, values, false)
+                )
+          );
+        }
       )
     );
   }
 }
 
 
-class newPallet extends StatefulWidget {
-  const newPallet({Key? key}) : super(key: key);
+class DynamicList extends StatefulWidget {
+  final List<String> entries;
+  final List<String> titles;
+  bool returnOnChoose;
+
+  DynamicList(this.entries,this.titles,this.returnOnChoose, {Key? key}) : super(key: key);
 
   @override
-  State<newPallet> createState() => _newPalletState();
+  State<DynamicList> createState() => _DynamicListState();
 }
 
-class _newPalletState extends State<newPallet> {
+class _DynamicListState extends State<DynamicList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-        ),
-      body: Column(
-        children: <Widget>[
-          ListTile(
-            title: const Text("test"),
-          ),
-          ListTile(
-            title: const Text("data"),
-          )
-        ]
-    ),
+      appBar: AppBar(
+        title: const Text('Tmarim test'),
+      ),
+      body: _buildListView(false),
     );
   }
+
+
+  ListView _buildListView(bool returnOnChoose) {
+    return (
+        ListView.builder(
+          shrinkWrap: true,
+            itemCount: widget.entries.length,
+            itemBuilder: (_, index) {
+              return Card(
+                child: ListTile(
+                  title: Center(
+                    child: Text(widget.entries[index]),
+                  ),
+                  subtitle: Center(
+                    child: Text(widget.titles[index]),
+                  ),
+                  onTap: () {
+                    if (widget.returnOnChoose){
+                      Navigator.pop(context, true);
+                      return;
+                    }
+                    Navigator.push(context, MaterialPageRoute(builder:(_) => DynamicList(getTitlesById(), getValuesById(), widget.returnOnChoose)));
+                    widget.returnOnChoose = true;
+                  }
+                )
+              );
+            }
+        )
+    );
+  }
+
+  void fetchAlbum() async {
+    try {
+      Dio test = new Dio();
+      String url = "http://localhost:8080/pallet/test";
+      var response = await Dio().get(url);
+      print(response);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  List<String> getTitlesById() {
+    try {
+      fetchAlbum();
+    }
+    finally {
+      return (<String>['1', '2', '3', '4']);
+    }
+  }
+  List<String> getValuesById() {
+    return (<String>['1', '2', '3', '4']);
+  }
 }
+
