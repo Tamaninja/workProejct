@@ -37,6 +37,7 @@ public class DebugService {
         PalletContainer tray = inventoryManagementService.newPalletContainer("tray",0.97, 100);
         PalletContainer smallTray = inventoryManagementService.newPalletContainer("smalltray",0.27,200);
         PalletContainer bigTray = inventoryManagementService.newPalletContainer("bigtray",0.72, 150);
+        PalletContainer testtest = inventoryManagementService.newPalletContainer("assssss",0.72, 150);
 
         PalletContainer woodenPallet = inventoryManagementService.newPalletContainer("wooden", 15, 1);
         PalletContainer plasticPallet = inventoryManagementService.newPalletContainer("plastic", 20, 1);

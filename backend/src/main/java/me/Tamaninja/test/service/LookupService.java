@@ -18,12 +18,14 @@ public class LookupService {
     private final PalletRepository palletRepository;
     private final InventoryRepository inventoryRepository;
     private final TransferRepository transferRepository;
+    private final PalletContainerRepository palletContainerRepository;
 
 
-    public LookupService(PalletRepository palletRepository, InventoryRepository inventoryRepository, TransferRepository transferRepository) {
+    public LookupService(PalletRepository palletRepository, InventoryRepository inventoryRepository, TransferRepository transferRepository, PalletContainerRepository palletContainerRepository) {
         this.palletRepository = palletRepository;
         this.inventoryRepository = inventoryRepository;
         this.transferRepository = transferRepository;
+        this.palletContainerRepository = palletContainerRepository;
 
     }
 
@@ -34,7 +36,9 @@ public class LookupService {
         }
         return (palletDto);
     }
-
+    public List<PalletContainer> getAllOptions() {
+        return (palletContainerRepository.findAllPalletContainers());
+    }
     public InventoryDto mapInventory(Inventory inventory, boolean withPallets) {
         InventoryDto inventoryDto = mapClassIgnoreLazy(inventory, InventoryDto.class);
         if (inventory.getChildren().size() > 0) {

@@ -1,6 +1,7 @@
 
-import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 
 
 void main() {
@@ -30,39 +31,40 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tmarim test'),
+        title:const Text("test")
       ),
-
-
       floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.add),
           onPressed: () {
-            final List<String> values = <String>['1', '2', '3', '4'];
-            final List<String> titles = <String>['Pallet type', 'Pallet weight', 'Amount', 'Content'];
             Navigator.push(context,
                 MaterialPageRoute(
-                    builder:(_) => DynamicList(titles, values, false)
+                    builder:(_) => DynamicList(fetchOptions())
                 )
           );
         }
       )
     );
   }
+  Future<List<Options>> fetchOptions() async{
+    Dio dio = new Dio();
+    Response response = await dio.get("http://localhost:8080/test");
+    final data = response.data;
+    List<Options> options = [];
+    data.forEach((jsonModel) {
+      options.add(Options.fromJson(jsonModel));
+    });
+    return(options);
+  }
 }
 
 
 class DynamicList extends StatefulWidget {
-  final List<String> entries;
-  final List<String> titles;
-  bool returnOnChoose;
-
-  DynamicList(this.entries,this.titles,this.returnOnChoose, {Key? key}) : super(key: key);
+  Future<List<Options>> options;
+  DynamicList(this.options, {Key? key}) : super(key: key);
 
   @override
   State<DynamicList> createState() => _DynamicListState();
@@ -73,63 +75,68 @@ class _DynamicListState extends State<DynamicList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tmarim test'),
+        title: const Text(''),
       ),
-      body: _buildListView(false),
+      body: FutureBuilder<List<Options>>(
+        future: widget.options,
+        builder: (BuildContext context, AsyncSnapshot<List<Options>> snapshot) {
+          if(snapshot.data == null) {
+            return (const Text("error"));
+          } else {
+            return(_buildListView(snapshot.data as List<Options>));
+          }
+        },
+      ),
     );
   }
 
 
-  ListView _buildListView(bool returnOnChoose) {
-    return (
-        ListView.builder(
-          shrinkWrap: true,
-            itemCount: widget.entries.length,
-            itemBuilder: (_, index) {
-              return Card(
-                child: ListTile(
-                  title: Center(
-                    child: Text(widget.entries[index]),
-                  ),
-                  subtitle: Center(
-                    child: Text(widget.titles[index]),
-                  ),
-                  onTap: () {
-                    if (widget.returnOnChoose){
-                      Navigator.pop(context, true);
-                      return;
-                    }
-                    Navigator.push(context, MaterialPageRoute(builder:(_) => DynamicList(getTitlesById(), getValuesById(), widget.returnOnChoose)));
-                    widget.returnOnChoose = true;
-                  }
-                )
-              );
+
+  Card listCard(Options options) {
+    return Card(
+        child: ListTile(
+            title: Center(
+              child: Text(options.identifier),
+            ),
+            subtitle: Center(
+              child: Text(options.weight.toString()),
+            ),
+            onTap: () {
+              Navigator.pop(context, true);
             }
         )
     );
   }
 
-  void fetchAlbum() async {
-    try {
-      Dio test = new Dio();
-      String url = "http://localhost:8080/pallet/test";
-      var response = await Dio().get(url);
-      print(response);
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  List<String> getTitlesById() {
-    try {
-      fetchAlbum();
-    }
-    finally {
-      return (<String>['1', '2', '3', '4']);
-    }
-  }
-  List<String> getValuesById() {
-    return (<String>['1', '2', '3', '4']);
+  ListView _buildListView(List<Options> options) {
+    return (
+        ListView.builder(
+            shrinkWrap: true,
+            itemCount: options.length,
+            itemBuilder: (_, index) {
+              return(listCard(options[index]));
+            }
+        )
+    );
   }
 }
+class Options {
+  String identifier;
+  double weight;
 
+  Options({
+    required this.identifier,
+    required this.weight,
+  });
+  factory Options.fromJson(Map<String, dynamic> json) => Options(
+    identifier: json["identifier"],
+    weight: json["weight"].toDouble(),
+  );
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['identifier'] = this.identifier;
+    data['weight'] = this.weight;
+    return data;
+  }
+}

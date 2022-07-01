@@ -1,9 +1,11 @@
 package me.Tamaninja.test.controller;
 
 
+import me.Tamaninja.test.entity.PalletContainer;
 import me.Tamaninja.test.service.InventoryManagementService;
 import me.Tamaninja.test.service.LookupService;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @CrossOrigin(maxAge = 3600)
@@ -17,11 +19,12 @@ public class ManagementController {
     }
 
     @GetMapping("/test")
-    public String test(){
-        return ("pallet");
+    public List<PalletContainer> test(){
+        return (lookupService.getAllOptions());
     }
 
-
-
-
+    @GetMapping("/text")
+    public String text() {
+        return ("ALLA BABALA");
+    }
 }
