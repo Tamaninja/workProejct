@@ -3,6 +3,7 @@ package me.Tamaninja.test.service;
 import me.Tamaninja.test.dto.InventoryDto;
 import me.Tamaninja.test.dto.PalletDto;
 import me.Tamaninja.test.dto.TransferDto;
+import me.Tamaninja.test.frontend.FrontendForm;
 import me.Tamaninja.test.entity.*;
 import me.Tamaninja.test.enums.Errors;
 import me.Tamaninja.test.repository.*;
@@ -19,14 +20,19 @@ public class LookupService {
     private final InventoryRepository inventoryRepository;
     private final TransferRepository transferRepository;
     private final PalletContainerRepository palletContainerRepository;
+    private final PalletContentRepository palletContentRepository;
 
 
-    public LookupService(PalletRepository palletRepository, InventoryRepository inventoryRepository, TransferRepository transferRepository, PalletContainerRepository palletContainerRepository) {
+    public LookupService(PalletRepository palletRepository, InventoryRepository inventoryRepository, TransferRepository transferRepository, PalletContainerRepository palletContainerRepository, PalletContentRepository palletContentRepository) {
         this.palletRepository = palletRepository;
         this.inventoryRepository = inventoryRepository;
         this.transferRepository = transferRepository;
         this.palletContainerRepository = palletContainerRepository;
+        this.palletContentRepository = palletContentRepository;
+    }
 
+    public FrontendForm getPalletForm() {
+        return (new FrontendForm(palletContentRepository.getAllPalletContents(), palletContainerRepository.getAllPalletContainers(), palletContainerRepository.getAllPalletTypes()));
     }
 
     public PalletDto mapPallet(Pallet pallet, boolean withTransfers) {
@@ -36,9 +42,7 @@ public class LookupService {
         }
         return (palletDto);
     }
-    public List<PalletContainer> getAllOptions() {
-        return (palletContainerRepository.findAllPalletContainers());
-    }
+
     public InventoryDto mapInventory(Inventory inventory, boolean withPallets) {
         InventoryDto inventoryDto = mapClassIgnoreLazy(inventory, InventoryDto.class);
         if (inventory.getChildren().size() > 0) {

@@ -111,11 +111,11 @@ public class InventoryManagementService {
         return (inventory);
     }
     public List<PalletContainer> getAllPalletTypes() {
-        return (palletContainerRepository.findAllPalletTypes());
+        return (palletContainerRepository.getAllPalletTypes());
     }
 
     public List<PalletContainer> getAllPalletContainers() {
-        return (palletContainerRepository.findAllPalletContainers());
+        return (palletContainerRepository.getAllPalletContainers());
     }
 
     public List<PalletContent> getAllPalletContents() {

@@ -24,11 +24,11 @@ public interface PalletContainerRepository extends JpaRepository<PalletContainer
     @Query(value = "SELECT * " +
             "FROM pallet_container " +
             "WHERE pallet_container.default_amount = 1", nativeQuery = true)
-    List<PalletContainer> findAllPalletTypes();
+    List<PalletContainer> getAllPalletTypes();
 
     @Query(value = "SELECT * " +
             "FROM pallet_container " +
             "WHERE NOT pallet_container.default_amount = 1", nativeQuery = true)
-    List<PalletContainer> findAllPalletContainers();
+    List<PalletContainer> getAllPalletContainers();
 
 }

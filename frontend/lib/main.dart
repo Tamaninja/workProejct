@@ -1,8 +1,8 @@
-
 import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-
+import 'package:frontend/TamaForm.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,9 +21,8 @@ class MyApp extends StatelessWidget {
       home: HomeScreen(),
     );
   }
-
-
 }
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
   @override
@@ -34,109 +33,111 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title:const Text("test")
-      ),
-      floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.add),
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(
-                    builder:(_) => DynamicList(fetchOptions())
-                )
-          );
-        }
-      )
-    );
+        appBar: AppBar(title: const Text("test")),
+        floatingActionButton: FutureBuilder<dynamic>(
+            future: fetchOptions(),
+            builder:
+                (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              if (snapshot == null) {
+                return (const Center(child: CircularProgressIndicator(
+                )));
+              } else {
+
+                return (FloatingActionButton(
+                    child: Icon(Icons.add),
+                    onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FormWidget(snapshot.requireData)
+                      ));
+                }));
+              }
+            }));
   }
-  Future<List<Options>> fetchOptions() async{
+
+  Future<List<List<TamaCard>>> fetchOptions() async {
     Dio dio = new Dio();
     Response response = await dio.get("http://localhost:8080/test");
-    final data = response.data;
-    List<Options> options = [];
-    data.forEach((jsonModel) {
-      options.add(Options.fromJson(jsonModel));
-    });
-    return(options);
+    PalletForm palletForm =  PalletForm.fromJson(response.data);
+    List<List<TamaCard>> cards = <List<TamaCard>>[];
+    cards.add(palletForm.palletContent!);
+    cards.add(palletForm.palletContainer!);
+    cards.add(palletForm.palletType!);
+    // List<List<TamaCard>> tamaCards = [];
+    // data.forEach((jsonModel) {
+    //   print(jsonModel);
+    //   List<TamaCard> cardList = [];
+    //   jsonModel.forEach((x) {
+    //     TamaCard tamaCard = TamaCard.fromJson(x);
+    //     cardList.add(tamaCard);
+    //   });
+    //   tamaCards.add(cardList);
+    // });
+    return (cards);
   }
 }
 
-
-class DynamicList extends StatefulWidget {
-  Future<List<Options>> options;
-  DynamicList(this.options, {Key? key}) : super(key: key);
-
+class FormWidget extends StatefulWidget {
+  List<dynamic> cards;
+  FormWidget(this.cards, {Key? key}) : super(key: key);
   @override
-  State<DynamicList> createState() => _DynamicListState();
+  State<FormWidget> createState() => _FormWidgerState();
+
 }
 
-class _DynamicListState extends State<DynamicList> {
+class _FormWidgerState extends State<FormWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(''),
-      ),
-      body: FutureBuilder<List<Options>>(
-        future: widget.options,
-        builder: (BuildContext context, AsyncSnapshot<List<Options>> snapshot) {
-          if(snapshot.data == null) {
-            return (const Text("error"));
-          } else {
-            return(_buildListView(snapshot.data as List<Options>));
-          }
-        },
-      ),
-    );
+        appBar: AppBar(
+          title: const Text(''),
+        ),
+        body: _buildListView(widget.cards));
   }
 
+  Card listCard(var data) {
+    String title = data.runtimeType.toString();
+    String subtitle = data.toString();
+    if (data is TamaCard) {
+      title = data.title!;
+      subtitle = data.subtitle!;
+    }
 
-
-  Card listCard(Options options) {
     return Card(
         child: ListTile(
             title: Center(
-              child: Text(options.identifier),
+              child: Text(title),
             ),
             subtitle: Center(
-              child: Text(options.weight.toString()),
+              child: Text(subtitle),
             ),
             onTap: () {
-              Navigator.pop(context, true);
-            }
-        )
-    );
+              if (data is List<dynamic>) {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => FormWidget(data)));
+              } else {
+                Navigator.pop(context, true);
+              }
+            }));
   }
 
-  ListView _buildListView(List<Options> options) {
-    return (
-        ListView.builder(
-            shrinkWrap: true,
-            itemCount: options.length,
-            itemBuilder: (_, index) {
-              return(listCard(options[index]));
-            }
-        )
-    );
-  }
-}
-class Options {
-  String identifier;
-  double weight;
-
-  Options({
-    required this.identifier,
-    required this.weight,
-  });
-  factory Options.fromJson(Map<String, dynamic> json) => Options(
-    identifier: json["identifier"],
-    weight: json["weight"].toDouble(),
-  );
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['identifier'] = this.identifier;
-    data['weight'] = this.weight;
-    return data;
+  ListView _buildListView(var cards) {
+    int length;
+    List<dynamic> cardList = <dynamic>[];
+    if (cards is List) {
+      cardList = cards;
+    }
+    if (cards is PalletForm) {
+      cardList.add(cards.palletType!);
+      cardList.add(cards.palletContainer!);
+      cardList.add(cards.palletContent!);
+    }
+    return (ListView.builder(
+        shrinkWrap: true,
+        itemCount: cardList.length,
+        itemBuilder: (_, index) {
+          return (listCard(cardList[index]));
+        }));
   }
 }
