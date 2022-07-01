@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-@Entity(name = "inventory")
+@Entity
 public class Inventory implements Serializable {
 
 

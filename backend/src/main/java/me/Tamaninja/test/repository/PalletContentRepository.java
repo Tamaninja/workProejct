@@ -8,10 +8,12 @@ import org.springframework.data.repository.query.Param;
 public interface PalletContentRepository extends JpaRepository<PalletContent, String> {
 
 
-    @Query(value = "SELECT pc.*, COUNT(p.pallet_content_name) AS used " +
+    @Query(value = "SELECT pc.* " +
             "FROM pallet p, pallet_content pc " +
-            "WHERE p.pallet_content_name = pc.name " +
+            "WHERE p.pallet_content_identifier = pc.identifier " +
             "AND p.origin_id = :origin " +
-            "GROUP BY pc.id ORDER BY used DESC LIMIT 1", nativeQuery = true)
+            "GROUP BY pc.identifier " +
+            "ORDER BY COUNT(p.pallet_content_identifier) DESC " +
+            "LIMIT 1;", nativeQuery = true)
     PalletContent mostUsedContent(@Param("origin") Long originId);
 }

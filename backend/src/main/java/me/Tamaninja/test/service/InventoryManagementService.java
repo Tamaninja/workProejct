@@ -73,7 +73,7 @@ public class InventoryManagementService {
         return (palletContentRepository.findAll());
     }
 
-    public Pallet savePallet(Long barcode, PalletContainer palletTypeIdentifier, PalletContainer palletContainerIdentifier, Integer containerAmount, PalletContent palletContentIdentifier, double grossWeight, Inventory origin) {
+    public Pallet savePallet(Long barcode, String palletTypeIdentifier, String palletContainerIdentifier, Integer containerAmount, String palletContentIdentifier, double grossWeight, Inventory origin) {
         if (origin == null) {
             return null;
         }
@@ -82,24 +82,25 @@ public class InventoryManagementService {
             return null;
         }
 
-//        PalletContainer palletContainer = findPalletContainer(palletContainerIdentifier, origin);
-//        PalletContainer palletType = findPalletContainer(palletTypeIdentifier, origin);
-//        PalletContent palletContent = findPalletContent(palletContentIdentifier, origin);
+        PalletContainer palletContainer = getPalletContainer(palletContainerIdentifier, origin);
+        PalletContainer palletType = getPalletContainer(palletTypeIdentifier, origin);
+        PalletContent palletContent = getPalletContent(palletContentIdentifier, origin);
 
         if (palletContainerIdentifier == null || palletContentIdentifier == null || palletTypeIdentifier == null) {return null;
         }
 
-        if (containerAmount == null) containerAmount = palletContainerIdentifier.getDefaultAmount();
-        double netWeight = (grossWeight - containerAmount*palletContainerIdentifier.getWeight() - palletTypeIdentifier.getWeight())*palletContentIdentifier.getWeightModifier();
+        if (containerAmount == null) containerAmount = palletContainer.getDefaultAmount();
+        double netWeight = (grossWeight - containerAmount*palletContainer.getWeight() - palletType.getWeight())*palletContent.getWeightModifier();
         if (netWeight < 0)  {
             return null;
         }
-        Pallet pallet = new Pallet(barcode, origin, palletTypeIdentifier,palletContentIdentifier, palletContainerIdentifier, containerAmount, grossWeight, netWeight);
+        Pallet pallet = new Pallet(barcode, origin, palletType,palletContent, palletContainer, containerAmount, grossWeight, netWeight);
         palletRepository.save(pallet);
         PalletDto palletDto = mapClassIgnoreLazy(pallet, PalletDto.class);
         return (pallet);
     }
-    public PalletContent findPalletContent(String identifier, Inventory inventory) {
+
+    public PalletContent getPalletContent(String identifier, Inventory inventory) {
         PalletContent palletContent;
         if (identifier == null) {
             palletContent = palletContentRepository.mostUsedContent(inventory.getId());
@@ -108,7 +109,7 @@ public class InventoryManagementService {
         }
         return (palletContent);
     }
-    public PalletContainer findPalletContainer(String identifier, Inventory inventory) {
+    public PalletContainer getPalletContainer(String identifier, Inventory inventory) {
         PalletContainer palletContainer;
         if (identifier == null) {
             palletContainer = palletContainerRepository.mostUsedContainer(inventory.getId());

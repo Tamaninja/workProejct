@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface PalletRepository extends JpaRepository<Pallet,Long> {
-    @Query(value = "SELECT COALESCE(MAX(p.barcode), 0)+1 FROM pallet p")
+    @Query(value = "SELECT COALESCE(MAX(p.barcode), 0)+1 FROM pallet p", nativeQuery = true)
     Long generateBarcode();
 
 //    @Query(value = "SELECT sum(p.palletWeightGross), sum(p.palletWeightNet), sum(p.palletAmount) FROM pallet p WHERE p.transfer = :transfer_id")

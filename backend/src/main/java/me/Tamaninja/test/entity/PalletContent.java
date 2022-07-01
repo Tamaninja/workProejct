@@ -3,7 +3,7 @@ package me.Tamaninja.test.entity;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity(name = "palletContent")
+@Entity
 public class PalletContent implements Serializable {
 
     @Id

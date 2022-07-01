@@ -3,9 +3,7 @@ package me.Tamaninja.test.service;
 import me.Tamaninja.test.dto.InventoryDto;
 import me.Tamaninja.test.dto.PalletDto;
 import me.Tamaninja.test.dto.TransferDto;
-import me.Tamaninja.test.entity.Inventory;
-import me.Tamaninja.test.entity.Pallet;
-import me.Tamaninja.test.entity.Transfer;
+import me.Tamaninja.test.entity.*;
 import me.Tamaninja.test.enums.Errors;
 import me.Tamaninja.test.repository.*;
 import me.Tamaninja.test.util.ClassMapperUtil;
@@ -15,17 +13,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static me.Tamaninja.test.util.ClassMapperUtil.*;
-
 @Service
 public class LookupService {
     private final PalletRepository palletRepository;
     private final InventoryRepository inventoryRepository;
     private final TransferRepository transferRepository;
 
+
     public LookupService(PalletRepository palletRepository, InventoryRepository inventoryRepository, TransferRepository transferRepository) {
         this.palletRepository = palletRepository;
         this.inventoryRepository = inventoryRepository;
         this.transferRepository = transferRepository;
+
     }
 
     public PalletDto mapPallet(Pallet pallet, boolean withTransfers) {
@@ -84,4 +83,5 @@ public class LookupService {
     public Inventory getInventoryByName(String name) {
         return (inventoryRepository.findByName(name).orElse(null));
     }
+
 }

@@ -9,10 +9,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
-@Entity(name = "pallet")
-@Table(indexes = {
-        @Index(name = "idx_pallet_barcode", columnList = "barcode")
-})
+@Entity
 public class Pallet implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

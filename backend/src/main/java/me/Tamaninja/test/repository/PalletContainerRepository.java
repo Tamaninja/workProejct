@@ -12,11 +12,13 @@ import java.util.List;
 public interface PalletContainerRepository extends JpaRepository<PalletContainer,String> {
 
 
-    @Query(value = "SELECT pc.*, COUNT(p.pallet_container_name) AS used " +
-            "FROM pallet p, pallet_container pc " +
-            "WHERE p.pallet_container_name = pc.name " +
+    @Query(value = "SELECT pc.* " +
+            "FROM pallet p, pallet_content pc " +
+            "WHERE p.pallet_content_identifier = pc.identifier " +
             "AND p.origin_id = :origin " +
-            "GROUP BY pc.id ORDER BY used DESC LIMIT 1", nativeQuery = true)
+            "GROUP BY pc.identifier " +
+            "ORDER BY COUNT(p.pallet_content_identifier) DESC " +
+            "LIMIT 1; ", nativeQuery = true)
     PalletContainer mostUsedContainer(@Param("origin") Long originId);
 
     @Query(value = "SELECT * " +

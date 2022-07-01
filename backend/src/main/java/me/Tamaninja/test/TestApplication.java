@@ -1,9 +1,7 @@
 package me.Tamaninja.test;
 
 import me.Tamaninja.test.entity.*;
-import me.Tamaninja.test.service.ImportExportService;
 import me.Tamaninja.test.service.InventoryManagementService;
-import me.Tamaninja.test.service.LookupService;
 import org.hibernate.Hibernate;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -17,9 +15,10 @@ import java.util.List;
 public class TestApplication {
 	public static void main(String[] args) {
 		System.out.println("test");
-		SpringApplication.run(TestApplication.class, args);
+			SpringApplication.run(TestApplication.class, args);
 
 	}
+
 
 	@Bean
 	public CommandLineRunner run(InventoryManagementService inventoryManagementService) throws Exception {
@@ -42,13 +41,10 @@ public class TestApplication {
 				Transfer transfer1 = inventoryManagementService.newTransfer("303031",inv200, inv150);
 
 
-				inventoryManagementService.savePallet(null, woodenPallet, tray, 2, palletContent, 200, inv150);
-
-
 				Random random = new Random();
 				Inventory inventory = inventoryManagementService.newInventory(inv150);
 				Inventory inventory1 = inventoryManagementService.newInventory(inv150);
-				inventoryManagementService.savePallet(null, woodenPallet, tray, 2, palletContent, 200, inventory);
+				inventoryManagementService.savePallet(null, "wooden", "tray", 2, "dry", 200, inventory);
 				List<PalletContainer> palletTypes = inventoryManagementService.getAllPalletTypes();
 				List<PalletContainer> palletContainers = inventoryManagementService.getAllPalletContainers();
 				List<PalletContent> palletContents = inventoryManagementService.getAllPalletContents();
@@ -58,14 +54,14 @@ public class TestApplication {
 					PalletContent randomContent = palletContents.get(random.nextInt(palletContents.size()));
 					int randomAmount = random.nextInt(100);
 					double randomWeight = random.nextInt(700) + 150;
-					Pallet pallet1 = inventoryManagementService.savePallet(null, randomType, randomContainer, 2, randomContent, 200, inventory);
+					Pallet pallet1 = inventoryManagementService.savePallet(null, randomType.getIdentifier(), randomContainer.getIdentifier(), 2, randomContent.getIdentifier(), 200, inventory);
 					Transfer transfer2 = inventoryManagementService.newTransfer(inventory,inv150);
 					inventoryManagementService.addToTransfer(pallet1, transfer2);
 				}
 				for (int i = 0; i < 250; i++) {
 					int randomAmount = random.nextInt(100);
 					double randomWeight = random.nextInt(700) + 150;
-					inventoryManagementService.savePallet(null, woodenPallet, tray, 2, palletContent, 200, inventory);
+					inventoryManagementService.savePallet(null, woodenPallet.getIdentifier(), tray.getIdentifier(), 2, palletContent.getIdentifier(), 200, inventory);
 				}
 				Hibernate.initialize(inv150.getPallets());
 			} catch (IllegalArgumentException e) {

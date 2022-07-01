@@ -6,8 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity(name = "palletContainer")
-
+@Entity
 public class PalletContainer implements Serializable {
 
 
