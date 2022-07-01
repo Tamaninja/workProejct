@@ -1,6 +1,5 @@
 package me.Tamaninja.test.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;
@@ -9,42 +8,26 @@ import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class InventoryDto implements Serializable {
-    private String name;
-    @JsonIgnore
-    private Long id;
+    private String identifier;
     private List<TransferDto> sent;
     private List<TransferDto> received;
     private List<PalletDto> pallets;
-    private InventoryDto parent;
+    private String parent;
     private List<InventoryDto> children;
 
     public InventoryDto() {
     }
 
-    public InventoryDto(String name, Long id, List<TransferDto> sent, List<TransferDto> received, List<PalletDto> pallets, InventoryDto parent, List<InventoryDto> children) {
-        this.name = name;
-        this.id = id;
-        this.sent = sent;
-        this.received = received;
-        this.pallets = pallets;
-        this.parent = parent;
-        this.children = children;
+    public InventoryDto(String name, String identifier) {
+        this.identifier = identifier;
     }
 
-    public String getName() {
-        return name;
+    public String getIdentifier() {
+        return identifier;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public void getIdentifier(String name) {
+        this.identifier = identifier;
     }
 
     public List<TransferDto> getSent() {
@@ -71,11 +54,11 @@ public class InventoryDto implements Serializable {
         this.pallets = pallets;
     }
 
-    public InventoryDto getParent() {
+    public String getParent() {
         return parent;
     }
 
-    public void setParent(InventoryDto parent) {
+    public void setParent(String parent) {
         this.parent = parent;
     }
 
@@ -92,8 +75,7 @@ public class InventoryDto implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         InventoryDto entity = (InventoryDto) o;
-        return Objects.equals(this.name, entity.name) &&
-                Objects.equals(this.id, entity.id) &&
+        return Objects.equals(this.identifier, entity.identifier) &&
                 Objects.equals(this.sent, entity.sent) &&
                 Objects.equals(this.received, entity.received) &&
                 Objects.equals(this.pallets, entity.pallets) &&
@@ -103,18 +85,11 @@ public class InventoryDto implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, id, sent, received, pallets, parent, children);
+        return Objects.hash(identifier, sent, received, pallets, parent, children);
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "name = " + name + ", " +
-                "id = " + id + ", " +
-                "sent = " + sent + ", " +
-                "received = " + received + ", " +
-                "pallets = " + pallets + ", " +
-                "parent = " + parent + ", " +
-                "children = " + children + ")";
+        return (this.identifier);
     }
 }

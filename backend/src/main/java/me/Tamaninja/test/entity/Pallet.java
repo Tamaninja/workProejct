@@ -46,7 +46,7 @@ public class Pallet implements Serializable {
     @Column(nullable = false, updatable = false)
     private Timestamp timestamp;
 
-    public Pallet(Long barcode, Inventory origin, PalletContainer palletType, PalletContent palletContent, PalletContainer palletContainer, Integer containerAmount, double weightGross, double weightNet) {
+    public Pallet(Long barcode, Inventory origin, PalletContainer palletType, PalletContent palletContent, PalletContainer palletContainer, Integer containerAmount, double weightGross) {
         this.barcode = barcode;
         this.location = origin;
         this.origin = origin;
@@ -55,7 +55,7 @@ public class Pallet implements Serializable {
         this.palletContent = palletContent;
         this.containerAmount = containerAmount;
         this.weightGross = weightGross;
-        this.weightNet = weightNet;
+        this.weightNet = (weightGross - containerAmount*palletContainer.getWeight() - palletType.getWeight())*palletContent.getWeightModifier();
         this.timestamp = Timestamp.valueOf(LocalDateTime.now(ZoneId.of("Asia/Jerusalem")));
     }
 
@@ -157,5 +157,10 @@ public class Pallet implements Serializable {
 
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
+    }
+
+    @Override
+    public String toString() {
+        return (this.barcode.toString());
     }
 }

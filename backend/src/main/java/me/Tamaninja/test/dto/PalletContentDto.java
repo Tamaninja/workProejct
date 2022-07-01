@@ -1,8 +1,11 @@
 package me.Tamaninja.test.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.io.Serializable;
 import java.util.Objects;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PalletContentDto implements Serializable {
     private String identifier;
 
@@ -36,7 +39,6 @@ public class PalletContentDto implements Serializable {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "identifier = " + identifier + ")";
+        return (this.identifier);
     }
 }

@@ -14,7 +14,7 @@ public class Inventory implements Serializable {
 
 
     @Column(unique = true)
-    private String name;
+    private String identifier;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -40,8 +40,8 @@ public class Inventory implements Serializable {
     @OneToMany(mappedBy = "parent")
     private List<Inventory> children;
 
-    public Inventory(String name) {
-        this.name = name;
+    public Inventory(String identifier) {
+        this.identifier = identifier;
     }
 
     public Inventory(Inventory parent) {
@@ -72,8 +72,8 @@ public class Inventory implements Serializable {
         this.children = children;
     }
 
-    public String getName() {
-        return name;
+    public String getIdentifier() {
+        return identifier;
     }
 
     public List<Pallet> getPallets() {
@@ -84,8 +84,8 @@ public class Inventory implements Serializable {
         this.pallets = pallets;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
     public List<Transfer> getSent() {
@@ -108,10 +108,7 @@ public class Inventory implements Serializable {
 
     @Override
     public String toString() {
-        return "Inventory{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        return (this.identifier);
     }
 
     @Override

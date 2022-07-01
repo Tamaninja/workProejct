@@ -36,8 +36,6 @@ public class PalletContent implements Serializable {
 
     @Override
     public String toString() {
-        return "PalletContent{" +
-                ", identifier='" + identifier + '\'' +
-                '}';
+        return (this.identifier);
     }
 }

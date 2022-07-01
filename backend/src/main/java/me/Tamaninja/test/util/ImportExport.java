@@ -60,7 +60,7 @@ public class ImportExport {
         cell.setCellStyle(this.defaultCellStyle);
         if (value instanceof Double) {
             cell.setCellValue((double)value);
-        } else if (value instanceof Integer) {
+        } else if (value instanceof Integer || value instanceof Long) {
             cell.setCellValue((int)value);
         } else if (value instanceof Timestamp) {
             cell.setCellValue((Timestamp)value);
@@ -83,7 +83,7 @@ public class ImportExport {
         writeCell(pallet.getWeightGross(), row.createCell(cellCount++));
         writeCell(pallet.getWeightNet(), row.createCell(cellCount++));
         writeCell(pallet.getPalletType().getIdentifier(), row.createCell(cellCount++));
-        writeCell(pallet.getLocation().getName(), row.createCell(cellCount++));
+        writeCell(pallet.getLocation().getIdentifier(), row.createCell(cellCount++));
         writeCell(pallet.getTimestamp(), row.createCell(cellCount));
     }
 }

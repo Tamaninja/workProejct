@@ -108,12 +108,6 @@ public class Transfer implements Serializable {
 
     @Override
     public String toString() {
-        return "Transfer{" +
-                "id=" + id +
-                ", origin=" + origin +
-                ", destination=" + destination +
-                ", pallets=" + pallets +
-                ", transferTimestamp=" + transferTimestamp +
-                '}';
+        return (this.identifier);
     }
 }

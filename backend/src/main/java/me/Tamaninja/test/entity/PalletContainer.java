@@ -42,10 +42,6 @@ public class PalletContainer implements Serializable {
 
     @Override
     public String toString() {
-        return "PalletContainer{" +
-                ", identifier='" + identifier + '\'' +
-                ", weight=" + weight +
-                ", defaultAmount=" + defaultAmount +
-                '}';
+        return (this.identifier);
     }
 }

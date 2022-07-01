@@ -1,40 +1,41 @@
 package me.Tamaninja.test.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PalletDto implements Serializable {
+
+    @JsonIgnore
     private Long id;
     private Long barcode;
-    private InventoryDto location;
+    private String location;
     private List<TransferDto> transfers;
-    private PalletContentDto palletContent;
-    private PalletContainerDto palletContainer;
+    private String palletContent;
+    private String palletContainer;
     private Integer containerAmount;
     private double weightGross;
     private double weightNet;
-    private PalletContainerDto palletType;
-    private InventoryDto origin;
+    private String palletType;
+    private String origin;
     private Timestamp timestamp;
 
     public PalletDto() {
     }
 
-    public PalletDto(Long id, Long barcode, InventoryDto location, List<TransferDto> transfers, PalletContentDto palletContent, PalletContainerDto palletContainer, Integer containerAmount, double weightGross, double weightNet, PalletContainerDto palletType, InventoryDto origin, Timestamp timestamp) {
-        this.id = id;
+    public PalletDto(Long barcode, String palletContent, String palletContainer, Integer containerAmount, double weightGross, String palletType, String origin) {
         this.barcode = barcode;
-        this.location = location;
-        this.transfers = transfers;
         this.palletContent = palletContent;
         this.palletContainer = palletContainer;
         this.containerAmount = containerAmount;
         this.weightGross = weightGross;
-        this.weightNet = weightNet;
         this.palletType = palletType;
         this.origin = origin;
-        this.timestamp = timestamp;
     }
 
     public Long getId() {
@@ -53,11 +54,11 @@ public class PalletDto implements Serializable {
         this.barcode = barcode;
     }
 
-    public InventoryDto getLocation() {
+    public String getLocation() {
         return location;
     }
 
-    public void setLocation(InventoryDto location) {
+    public void setLocation(String location) {
         this.location = location;
     }
 
@@ -69,19 +70,19 @@ public class PalletDto implements Serializable {
         this.transfers = transfers;
     }
 
-    public PalletContentDto getPalletContent() {
+    public String getPalletContent() {
         return palletContent;
     }
 
-    public void setPalletContent(PalletContentDto palletContent) {
+    public void setPalletContent(String palletContent) {
         this.palletContent = palletContent;
     }
 
-    public PalletContainerDto getPalletContainer() {
+    public String getPalletContainer() {
         return palletContainer;
     }
 
-    public void setPalletContainer(PalletContainerDto palletContainer) {
+    public void setPalletContainer(String palletContainer) {
         this.palletContainer = palletContainer;
     }
 
@@ -109,19 +110,19 @@ public class PalletDto implements Serializable {
         this.weightNet = weightNet;
     }
 
-    public PalletContainerDto getPalletType() {
+    public String getPalletType() {
         return palletType;
     }
 
-    public void setPalletType(PalletContainerDto palletType) {
+    public void setPalletType(String palletType) {
         this.palletType = palletType;
     }
 
-    public InventoryDto getOrigin() {
+    public String getOrigin() {
         return origin;
     }
 
-    public void setOrigin(InventoryDto origin) {
+    public void setOrigin(String origin) {
         this.origin = origin;
     }
 
