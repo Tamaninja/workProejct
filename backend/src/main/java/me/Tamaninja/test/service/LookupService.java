@@ -3,7 +3,7 @@ package me.Tamaninja.test.service;
 import me.Tamaninja.test.dto.InventoryDto;
 import me.Tamaninja.test.dto.PalletDto;
 import me.Tamaninja.test.dto.TransferDto;
-import me.Tamaninja.test.frontend.FrontendForm;
+import me.Tamaninja.test.frontend.FrontendCard;
 import me.Tamaninja.test.entity.*;
 import me.Tamaninja.test.enums.Errors;
 import me.Tamaninja.test.repository.*;
@@ -31,8 +31,19 @@ public class LookupService {
         this.palletContentRepository = palletContentRepository;
     }
 
-    public FrontendForm getPalletForm() {
-        return (new FrontendForm(palletContentRepository.getAllPalletContents(), palletContainerRepository.getAllPalletContainers(), palletContainerRepository.getAllPalletTypes()));
+    public List<FrontendCard> getPalletForm() {
+        List<FrontendCard> form = new ArrayList<>();
+        List<PalletContent> palletContents = palletContentRepository.getAllPalletContents();
+        List<PalletContainer> palletContainers = palletContainerRepository.getAllPalletContainers();
+        List<PalletContainer> palletTypes = palletContainerRepository.getAllPalletTypes();
+
+
+        form.add(new FrontendCard("palletContent",palletContents.get(0).getIdentifier(), (List)palletContents));
+        form.add(new FrontendCard("palletContainer",palletContainers.get(0).getIdentifier(), (List)palletContainers));
+        form.add(new FrontendCard("palletType",palletTypes.get(0).getIdentifier(), (List)palletTypes));
+
+
+        return (form);
     }
 
     public PalletDto mapPallet(Pallet pallet, boolean withTransfers) {
