@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RestController
+@CrossOrigin(maxAge = 3600)
 public class ExportController {
     private final ImportExportService importExportService;
 
@@ -28,9 +29,6 @@ public class ExportController {
 
     @PostMapping ("/create/pallet")
     public ResponseEntity<PalletDto> createPallet(@RequestBody PalletDto palletDto) {
-
-
-
         return (inventoryManagementService.createPallet(palletDto));
     }
 }

@@ -26,7 +26,7 @@ public class InventoryManagementService {
     }
     public ResponseEntity<PalletDto> createPallet(PalletDto request){
         ResponseEntity<PalletDto> response;
-        Pallet pallet = newPallet(request.getBarcode(), request.getPalletType(), request.getPalletContent(), request.getContainerAmount(), request.getPalletContainer(), request.getWeightGross(), request.getOrigin());
+        Pallet pallet = newPallet(request.getBarcode(), request.getPalletType(), request.getPalletContainer(), request.getContainerAmount(), request.getPalletContent(), request.getWeightGross(), request.getOrigin());
         PalletDto palletDTO;
 
         if (pallet != null) {
@@ -36,7 +36,6 @@ public class InventoryManagementService {
         } else {
             response = new ResponseEntity<PalletDto>(HttpStatus.I_AM_A_TEAPOT);
         }
-
         return (response);
     }
 
@@ -49,6 +48,7 @@ public class InventoryManagementService {
             containerAmount = palletContainer.getDefaultAmount();
         }
         Pallet pallet = new Pallet(barcode, origin, palletType, palletContent, palletContainer, containerAmount, grossWeight);
+
         if (isValid(pallet)) {
             return (pallet);
         } else {

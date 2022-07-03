@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
               } else {
                 return (FloatingActionButton(
                   heroTag: "newForm",
-                    child: Icon(Icons.add),
+                    child: const Icon(Icons.add),
                     onPressed: () {
                       Navigator.push(
                           context,
@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Dio dio = Dio();
     Response response = await dio.get("http://localhost:8080/test");
     var data = response.data;
-    TamaForm tamaForm = TamaForm("12345");
+    TamaForm tamaForm = TamaForm("http://localhost:8080/create/pallet");
     data.forEach((jsonModel) {
       TamaList tamaCard = TamaList.fromJson(jsonModel);
       tamaForm.list.add(tamaCard);
@@ -85,7 +85,17 @@ class _FormWidgetState extends State<FormWidget> {
         child: buildList(widget.tamaForm.list),
       ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {  },
+          onPressed: () async {
+            Dio dio = Dio();
+            var data = {"origin" : "150", "weightGross" : 500.5};
+            for (var element in widget.tamaForm.list) {
+              data.addAll({element.key : element.value});
+            }
+            await dio.post(widget.tamaForm.endpoint, data: jsonEncode(data)).then((value) {
+              Navigator.pop(context, true);
+            });
+
+          },
           heroTag: "newForm",
           child: const Icon(Icons.send),
       )
