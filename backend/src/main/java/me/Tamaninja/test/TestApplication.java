@@ -15,7 +15,7 @@ public class TestApplication {
 	}
 
 	@Bean
-	public CommandLineRunner run(DebugService debugService) throws Exception {
+	public CommandLineRunner run(DebugService debugService){
 		return args -> {
 			try {
 				debugService.init();
