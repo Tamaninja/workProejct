@@ -1,9 +1,12 @@
 package me.Tamaninja.test.controller;
 
 
-import me.Tamaninja.test.frontend.FrontendCard;
+import me.Tamaninja.test.dto.PalletDto;
+import me.Tamaninja.test.frontend.FrontendForm;
 import me.Tamaninja.test.service.InventoryManagementService;
 import me.Tamaninja.test.service.LookupService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,8 +23,8 @@ public class ManagementController {
     }
 
     @GetMapping("/test")
-    public List<FrontendCard> test(){
-        return (lookupService.getPalletForm());
+    public ResponseEntity<FrontendForm> test(){
+        return (new ResponseEntity<FrontendForm>(lookupService.getPalletForm(), HttpStatus.OK));
     }
 
     @GetMapping("/text")

@@ -37,18 +37,17 @@ class _HomeScreenState extends State<HomeScreen> {
         floatingActionButton: FutureBuilder<TamaForm>(
             future: fetchOptions(),
             builder: (BuildContext context, AsyncSnapshot<TamaForm> snapshot) {
-              if (snapshot == null) {
+              if (snapshot.data == null) {
                 return (const Center(child: CircularProgressIndicator()));
               } else {
                 return (FloatingActionButton(
-                  heroTag: "newForm",
                     child: const Icon(Icons.add),
                     onPressed: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  FormWidget(snapshot.requireData)));
+                              context,
+                              PageRouteBuilder(
+                                  pageBuilder: (_, __, ___) =>
+                                      FormWidget(snapshot.requireData)));
                     }));
               }
             }));
@@ -75,90 +74,34 @@ class FormWidget extends StatefulWidget {
 }
 
 class _FormWidgetState extends State<FormWidget> {
+  dynamic value;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("form test"),
       ),
-      body: Center(
-        child: buildList(widget.tamaForm.list),
+      body: Form(
+        child: Center(
+          child: Card(
+            child: DropdownButtonFormField(
+              items:widget.tamaForm.list.first.options
+                  .map((TamaCard card) {
+                return DropdownMenuItem(
+                  value: card.title,
+                  child: Center(child: Text(card.title)),
+                );
+              }).toList(),
+              onChanged: (dynamic newValue) {
+                setState(() {
+                  value = newValue!;
+                });
+              },
+            ),
+          )
+        ),
       ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            Dio dio = Dio();
-            var data = {"origin" : "150", "weightGross" : 500.5};
-            for (var element in widget.tamaForm.list) {
-              data.addAll({element.key : element.value});
-            }
-            await dio.post(widget.tamaForm.endpoint, data: jsonEncode(data)).then((value) {
-              Navigator.pop(context, true);
-            });
-
-          },
-          heroTag: "newForm",
-          child: const Icon(Icons.send),
-      )
     );
-  }
-
-  ListView buildList(List<dynamic> list) {
-    return (ListView.builder(
-        itemCount: list.length,
-        itemBuilder: (BuildContext context, int index) {
-          return (buildListTile(list[index]));
-        }));
-  }
-
-
-  dynamic buildListTile(var data) {
-    if(data is TamaList) {
-      return Hero(
-          tag: data.key,
-          child: buildTile(data));
-    } else if (data is TamaCard){
-      return(buildRadioTile(data));
-    }
-  }
-
-
-  Card buildTile(TamaList tamaList) {
-    return (Card(
-      child: ListTile(
-        title: Text(tamaList.key.toString()),
-        subtitle: Text(tamaList.value.toString()),
-        onTap: () {
-          Navigator.push(
-              context,
-              PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => Hero(
-                    tag: tamaList.key,
-                    child: Scaffold(
-                          appBar: AppBar(
-                            title: Text(tamaList.key),
-                          ),
-                          body:buildList(tamaList.options),
-                        ),
-                  )));
-        },
-      ),
-    ));
-  }
-
-  Card buildRadioTile(TamaCard tamaCard) {
-    return (Card(
-      child: RadioListTile(
-        title: Text(tamaCard.title.toString()),
-        subtitle: Text(tamaCard.subtitle.toString()),
-        groupValue: tamaCard.parent.value,
-        value: tamaCard.title,
-        onChanged: (dynamic value) {
-          setState(() {
-            tamaCard.parent.value = value;
-            Navigator.pop(context, true);
-          });
-        },
-      ),
-    ));
   }
 }

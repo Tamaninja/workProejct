@@ -3,14 +3,16 @@ package me.Tamaninja.test.service;
 import me.Tamaninja.test.dto.InventoryDto;
 import me.Tamaninja.test.dto.PalletDto;
 import me.Tamaninja.test.dto.TransferDto;
-import me.Tamaninja.test.frontend.FrontendCard;
 import me.Tamaninja.test.entity.*;
 import me.Tamaninja.test.enums.Errors;
+import me.Tamaninja.test.frontend.FrontendField;
+import me.Tamaninja.test.frontend.FrontendForm;
 import me.Tamaninja.test.repository.*;
 import me.Tamaninja.test.util.ClassMapperUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static me.Tamaninja.test.util.ClassMapperUtil.*;
@@ -31,16 +33,18 @@ public class LookupService {
         this.palletContentRepository = palletContentRepository;
     }
 
-    public List<FrontendCard> getPalletForm() {
-        List<FrontendCard> form = new ArrayList<>();
+    public FrontendForm getPalletForm() {
+        FrontendForm form = new FrontendForm("http://localhost:8080/create/pallet");
         List<PalletContent> palletContents = palletContentRepository.getAllPalletContents();
         List<PalletContainer> palletContainers = palletContainerRepository.getAllPalletContainers();
         List<PalletContainer> palletTypes = palletContainerRepository.getAllPalletTypes();
 
 
-        form.add(new FrontendCard("palletContent",palletContents.get(0).getIdentifier(), (List)palletContents));
-        form.add(new FrontendCard("palletContainer",palletContainers.get(0).getIdentifier(), (List)palletContainers));
-        form.add(new FrontendCard("palletType",palletTypes.get(0).getIdentifier(), (List)palletTypes));
+        form.addField(new FrontendField("palletContent",palletContents.get(0).getIdentifier(), palletContents));
+        form.addField(new FrontendField("palletContainer",palletContainers.get(0).getIdentifier(), palletContainers));
+        form.addField(new FrontendField("palletType",palletTypes.get(0).getIdentifier(), palletTypes));
+        form.addField(new FrontendField("containerAmount", palletContainers.get(0).getDefaultAmount()));
+        form.addField(new FrontendField("weightGross", 0.0));
 
 
         return (form);
