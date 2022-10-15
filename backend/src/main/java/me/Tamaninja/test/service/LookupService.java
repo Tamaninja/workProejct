@@ -40,11 +40,11 @@ public class LookupService {
         List<PalletContainer> palletTypes = palletContainerRepository.getAllPalletTypes();
 
 
-        form.addField(new FrontendField("palletContent",palletContents.get(0).getIdentifier(), palletContents));
-        form.addField(new FrontendField("palletContainer",palletContainers.get(0).getIdentifier(), palletContainers));
-        form.addField(new FrontendField("palletType",palletTypes.get(0).getIdentifier(), palletTypes));
-        form.addField(new FrontendField("containerAmount", palletContainers.get(0).getDefaultAmount()));
-        form.addField(new FrontendField("weightGross", 0.0));
+        form.addField(new FrontendField<>("palletContent", palletContents.get(0), palletContents));
+        form.addField(new FrontendField<>("palletContainer",palletContainers.get(0), palletContainers));
+        form.addField(new FrontendField<>("palletType",palletTypes.get(0), palletTypes));
+        form.addField(new FrontendField<>("containerAmount", palletContainers.get(0).getDefaultAmount()));
+        form.addField(new FrontendField<>("weightGross", 0.0));
 
 
         return (form);

@@ -37,9 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
         floatingActionButton: FutureBuilder<TamaForm>(
             future: fetchOptions(),
             builder: (BuildContext context, AsyncSnapshot<TamaForm> snapshot) {
-              if (snapshot.data == null) {
-                return (const Center(child: CircularProgressIndicator()));
-              } else {
+              {
                 return (FloatingActionButton(
                     child: const Icon(Icons.add),
                     onPressed: () {
@@ -47,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               context,
                               PageRouteBuilder(
                                   pageBuilder: (_, __, ___) =>
-                                      FormWidget(snapshot.requireData)));
+                                      FormWidget()));
                     }));
               }
             }));
@@ -57,24 +55,19 @@ class _HomeScreenState extends State<HomeScreen> {
     Dio dio = Dio();
     Response response = await dio.get("http://localhost:8080/test");
     var data = response.data;
-    TamaForm tamaForm = TamaForm("http://localhost:8080/create/pallet");
-    data.forEach((jsonModel) {
-      TamaList tamaCard = TamaList.fromJson(jsonModel);
-      tamaForm.list.add(tamaCard);
-    });
+    TamaForm tamaForm = TamaForm.fromJson(data);
     return (tamaForm);
   }
 }
 
 class FormWidget extends StatefulWidget {
-  TamaForm tamaForm;
-  FormWidget(this.tamaForm, {Key? key}) : super(key: key);
+  FormWidget({Key? key}) : super(key: key);
   @override
   State<FormWidget> createState() => _FormWidgetState();
 }
 
 class _FormWidgetState extends State<FormWidget> {
-  dynamic value;
+  bool test = true;
 
   @override
   Widget build(BuildContext context) {
@@ -85,23 +78,17 @@ class _FormWidgetState extends State<FormWidget> {
       body: Form(
         child: Center(
           child: Card(
-            child: DropdownButtonFormField(
-              items:widget.tamaForm.list.first.options
-                  .map((TamaCard card) {
-                return DropdownMenuItem(
-                  value: card.title,
-                  child: Center(child: Text(card.title)),
-                );
-              }).toList(),
-              onChanged: (dynamic newValue) {
+            child: Switch(
+              value: test,
+              onChanged: (bool newValue) {
+                // This is called when the user toggles the switch.
                 setState(() {
-                  value = newValue!;
+                  test = newValue;
                 });
-              },
-            ),
+              },)
+          ),
           )
         ),
-      ),
-    );
+      );
   }
 }

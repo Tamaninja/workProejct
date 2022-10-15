@@ -1,54 +1,79 @@
+class TamaForm {
+  String? endpoint;
+  List<Fields>? fields;
 
-class TamaList {
-  String key = "key";
-  dynamic value = "value";
-  List<TamaCard> options = <TamaCard>[];
+  TamaForm({this.endpoint, this.fields});
 
-  TamaList(this.key, this.value, this.options);
-
-  TamaList.fromJson(Map<String, dynamic> json) {
-    key = json['key'];
-    value = json['value'];
-    options = <TamaCard>[];
-    if (json['options'] != null) {
-      json['options'].forEach((v) {
-        options.add(TamaCard.fromJson(v, this));
+  TamaForm.fromJson(Map<String, dynamic> json) {
+    endpoint = json['endpoint'];
+    if (json['fields'] != null) {
+      fields = <Fields>[];
+      json['fields'].forEach((v) {
+        fields!.add(new Fields.fromJson(v));
       });
-    } else {
-      options.add(TamaCard(key,value, this));
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['key'] = key;
-    data['value'] = value;
-    data['options'] = options.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['endpoint'] = this.endpoint;
+    if (this.fields != null) {
+      data['fields'] = this.fields!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
 
-class TamaForm {
-  String endpoint;
-  List<TamaList> list = <TamaList>[];
-  TamaForm(this.endpoint);
-}
+class Fields {
+  Value? value;
+  String? jsonKey;
+  List<dynamic>? possibleValues;
 
-class TamaCard {
-  dynamic title;
-  dynamic subtitle;
-  TamaList parent;
-  TamaCard(this.title, this.subtitle, this.parent);
+  Fields({this.value, this.jsonKey, this.possibleValues});
 
-  TamaCard.fromJson(Map<String, dynamic> json, this.parent) {
-    title = json[json.keys.first];
-    subtitle = json[json.keys.last];
+  Fields.fromJson(Map<String, dynamic> json) {
+    value = json['value'] != null ? new Value.fromJson(json['value']) : null;
+    jsonKey = json['jsonKey'];
+    if (json['possibleValues'] != null) {
+      possibleValues = <dynamic>[];
+      json['possibleValues'].forEach((v) {
+        possibleValues!.add(v);
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['title'] = title;
-    data['subtitle'] = subtitle;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.value != null) {
+      data['value'] = this.value!.toJson();
+    }
+    data['jsonKey'] = this.jsonKey;
+    if (this.possibleValues != null) {
+      data['possibleValues'] =
+          this.possibleValues!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Value {
+  String? identifier;
+  int? weightModifier;
+  double? weight;
+
+  Value({this.identifier, this.weightModifier, this.weight});
+
+  Value.fromJson(Map<String, dynamic> json) {
+    identifier = json['identifier'];
+    weightModifier = json['weightModifier'];
+    weight = json['weight'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['identifier'] = this.identifier;
+    data['weightModifier'] = this.weightModifier;
+    data['weight'] = this.weight;
     return data;
   }
 }

@@ -1,33 +1,36 @@
 package me.Tamaninja.test.frontend;
 
-import java.util.ArrayList;
+
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.List;
+public class FrontendField<T>{
 
-public class FrontendField {
-    private String jsonKey; //json key
-    private Object value;
-    private List valueList = new ArrayList<>();
+    private T value;
+    private String jsonKey;
 
-    public FrontendField(String key, Object value) {
+    private List<T> possibleValues;
+
+    public FrontendField(String key, T defaultValue) {
         this.jsonKey = key;
-        this.value = value;
-        this.valueList.add(value);
+        this.value = defaultValue;
     }
-    public FrontendField(String key, Object value, List options) {
+    public FrontendField(String key, T defaultValue, List<T> possibleValues) {
         this.jsonKey = key;
-        this.valueList = options;
-        this.value = value;
+        this.value = defaultValue;
+        this.possibleValues = possibleValues;
+    }
+
+    public T getValue() {
+        return value;
     }
 
     public String getJsonKey() {
         return jsonKey;
     }
 
-    public Object getValue() {
-        return value;
-    }
-
-    public List<Object> getValueList() {
-        return valueList;
+    public List<T> getPossibleValues() {
+        return possibleValues;
     }
 }
