@@ -26,7 +26,7 @@ public class DebugService {
             PalletContainer randomType = palletTypes.get(random.nextInt(palletTypes.size()));
             PalletContainer randomContainer = palletContainers.get(random.nextInt(palletContainers.size()));
             PalletContent randomContent = palletContents.get(random.nextInt(palletContents.size()));
-            inventoryManagementService.savePallet(null, randomType.getIdentifier(), randomContainer.getIdentifier(), 2, randomContent.getIdentifier(), 200, "150");
+            inventoryManagementService.savePallet(null, randomType.getId(), randomContainer.getId(), 2, randomContent.getId(), 200, "150");
         }
 
     }

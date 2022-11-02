@@ -103,13 +103,6 @@ public class InventoryManagementService {
         inventoryRepository.save(inventory);
         return (inventory);
     }
-    public Inventory newInventory(Inventory parent) {
-        Inventory inventory = new Inventory(parent);
-        inventoryRepository.save(inventory);
-        inventory.setIdentifier(inventory.getId() + ">" + parent.getIdentifier());
-        inventoryRepository.save(inventory);
-        return (inventory);
-    }
     public List<PalletContainer> getAllPalletTypes() {
         return (palletContainerRepository.getAllPalletTypes());
     }

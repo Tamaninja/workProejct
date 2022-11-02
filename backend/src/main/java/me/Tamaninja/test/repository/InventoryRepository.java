@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.List;
 @Repository
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
-    @Query(value = "SELECT i.* FROM inventory i WHERE i.identifier = :inventoryName", nativeQuery = true)
+    @Query(value = "SELECT i.* FROM inventory i WHERE i.description = :inventoryName", nativeQuery = true)
     Optional<Inventory> findByName(@Param("inventoryName") String inventoryName);
 
     @Query(value = "SELECT p.* FROM pallet AS p WHERE p.location_id = :inventoryId", nativeQuery = true)

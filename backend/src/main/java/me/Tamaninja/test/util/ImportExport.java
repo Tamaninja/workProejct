@@ -77,13 +77,13 @@ public class ImportExport {
     private void writePallet(Row row, Pallet pallet) {
         int cellCount = 0;
         writeCell(pallet.getBarcode(), row.createCell(cellCount++));
-        writeCell(pallet.getPalletContent().getIdentifier(), row.createCell(cellCount++));
+        writeCell(pallet.getPalletContent().getId(), row.createCell(cellCount++));
         writeCell(pallet.getContainerAmount(), row.createCell(cellCount++));
-        writeCell(pallet.getPalletContainer().getIdentifier(), row.createCell(cellCount++));
+        writeCell(pallet.getPalletContainer().getId(), row.createCell(cellCount++));
         writeCell(pallet.getWeightGross(), row.createCell(cellCount++));
         writeCell(pallet.getWeightNet(), row.createCell(cellCount++));
-        writeCell(pallet.getPalletType().getIdentifier(), row.createCell(cellCount++));
-        writeCell(pallet.getLocation().getIdentifier(), row.createCell(cellCount++));
+        writeCell(pallet.getPalletType().getId(), row.createCell(cellCount++));
+        writeCell(pallet.getLocation().getId(), row.createCell(cellCount++));
         writeCell(pallet.getTimestamp(), row.createCell(cellCount));
     }
 }

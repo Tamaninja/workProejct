@@ -34,29 +34,21 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: const Text("test")),
-        floatingActionButton: FutureBuilder<TamaForm>(
-            future: fetchOptions(),
-            builder: (BuildContext context, AsyncSnapshot<TamaForm> snapshot) {
-              {
-                return (FloatingActionButton(
-                    child: const Icon(Icons.add),
-                    onPressed: () {
-                      Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                  pageBuilder: (_, __, ___) =>
-                                      FormWidget()));
-                    }));
-              }
+        floatingActionButton: FloatingActionButton(
+            child: const Icon(Icons.add),
+            onPressed: () {
+              fetchOptions();
+              Navigator.push(context,
+                  PageRouteBuilder(pageBuilder: (_, __, ___) => FormWidget()));
             }));
   }
 
-  Future<TamaForm> fetchOptions() async {
+  void fetchOptions() async {
+    print("hi");
     Dio dio = Dio();
     Response response = await dio.get("http://localhost:8080/test");
-    var data = response.data;
-    TamaForm tamaForm = TamaForm.fromJson(data);
-    return (tamaForm);
+
+    print(Welcom);
   }
 }
 
@@ -76,8 +68,10 @@ class _FormWidgetState extends State<FormWidget> {
         title: const Text("form test"),
       ),
       body: Form(
-        child: Center(
-          child: Card(
+          child: Center(
+              child: ListView(
+        children: [
+          Card(
             child: Switch(
               value: test,
               onChanged: (bool newValue) {
@@ -85,10 +79,25 @@ class _FormWidgetState extends State<FormWidget> {
                 setState(() {
                   test = newValue;
                 });
-              },)
-          ),
+              },
+            ),
           )
-        ),
-      );
+        ],
+      ))),
+    );
+  }
+}
+
+class FormTile extends StatefulWidget {
+  const FormTile({Key? key}) : super(key: key);
+
+  @override
+  State<FormTile> createState() => _FormTileState();
+}
+
+class _FormTileState extends State<FormTile> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }

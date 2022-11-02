@@ -13,10 +13,10 @@ public interface PalletContentRepository extends JpaRepository<PalletContent, St
 
     @Query(value = "SELECT pc.* " +
             "FROM pallet p, pallet_content pc " +
-            "WHERE p.pallet_content_identifier = pc.identifier " +
+            "WHERE p.pallet_content_id = pc.id " +
             "AND p.origin_id = :origin " +
-            "GROUP BY pc.identifier " +
-            "ORDER BY COUNT(p.pallet_content_identifier) DESC " +
+            "GROUP BY pc.id " +
+            "ORDER BY COUNT(p.pallet_content_id) DESC " +
             "LIMIT 1;", nativeQuery = true)
     PalletContent mostUsedContent(@Param("origin") Long originId);
 

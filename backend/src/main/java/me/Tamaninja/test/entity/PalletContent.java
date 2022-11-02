@@ -8,34 +8,27 @@ public class PalletContent implements Serializable {
 
     @Id
     @Column(nullable = false, unique = true)
-    private String identifier;
+    private String id;
     private Double weightModifier;
-    public PalletContent(String identifier, Double weightModifier) {
-        this.identifier = identifier;
+    public PalletContent(String id, Double weightModifier) {
+        this.id = id;
         this.weightModifier = weightModifier;
     }
 
 
     public PalletContent() {}
 
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
-
-    public Double getWeightModifier() {
+    public Double getWeight() {
         return weightModifier;
     }
 
-    public void setWeightModifier(double weightModifier) {
-        this.weightModifier = weightModifier;
-    }
 
-    public String getIdentifier() {
-        return identifier;
+    public String getId() {
+        return id;
     }
 
     @Override
     public String toString() {
-        return (this.identifier);
+        return (this.id);
     }
 }

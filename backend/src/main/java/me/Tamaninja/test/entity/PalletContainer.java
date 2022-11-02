@@ -12,7 +12,7 @@ public class PalletContainer implements Serializable {
 
     @Id
     @Column(nullable = false, unique = true)
-    private String identifier;
+    private String id;
     @Column(nullable = false, scale = 2)
     private double weight;
 
@@ -20,16 +20,16 @@ public class PalletContainer implements Serializable {
     @Column(nullable = false)
     private Integer defaultAmount;
 
-    public PalletContainer(String identifier, double weight, Integer defaultAmount) {
-        this.identifier = identifier;
+    public PalletContainer(String id, double weight, Integer defaultAmount) {
+        this.id = id;
         this.weight = weight;
         this.defaultAmount = defaultAmount;
     }
     public PalletContainer() {
 
     }
-    public String getIdentifier() {
-        return identifier;
+    public String getId() {
+        return id;
     }
 
     public double getWeight() {
@@ -42,6 +42,6 @@ public class PalletContainer implements Serializable {
 
     @Override
     public String toString() {
-        return (this.identifier);
+        return (this.id);
     }
 }

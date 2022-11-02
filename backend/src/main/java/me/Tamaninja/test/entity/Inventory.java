@@ -13,8 +13,8 @@ public class Inventory implements Serializable {
 
 
 
-    @Column(unique = true)
-    private String identifier;
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -40,8 +40,19 @@ public class Inventory implements Serializable {
     @OneToMany(mappedBy = "parent")
     private List<Inventory> children;
 
-    public Inventory(String identifier) {
-        this.identifier = identifier;
+    @Column(name = "description", nullable = false, unique = true)
+    private String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Inventory(String description) {
+        this.description = description;
     }
 
     public Inventory(Inventory parent) {
@@ -72,9 +83,6 @@ public class Inventory implements Serializable {
         this.children = children;
     }
 
-    public String getIdentifier() {
-        return identifier;
-    }
 
     public List<Pallet> getPallets() {
         return pallets;
@@ -83,11 +91,6 @@ public class Inventory implements Serializable {
     public void setPallets(List<Pallet> pallets) {
         this.pallets = pallets;
     }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
-
     public List<Transfer> getSent() {
         return sent;
     }
@@ -105,11 +108,6 @@ public class Inventory implements Serializable {
     }
 
     public Inventory() {}
-
-    @Override
-    public String toString() {
-        return (this.identifier);
-    }
 
     @Override
     public boolean equals(Object o) {

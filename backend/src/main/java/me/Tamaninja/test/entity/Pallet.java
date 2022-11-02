@@ -55,7 +55,7 @@ public class Pallet implements Serializable {
         this.palletContent = palletContent;
         this.containerAmount = containerAmount;
         this.weightGross = weightGross;
-        this.weightNet = (weightGross - containerAmount*palletContainer.getWeight() - palletType.getWeight())*palletContent.getWeightModifier();
+        this.weightNet = (weightGross - containerAmount*palletContainer.getWeight() - palletType.getWeight())*palletContent.getWeight();
         this.timestamp = Timestamp.valueOf(LocalDateTime.now(ZoneId.of("Asia/Jerusalem")));
     }
 

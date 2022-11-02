@@ -13,11 +13,8 @@ import java.util.List;
 public class Transfer implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    @Column(unique = true)
-    private String identifier;
+    @Column(name = "id", nullable = false)
+    private String id;
 
     @ManyToOne()
     private Inventory origin;
@@ -37,9 +34,8 @@ public class Transfer implements Serializable {
     private List<Pallet> pallets = new ArrayList<>();
 
 
-
-    public Transfer(String identifier, Inventory origin, Inventory destination) {
-        this.identifier = identifier;
+    public Transfer(String id, Inventory origin, Inventory destination) {
+        this.id = id;
         this.origin = origin;
         this.destination = destination;
     }
@@ -52,52 +48,27 @@ public class Transfer implements Serializable {
 
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
 
     public Inventory getOrigin() {
         return origin;
     }
 
-    public void setOrigin(Inventory origin) {
-        this.origin = origin;
-    }
 
     public Inventory getDestination() {
         return destination;
-    }
-
-    public void setDestination(Inventory destination) {
-        this.destination = destination;
     }
 
     public Date getTransferTimestamp() {
         return transferTimestamp;
     }
 
-    public void setTransferTimestamp(Date transferTimestamp) {
-        this.transferTimestamp = transferTimestamp;
-    }
 
     public List<Pallet> getPallets() {
         return pallets;
-    }
-
-    public void setPallets(List<Pallet> pallets) {
-        this.pallets = pallets;
     }
 
     public void addPallet(Pallet pallet) {
@@ -108,6 +79,6 @@ public class Transfer implements Serializable {
 
     @Override
     public String toString() {
-        return (this.identifier);
+        return (this.id);
     }
 }

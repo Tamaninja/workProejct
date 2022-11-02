@@ -1,79 +1,73 @@
-class TamaForm {
-  String? endpoint;
-  List<Fields>? fields;
+// To parse this JSON data, do
+//
+//     final welcome = welcomeFromJson(jsonString);
 
-  TamaForm({this.endpoint, this.fields});
+import 'dart:convert';
 
-  TamaForm.fromJson(Map<String, dynamic> json) {
-    endpoint = json['endpoint'];
-    if (json['fields'] != null) {
-      fields = <Fields>[];
-      json['fields'].forEach((v) {
-        fields!.add(new Fields.fromJson(v));
-      });
-    }
-  }
+Welcome welcomeFromJson(String str) => Welcome.fromJson(json.decode(str));
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['endpoint'] = this.endpoint;
-    if (this.fields != null) {
-      data['fields'] = this.fields!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
+String welcomeToJson(Welcome data) => json.encode(data.toJson());
+
+class Welcome {
+  Welcome({
+    this.endpoint,
+    this.fields,
+  });
+
+  String endpoint;
+  List<Field> fields;
+
+  factory Welcome.fromJson(Map<String, dynamic> json) => Welcome(
+    endpoint: json["endpoint"],
+    fields: List<Field>.from(json["fields"].map((x) => Field.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "endpoint": endpoint,
+    "fields": List<dynamic>.from(fields.map((x) => x.toJson())),
+  };
 }
 
-class Fields {
-  Value? value;
-  String? jsonKey;
-  List<dynamic>? possibleValues;
+class Field {
+  Field({
+    this.value,
+    this.jsonKey,
+    this.possibleValues,
+  });
 
-  Fields({this.value, this.jsonKey, this.possibleValues});
+  dynamic value;
+  String jsonKey;
+  List<ValueElement> possibleValues;
 
-  Fields.fromJson(Map<String, dynamic> json) {
-    value = json['value'] != null ? new Value.fromJson(json['value']) : null;
-    jsonKey = json['jsonKey'];
-    if (json['possibleValues'] != null) {
-      possibleValues = <dynamic>[];
-      json['possibleValues'].forEach((v) {
-        possibleValues!.add(v);
-      });
-    }
-  }
+  factory Field.fromJson(Map<String, dynamic> json) => Field(
+    value: json["value"],
+    jsonKey: json["jsonKey"],
+    possibleValues: json["possibleValues"] == null ? null : List<ValueElement>.from(json["possibleValues"].map((x) => ValueElement.fromJson(x))),
+  );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.value != null) {
-      data['value'] = this.value!.toJson();
-    }
-    data['jsonKey'] = this.jsonKey;
-    if (this.possibleValues != null) {
-      data['possibleValues'] =
-          this.possibleValues!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+    "value": value,
+    "jsonKey": jsonKey,
+    "possibleValues": possibleValues == null ? null : List<dynamic>.from(possibleValues.map((x) => x.toJson())),
+  };
 }
 
-class Value {
-  String? identifier;
-  int? weightModifier;
-  double? weight;
+class ValueElement {
+  ValueElement({
+    this.id,
+    this.weight,
+  });
 
-  Value({this.identifier, this.weightModifier, this.weight});
+  String id;
+  double weight;
 
-  Value.fromJson(Map<String, dynamic> json) {
-    identifier = json['identifier'];
-    weightModifier = json['weightModifier'];
-    weight = json['weight'];
-  }
+  factory ValueElement.fromJson(Map<String, dynamic> json) => ValueElement(
+    id: json["id"],
+    weight: json["weight"].toDouble(),
+  );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['identifier'] = this.identifier;
-    data['weightModifier'] = this.weightModifier;
-    data['weight'] = this.weight;
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "weight": weight,
+  };
 }
